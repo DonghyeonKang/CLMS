@@ -1,6 +1,6 @@
 package com.example.csws.repository.user;
 
-import com.example.csws.domain.user.User;
+import com.example.csws.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

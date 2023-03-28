@@ -3,7 +3,7 @@ package com.example.csws.config.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.csws.config.auth.PrincipalDetails;
-import com.example.csws.domain.user.User;
+import com.example.csws.entity.user.User;
 import com.example.csws.repository.user.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,4 +1,4 @@
-package com.example.csws.domain.user;
+package com.example.csws.entity.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
