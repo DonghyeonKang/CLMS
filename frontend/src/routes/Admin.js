@@ -20,10 +20,10 @@ const Admin = () => {
         <MyList items={food} />
         <Grid container justifyContent="space-between">
           <Grid item xs={5}>
-            <MyButtonFalse />
+            <MyButtonFalse onClick={()=> console.log('거절')}/>
           </Grid>
           <Grid item xs={5}>
-            <MyButtonTrue />
+            <MyButtonTrue onClick={()=> console.log('승인')}/>
           </Grid>
         </Grid>
       </MyBox>
