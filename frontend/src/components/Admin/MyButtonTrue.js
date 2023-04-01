@@ -2,10 +2,17 @@ import React from "react";
 import Button from "@mui/material/Button";
 
 const MyButtonTrue = ({ disabled, onClick, boxName }) => {
+  const handleClick = () => {
+    const confirmed = window.confirm("정말 승인하시겠습니까?");
+    if (confirmed) {
+      onClick();
+    }
+  };
+
   return (
     <Button
       disabled={disabled}
-      onClick={onClick}
+      onClick={handleClick}
       type="submit"
       fullWidth
       variant="contained"
