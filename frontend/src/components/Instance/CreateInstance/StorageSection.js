@@ -1,3 +1,4 @@
+import { MenuItem, Select } from "@mui/material";
 import styled from "styled-components";
 
 const StorageSection = ({setData, data}) => {
@@ -7,14 +8,14 @@ const StorageSection = ({setData, data}) => {
     return (
         <Storage>
             <Title>스토리지 구성</Title>
-            <select name="storage" onChange={storageHandler} defaultValue={data.storage}>
-                <option value='1'>1GB</option>
-                <option value='2'>2GB</option>
-                <option value='4'>4GB</option>
-                <option value='8'>8GB</option>
-                <option value='16'>16GB</option>
-                <option value='32'>32GB</option>
-            </select>
+            <Select label="storage" onChange={storageHandler} defaultValue={data.storage} size='small'>
+                <MenuItem value='1'>1GB</MenuItem>
+                <MenuItem value='2'>2GB</MenuItem>
+                <MenuItem value='4'>4GB</MenuItem>
+                <MenuItem value='8'>8GB</MenuItem>
+                <MenuItem value='16'>16GB</MenuItem>
+                <MenuItem value='32'>32GB</MenuItem>
+            </Select>
         </Storage>
     );
 };
@@ -35,4 +36,5 @@ const Storage = styled.div`
 
 const Title = styled.div`
   margin-bottom: 5%;
+  font-weight: 600;
 `;

@@ -1,3 +1,4 @@
+import { MenuItem, Select, TextField } from "@mui/material";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -50,20 +51,20 @@ const NewInboundRule = ({data, setData, i}) => {
             <tr key={i.Id}>
                 <td style={{width:'12vw', minWidth:'150px'}}>{i?.Id}</td>
                 <td>
-                    <select name="type" style={{width:'12vw', minWidth:'150px'}} defaultValue={i?.type} onChange={handleType}>
-                        <option value='1'>1</option>
-                        <option value='2'>2</option>
-                        <option value='3'>3</option>
-                    </select>
+                    <Select label="type" style={{width:'12vw', minWidth:'150px'}} defaultValue={i?.type} onChange={handleType} size="small">
+                        <MenuItem value='1'>1</MenuItem>
+                        <MenuItem value='2'>2</MenuItem>
+                        <MenuItem value='3'>3</MenuItem>
+                    </Select>
                 </td>
-                <td><input style={{width:'5vw', minWidth:'80px'}} defaultValue={i?.protocol} onChange={handleProtocol}/></td>
-                <td><input style={{width:'6vw', minWidth:'100px'}} defaultValue={i?.port} onChange={handlePort}/></td>
+                <td><TextField style={{width:'5vw', minWidth:'80px'}} defaultValue={i?.protocol} onChange={handleProtocol} size="small"/></td>
+                <td><TextField style={{width:'6vw', minWidth:'100px'}} defaultValue={i?.port} onChange={handlePort} size="small"/></td>
                 <td>
-                    <select name="CIDR" style={{width:'12vw', minWidth:'150px'}} defaultValue={i?.CIDR} onChange={handleCIDR}>
-                        <option value='1'>1</option>
-                        <option value='2'>2</option>
-                        <option value='3'>3</option>
-                    </select>
+                    <Select label="CIDR" style={{width:'12vw', minWidth:'150px'}} defaultValue={i?.CIDR} onChange={handleCIDR} size="small">
+                        <MenuItem value='1'>1</MenuItem>
+                        <MenuItem value='2'>2</MenuItem>
+                        <MenuItem value='3'>3</MenuItem>
+                    </Select>
                 </td>
                 <DeleteRule onClick={()=>{setData(data.filter((item)=>item?.Id !== i?.Id))}}>삭제</DeleteRule>
             </tr>
@@ -79,6 +80,8 @@ const DeleteRule = styled.td`
   border: 1px solid black;
   text-align: center;
   width: 50px;
+  padding: 0 8px;
+  font-weight: 600;
   &:hover{
     background-color: #fafafa;
     color: black;

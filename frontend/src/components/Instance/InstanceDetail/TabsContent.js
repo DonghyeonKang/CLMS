@@ -1,3 +1,4 @@
+import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -46,8 +47,8 @@ const TabsContent = () => {
                 <DetailGrid>네트워크 인터페이스</DetailGrid>
                 </>
                 : <DetailGrid>
-                <DomainInput placeholder="도메인 입력" onChange={(i)=>setDomain(i)}/>
-                <button onClick={()=>console.log(domain.target.value)}>도메인 적용</button>
+                <TextField label="도메인 입력" onChange={(i)=>setDomain(i)} size="small" style={{marginRight:'10%'}}/>
+                <Button onClick={()=>console.log(domain.target.value)} variant="outlined">도메인 적용</Button>
                 </DetailGrid>}
             </DetailContent>
         </>
@@ -86,7 +87,7 @@ const DetailContent = styled.div`
 const DetailGrid = styled.div`
   width: 100%;
   min-width: 300px;
-  height: 50px;
+  min-height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -99,8 +100,4 @@ const DetailId = styled(DetailGrid)`
   &:hover{
     text-decoration: underline;
   }
-`;
-
-const DomainInput = styled.input`
-  margin-right: 10%;
 `;
