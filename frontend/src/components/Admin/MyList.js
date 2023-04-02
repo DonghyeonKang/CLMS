@@ -8,33 +8,27 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 
 export default function MyList(props) {
-  const [checked, setChecked] = React.useState([]);
+  const { items, checked, handleToggle } = props;
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
+  const handleDelete = (index) => () => {
+    const newList = items.filter((item, i) => i !== index);
+    props.onDelete(newList);
   };
 
   return (
     <List sx={{ width: '100%', maxWidth: 400, maxHeight: 500, overflow: 'auto', bgcolor: 'background.paper' }}>
-      {props.items.map((value, index) => {
+      {items.map((value, index) => {
         const labelId = `checkbox-list-label-${index}`;
 
         return (
           <ListItem
             key={index}
             secondaryAction={
-              <IconButton edge="end" aria-label="comments"/>
+              <IconButton edge="end" aria-label="delete" onClick={handleDelete(index)}>
+              </IconButton>
             }
             disablePadding
+            selected={checked.indexOf(index) !== -1}
           >
             <ListItemButton role={undefined} onClick={handleToggle(index)} dense>
               <ListItemIcon>

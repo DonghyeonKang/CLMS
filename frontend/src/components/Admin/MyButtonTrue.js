@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@mui/material/Button";
 
-const MyButtonTrue = ({ disabled, onClick, boxName }) => {
+const MyButtonTrue = ({ onClick, boxName, checked }) => {
   const handleClick = () => {
     const confirmed = window.confirm("정말 승인하시겠습니까?");
     if (confirmed) {
@@ -11,7 +11,7 @@ const MyButtonTrue = ({ disabled, onClick, boxName }) => {
 
   return (
     <Button
-      disabled={disabled}
+      disabled={checked.length === 0}
       onClick={handleClick}
       type="submit"
       fullWidth
