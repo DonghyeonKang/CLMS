@@ -1,3 +1,4 @@
+import { TextField } from "@mui/material";
 import styled from "styled-components";
 
 const InstanceNameSection = ({setData, data}) => {
@@ -7,7 +8,7 @@ const InstanceNameSection = ({setData, data}) => {
     return (
         <Name>
             <Title>인스턴스 이름</Title>
-            <input onChange={nameHandler}/>
+            <TextField label='인스턴스 이름' onChange={nameHandler} size="small"/>
         </Name>
     );
 };
@@ -28,4 +29,5 @@ const Name = styled.div`
 
 const Title = styled.div`
   margin-bottom: 5%;
+  font-weight: 600;
 `;
