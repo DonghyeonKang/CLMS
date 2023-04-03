@@ -12,13 +12,18 @@ import javax.persistence.Id;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class University {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String name;
+
+    public UniversityDto toDto() {
+        UniversityDto dto = new UniversityDto();
+        dto.setId(id);
+        dto.setName(name);
+        return dto;
+    }
 
 }

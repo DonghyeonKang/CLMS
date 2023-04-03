@@ -3,15 +3,17 @@ package com.example.csws.service.university;
 import com.example.csws.entity.university.University;
 import com.example.csws.entity.university.UniversityDto;
 import com.example.csws.repository.university.UniversityRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UniversityServiceImpl implements UniversityService{
 
-    private UniversityRepository universityRepository;
+    private final UniversityRepository universityRepository;
 
     @Override
     public List<UniversityDto> findAllUniversity() {
@@ -20,10 +22,7 @@ public class UniversityServiceImpl implements UniversityService{
         List<UniversityDto> dtoList = new ArrayList<>();
 
         for (University entity : entityList) {
-            UniversityDto dto = new UniversityDto();
-            dto.setId(entity.getId());
-            dto.setName(entity.getName());
-            dtoList.add(dto);
+            dtoList.add(entity.toDto());
         }
 
         return dtoList;
