@@ -6,6 +6,7 @@ import com.example.csws.config.LoginRequestDto;
 import com.example.csws.config.auth.PrincipalDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -72,10 +73,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	// JWT Token 생성해서 response에 담아주기
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-			Authentication authResult) throws IOException, ServletException {
+											Authentication authResult) throws IOException, ServletException {
 		System.out.println("successfulAuthentication 진입");
 		PrincipalDetails principalDetailis = (PrincipalDetails) authResult.getPrincipal();
 		System.out.println("토큰 생성");
+		// token 생성
 		String jwtToken = JWT.create()
 				.withSubject(principalDetailis.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
@@ -83,6 +85,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				.withClaim("username", principalDetailis.getUser().getUsername())
 				.sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
-		response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
+		// cookie 생성
+		ResponseCookie cookie = ResponseCookie.from("authToken", jwtToken)
+				.maxAge(7 * 24 * 60 * 60) //
+				.secure(true)
+				.sameSite("None")
+				.httpOnly(true)
+				.build();
+
+		// 쿠키에 토큰 전달
+		response.setHeader("Set-Cookie", cookie.toString());
 	}
 }
