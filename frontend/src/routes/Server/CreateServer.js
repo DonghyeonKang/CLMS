@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { Button, TextField } from "@mui/material";
 import styled from "styled-components";
 import Header from "../../components/Header";
 
 const CreateServer = () => {
+    const navigate = useNavigate();
     return (
         <>
             <Header/>
@@ -16,7 +18,7 @@ const CreateServer = () => {
                         <TextField label="서버 별명 입력" fullWidth variant="standard"/>
                     </ServerNickname>
                     <DownloadFile href=" " download>서버화 위한 다운로드 파일</DownloadFile>
-                    <Button variant="contained">서버 등록</Button>
+                    <Button variant="contained" onClick={()=>navigate('/serverResources')}>서버 등록</Button>
                 </ContentBody>
             </Content>
         </>

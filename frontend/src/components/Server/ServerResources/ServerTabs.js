@@ -1,18 +1,30 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const ServerTabs = ({serverList,server,setServer}) => {
+    const navigate = useNavigate();
     return(
-    <div>
-        {serverList?.map((item)=>{
-            return(
-            server === item ? 
-            <SelectedServerTab onClick={()=>setServer(item)}>{item}</SelectedServerTab> :
-            <ServerTab onClick={()=>setServer(item)}>{item}</ServerTab>)
-        })}
-    </div>);
+    <Header>
+        <div>
+            {serverList?.map((item)=>{
+                return(
+                server === item ? 
+                <SelectedServerTab onClick={()=>setServer(item)}>{item}</SelectedServerTab> :
+                <ServerTab onClick={()=>setServer(item)}>{item}</ServerTab>)
+            })}
+        </div>
+        <CreateServer onClick={()=>navigate('/createServer')}>서버 등록</CreateServer>
+    </Header>
+    );
 };
 
 export default ServerTabs;
+
+const Header = styled.div`
+    width: 95%;
+    display: flex;
+    justify-content: space-between;
+`;
 
 const ServerTab = styled.div`
     cursor: pointer;
@@ -28,4 +40,17 @@ const ServerTab = styled.div`
 const SelectedServerTab = styled(ServerTab)`
     border-bottom: 2px solid  #0073bb;
     color:  #0073bb;
+`;
+
+const CreateServer = styled.div`
+    cursor: pointer;
+    padding: 4px 15px;
+    height: 25px;
+    background-color: #ec7211;
+    margin-left: 20px;
+    color: white;
+    font-weight: 600;
+    &:hover{
+        background-color: #eb5f07;
+    }
 `;
