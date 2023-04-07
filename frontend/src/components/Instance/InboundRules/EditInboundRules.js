@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import NewInboundRule from "./NewInboundRule";
-import ExistingInboundRule from "./ExistingInboundRule";
+import InboundRule from "./InboundRule";
 
 const EditInboundRules = () => {
     const navigate = useNavigate();
@@ -10,20 +9,14 @@ const EditInboundRules = () => {
     const [id, setId] = useState(1);
     const [data,setData] = useState([{
         Id:'0',
-        type:'1',
         protocol:'1',
         port:'1',
-        CIDR:'1',
     }]);
-
-    const [newData, setNewData] = useState([]);
     const addData = () => {
-        setNewData((prev) => [...prev,{
+        setData((prev) => [...prev,{
         Id:id,
-        type:'2',
         protocol:'2',
         port:'2',
-        CIDR:'2',
         }]);
         setId((prev)=>prev+1);
     };
@@ -38,18 +31,13 @@ const EditInboundRules = () => {
                 <Rules>
                 <tbody>
                 <tr>
-                    <RulesHeader style={{width:'12vw', minWidth:'150px'}}>보안 그룹 ID</RulesHeader>
-                    <RulesHeader style={{width:'12vw', minWidth:'150px'}}>유형</RulesHeader>
-                    <RulesHeader style={{width:'5vw', minWidth:'80px'}}>프로토콜</RulesHeader>
-                    <RulesHeader style={{width:'6vw', minWidth:'100px'}}>포트 범위</RulesHeader>
-                    <RulesHeader style={{width:'12vw', minWidth:'150px'}}>CIDR 블록</RulesHeader>
+                    <RulesHeader style={{minWidth:'150px'}}>보안 그룹 ID</RulesHeader>
+                    <RulesHeader style={{minWidth:'80px'}}>프로토콜</RulesHeader>
+                    <RulesHeader style={{minWidth:'100px'}}>포트 범위</RulesHeader>
                     <th> </th>
                 </tr>
                 {data.map((i)=>{
-                    return(<ExistingInboundRule data={data} setData={setData} i={i} key={i.Id}/>)})
-                }
-                {newData.map((i)=>{
-                    return(<NewInboundRule data={newData} setData={setNewData} i={i} key={i.Id}/>)})
+                    return(<InboundRule data={data} setData={setData} i={i} key={i.Id}/>)})
                 }
                 </tbody>
                 </Rules>
@@ -87,6 +75,7 @@ const Rules = styled.table`
 const RulesHeader = styled.th`
   text-align: left;
   margin-right: 5vw;
+  width: 30%;
 `;
 
 const BtnSection = styled.div`
