@@ -20,16 +20,10 @@ const Navigation = () => {
                         }
                 </>)
                  : (<></>)}
-                 {location.pathname.split('/')[3] ? 
+                 {location.pathname.split('/')[3] ?
                 (<>
                     <span> ❯ </span>
-                    <Link onClick={() => navigate(`/dashboard/${param?.instanceId}/${param?.securityGroupId}`)}>{location.pathname.split('/')[3]}</Link>
-                </>)
-                 : (<></>)}
-                 {location.pathname.split('/')[4] ? 
-                (<>
-                    <span> ❯ </span>
-                    <span>인바운드 규칙</span>
+                    <span>인바운드 규칙 편집</span>
                 </>)
                  : (<></>)}
             </Nav>
