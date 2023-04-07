@@ -15,9 +15,6 @@ const TabsContent = () => {
           {list === 'security' ? 
           <SelectedTab onClick={()=>setList('security')}>보안</SelectedTab> : 
           <DetailTab onClick={()=>setList('security')}>보안</DetailTab>}
-          {list === 'networking' ? 
-          <SelectedTab onClick={()=>setList('networking')}>네트워킹</SelectedTab> : 
-          <DetailTab onClick={()=>setList('networking')}>네트워킹</DetailTab>}
           {list === 'domain' ? 
           <SelectedTab onClick={()=>setList('domain')}>도메인 적용</SelectedTab> : 
           <DetailTab onClick={()=>setList('domain')}>도메인 적용</DetailTab>}
@@ -31,21 +28,31 @@ const TabsContent = () => {
                 <DetailGrid>소유자</DetailGrid>
                 </>
                 : (list === 'security') ? 
-                <>
-                <DetailGrid>소유자 ID</DetailGrid>
-                <DetailGrid>시작 시간</DetailGrid>
-                <DetailId onClick={() => navigate(`${Date.now()}`)}>보안 그룹 ID</DetailId>
-                <DetailGrid>인바운드 규칙 목록</DetailGrid>
-                <DetailGrid>아웃바운드 규칙 목록</DetailGrid>
-                </>
-                : (list === 'networking') ? 
-                <>
-                <DetailGrid>퍼블릭 IPv4 주소</DetailGrid>
-                <DetailGrid>프라이빗 IPv4 주소</DetailGrid>
-                <DetailGrid>퍼블릭 IPv4 DNS</DetailGrid>
-                <DetailGrid>프라이빗 IP DNS 이름</DetailGrid>
-                <DetailGrid>네트워크 인터페이스</DetailGrid>
-                </>
+                <Box>
+                  <Stripe>
+                    <Title>인바운드 규칙</Title>
+                    <EditRules onClick={() => navigate('inboundRules')}>인바운드 규칙 편집</EditRules>
+                  </Stripe>
+                  
+                  <Rules> 
+                    <thead>
+                      <tr>
+                        <RulesHeader style={{minWidth:'180px'}}>이름</RulesHeader>
+                        <RulesHeader style={{minWidth:'120px'}}>프로토콜</RulesHeader>
+                        <RulesHeader style={{minWidth:'120px'}}>포트범위</RulesHeader>
+                        <RulesHeader style={{minWidth:'120px'}}>소스</RulesHeader>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <RulesBody style={{minWidth:'180px'}}>-</RulesBody>
+                        <RulesBody style={{minWidth:'120px'}}>-</RulesBody>
+                        <RulesBody style={{minWidth:'120px'}}>-</RulesBody>
+                        <RulesBody style={{minWidth:'120px'}}>0.0.0.0/0</RulesBody>
+                      </tr>
+                    </tbody>
+                  </Rules>
+                </Box>
                 : <DetailGrid>
                 <TextField label="도메인 입력" onChange={(i)=>setDomain(i)} size="small" style={{marginRight:'10%'}}/>
                 <Button onClick={()=>console.log(domain.target.value)} variant="outlined">도메인 적용</Button>
@@ -94,10 +101,53 @@ const DetailGrid = styled.div`
   background-color: white;
 `;
 
-const DetailId = styled(DetailGrid)`
+const Box = styled.div`
+  grid-column: 1 / 4;
+  width: 95%;
+  padding: 2%;
+  min-width: 1150px;
+  background-color: white;
+`;
+
+const Stripe = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2%;
+`;
+
+const Title = styled.div`
+  font-size: 20px;
+  font-weight: 600;
+`;
+
+const EditRules = styled.div`
   cursor: pointer;
-  color: #0073bb;
+  border: 0.5px solid #879596;
+  padding: 2px 12px;
+  font-weight: 600;
+  background-color: white;
   &:hover{
-    text-decoration: underline;
+    background-color: #fafafa;
+    color: black;
   }
+`;
+
+const Rules = styled.table`
+  width: 100%;
+  border-spacing: 0;
+`;
+
+const RulesHeader = styled.th`
+  background-color: #fafafa;
+  text-align: left;
+  padding: 3px 0;
+  padding-left: 10px;
+  border: 1px solid #eaeded;
+`;
+
+const RulesBody = styled.td`
+  text-align: left;
+  padding: 5px 0;
+  padding-left: 10px;
+  width: 20%;
 `;
