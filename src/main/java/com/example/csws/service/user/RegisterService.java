@@ -48,4 +48,14 @@ public class RegisterService {
         user.setRole("ROLE_USER");
         return user;
     }
+
+    // 회원가입 메일 인증번호 요청
+    public void getVerificationNumber() {
+
+    }
+
+    // 회원가입 인증번호 확인
+    public void checkVerificationNumber() {
+
+    }
 }
