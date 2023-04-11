@@ -2,7 +2,6 @@ package com.example.csws.service.user;
 
 import com.example.csws.common.exception.ErrorCode;
 import com.example.csws.common.exception.RegisterException;
-import com.example.csws.entity.user.RegisterRequest;
 import com.example.csws.entity.user.User;
 import com.example.csws.entity.user.UserDto;
 import com.example.csws.repository.user.UserRepository;
@@ -16,11 +15,10 @@ import org.springframework.stereotype.Component;
 public class RegisterService {
     final UserRepository userRepository;
 
-    public User register(RegisterRequest registerRequest) {
+    public User register(UserDto userDto) {
         System.out.println("Register Service start");
         // 회원가입 검증절차
-        validateRegisterRequest(registerRequest);
-        UserDto userDto = extractUser(registerRequest);
+        validateRegisterRequest(userDto);
         // 로그 남기기
         log.debug("user = {}", userDto);
         // dto to entity
@@ -30,10 +28,10 @@ public class RegisterService {
 
     }
 
-    private void validateRegisterRequest(RegisterRequest registerRequest) { // 회원가입 검증
+    private void validateRegisterRequest(UserDto userDto) { // 회원가입 검증
         System.out.println("validateRegisterRequest start");
         // 이메일 중복 검증
-        validateDuplicateEmail(registerRequest.getUsername());
+        validateDuplicateEmail(userDto.getUsername());
     }
 
     private void validateDuplicateEmail(String email) {
@@ -41,12 +39,6 @@ public class RegisterService {
         if (userRepository.findByUsername(email).isPresent()) { // isPresent value 가 있으면 true, 없으면 false return
             throw new RegisterException(ErrorCode.DUPLICATED_EMAIL);
         }
-    }
-
-    private UserDto extractUser(RegisterRequest request) {
-        UserDto user = request.toUserDto();
-        user.setRole("ROLE_USER");
-        return user;
     }
 
     // 회원가입 인증번호 확인
