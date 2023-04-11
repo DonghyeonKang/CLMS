@@ -29,6 +29,7 @@ public class InstanceDto {
     public InstanceDto(Instance instance) {
         this.id = instance.getId();
         this.name = instance.getName();
+        this.code = instance.getCode();
         this.state = instance.getState();
         this.storage = instance.getStorage();
         this.address = instance.getAddress();
@@ -44,6 +45,7 @@ public class InstanceDto {
         return Instance.builder()
                 .id(id)
                 .name(name)
+                .code(code)
                 .state(state)
                 .storage(storage)
                 .address(address)

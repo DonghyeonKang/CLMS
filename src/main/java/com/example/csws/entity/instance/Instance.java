@@ -31,9 +31,10 @@ public class Instance {
     private String serverId;
 
     @Builder
-    public Instance(int id, String name, String state, Double storage, String address, int port, String keyName, String os, Date created, String userId, String serverId) {
+    public Instance(int id, String name, int code, String state, Double storage, String address, int port, String keyName, String os, Date created, String userId, String serverId) {
         this.id = id;
         this.name = name;
+        this.code = code;
         this.state = state;
         this.storage = storage;
         this.address = address;
