@@ -23,7 +23,7 @@ public class InstanceServiceImpl implements InstanceService{
     // dto를 entity로 변환 후 save(insert 혹은 update)한 결과값을 컨트롤러에 반환.
     // 1) 호스트 포트는 유저가 선택한 포트. 2) 컨테이너 포트는 22 고정.
     // 3) 유저 이름 : 유저가 입력한 이름(instance.getName())
-    // 4) 유저 코드 : 랜덤 생성된 code
+    // 4) 유저 코드 : instanceId로 대체.
     // 5) 용량. 6) 이미지 이름
     @Override
     public String createInstance(InstanceDto instanceDto) {
@@ -31,7 +31,7 @@ public class InstanceServiceImpl implements InstanceService{
 
         try {
             shRunner.execCommand("CreateContainer.sh", Integer.toString(entity.getPort()), "22",
-                    entity.getName(), Integer.toString(entity.getCode()),
+                    entity.getName(), Integer.toString(entity.getId()),
                     Double.toString(entity.getStorage()), entity.getOs());
             return "success";
         } catch (Exception e) {
