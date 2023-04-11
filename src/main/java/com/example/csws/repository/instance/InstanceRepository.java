@@ -17,6 +17,6 @@ public interface InstanceRepository {
 
     public List<Instance> findAllByServerid(int serverId);
 
-    public void delete(Instance instance);
+    public void deleteById(int instanceId);
 
 }
