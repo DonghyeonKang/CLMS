@@ -1,7 +1,6 @@
 package com.example.csws.controller.user;
 
-import com.example.csws.entity.user.RegisterRequest;
-import com.example.csws.entity.user.VerificationRequest;
+import com.example.csws.entity.user.*;
 import com.example.csws.service.user.EmailService;
 import com.example.csws.service.user.RegisterService;
 import lombok.RequiredArgsConstructor;
@@ -26,30 +25,46 @@ public class RegisterController {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
-    @PostMapping
-    public Object register(@ModelAttribute RegisterRequest model) throws IOException {
+    // 학생 회원가입
+    @PostMapping("/student")
+    public Object registerStudent(@ModelAttribute RegisterStudentRequest model) {
         try {
-            System.out.println("Controller start");
-            System.out.println(model.getUsername());
-            System.out.println(model.getPassword());
             model.setPassword(passwordEncoder.encode(model.getPassword()));  // password encoding
-            registerService.register(model);
+            // request -> userDto
+            UserDto userDto = model.toUserDto();
+
+            // setting for student ,,,,,,, 나중에 수정해야함
+            userDto.setRole("ROLE_USER");
+            userDto.setDepartmentId(1);
+            userDto.setUniversityId(1);
+
+            // register
+            registerService.register(userDto);
             return Map.of("result", "성공");  // 성공 리턴
         } catch (Exception e) {
             throw e;
         }
     }
 
-    // 학생 회원가입
-    @PostMapping("/student")
-    public void registerStudent() {
-
-    }
-
     // 관리자 회원가입
     @PostMapping("/manager")
-    public void registerManager() {
+    public Object registerManager(@ModelAttribute RegisterManagerRequest model) {
+        try {
+            model.setPassword(passwordEncoder.encode(model.getPassword()));  // password encoding
+            // request -> userDto
+            UserDto userDto = model.toUserDto();
 
+            // setting for student ,,,,,,, 나중에 수정해야함
+            userDto.setRole("ROLE_MANAGER");
+            userDto.setDepartmentId(1);
+            userDto.setUniversityId(1);
+
+            // register
+            registerService.register(userDto);
+            return Map.of("result", "성공");  // 성공 리턴
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     // 회원가입 메일 인증번호 요청

@@ -1,26 +1,24 @@
 package com.example.csws.entity.user;
 
-import lombok.*;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Builder
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class RegisterRequest {  // 회원 가입 요청으로 들어오는 데이터를 넣을 DTO
-    @Email
-    @NotBlank
+public class RegisterManagerRequest {
     private String username;
-    @NotBlank
     private String password;
+    private String phone;
+    private String university;
+    private String department;
 
     public UserDto toUserDto() {
         return UserDto.builder()
                 .username(username)
                 .password(password)
+                .phone(phone)
                 .build();
     }
 }
