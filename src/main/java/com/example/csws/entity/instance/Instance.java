@@ -30,20 +30,21 @@ public class Instance {
     @Column(name = "serverid")
     private String serverId;
 
-    @Builder
-    public Instance(int id, String name, int code, String state, Double storage, String address, int port, String keyName, String os, Date created, String userId, String serverId) {
-        this.id = id;
-        this.name = name;
-        this.code = code;
-        this.state = state;
-        this.storage = storage;
-        this.address = address;
-        this.port = port;
-        this.keyName = keyName;
-        this.os = os;
-        this.created = created;
-        this.userId = userId;
-        this.serverId = serverId;
+    public InstanceDto toDto() {
+        return InstanceDto.builder()
+                .id(id)
+                .name(name)
+                .code(code)
+                .state(state)
+                .storage(storage)
+                .address(address)
+                .port(port)
+                .keyName(keyName)
+                .os(os)
+                .created(created)
+                .userId(userId)
+                .serverId(serverId)
+                .build();
     }
 
 }

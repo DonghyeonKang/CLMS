@@ -25,22 +25,6 @@ public class InstanceDto {
     private String userId;
     private String serverId;
 
-    @Builder
-    public InstanceDto(Instance instance) {
-        this.id = instance.getId();
-        this.name = instance.getName();
-        this.code = instance.getCode();
-        this.state = instance.getState();
-        this.storage = instance.getStorage();
-        this.address = instance.getAddress();
-        this.port = instance.getPort();
-        this.keyName = instance.getKeyName();
-        this.os = instance.getOs();
-        this.created = instance.getCreated();
-        this.userId = instance.getUserId();
-        this.serverId = instance.getServerId();
-    }
-
     public Instance toEntity() {
         return Instance.builder()
                 .id(id)
