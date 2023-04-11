@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface InstanceService {
 
-    public InstanceDto createInstance(InstanceDto instanceDto);
+    public String createInstance(InstanceDto instanceDto);
     public Optional<InstanceDto> findByUserid(int userId);
     public List<InstanceDto> findAllByUserid(int userId);
     public Optional<InstanceDto> findByServerid(int serverId);

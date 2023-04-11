@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class shRunner {
+public class ShRunner {
     public Map execCommand(String... str) {
         Map<Integer, String> map = new HashMap<>();
 
