@@ -49,13 +49,12 @@ public class RegisterService {
         return user;
     }
 
-    // 회원가입 메일 인증번호 요청
-    public void getVerificationNumber() {
-
-    }
-
     // 회원가입 인증번호 확인
-    public void checkVerificationNumber() {
-
+    public boolean checkVerificationNumber(String sessionAuthNumber, String requestAuthNumber) {
+        if(sessionAuthNumber.equals(requestAuthNumber)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

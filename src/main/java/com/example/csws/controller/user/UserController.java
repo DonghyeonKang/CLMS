@@ -33,6 +33,7 @@ public class UserController {
     public void approveManagerVerification() {
 
     }
+
     // 학생 목록 조회
     @GetMapping("/student/list")
     public void getStudentList() {
