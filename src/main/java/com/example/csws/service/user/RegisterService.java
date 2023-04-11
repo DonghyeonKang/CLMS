@@ -48,4 +48,13 @@ public class RegisterService {
         user.setRole("ROLE_USER");
         return user;
     }
+
+    // 회원가입 인증번호 확인
+    public boolean checkVerificationNumber(String sessionAuthNumber, String requestAuthNumber) {
+        if(sessionAuthNumber.equals(requestAuthNumber)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

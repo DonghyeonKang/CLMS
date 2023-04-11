@@ -17,4 +17,28 @@ public class UserService {  // 사용자 회원가입, 사용자 정보 불러�
         return userRepository.findByUsername(email)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
     }
+
+    // 회원 탈퇴
+    public void deleteUser() {
+
+    }
+
+    // 비밀번호 재설정
+    public void resetPassword() {
+
+    }
+
+    // 관리자 인증 요청 리스트 조회
+    public void getManagerVerificationList() {
+
+    }
+
+    // 관리자 인증 요청 승인
+    public void approveManagerVerification() {
+
+    }
+    // 학생 목록 조회
+    public void getStudentList() {
+
+    }
 }
