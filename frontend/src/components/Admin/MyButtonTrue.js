@@ -11,7 +11,6 @@ const MyButtonTrue = ({ onClick, boxName, checked }) => {
 
   return (
     <Button
-      disabled={checked.length === 0}
       onClick={handleClick}
       type="submit"
       fullWidth
