@@ -13,12 +13,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/instances")
 public class InstanceController {
 
+    // 웹 뷰 파일들의 최상위 경로
+    private static final String VIEWPATH = "";
+
     private final UserService userService;
     private final InstanceService instanceService;
 //    private final DomainService domainService;
     private final ServerService serverService;
 //    private final InboundPolicyService inboundPolicyService;
 
+    // return VIEWPATH + "웹 페이지 경로" : 이동할 웹 페이지 경로를 반환.
+    // return "redirect:매핑 이름" : 해당 매핑으로 리다이렉트
+    
     // 인스턴스 시작
     @PostMapping("/start")
     public String startInstance(@ModelAttribute StartInstanceRequest request) {
@@ -50,10 +56,10 @@ public class InstanceController {
     // 인스턴스 생성 페이지 이동.
     @GetMapping("/creation")
     public String createForm() {
-        return "forTest/instances/createInstanceForm";
+        return VIEWPATH + "생성 페이지 패키지 경로";
     }
 
-    // 인스턴스 생성
+    // 인스턴스 생성 후 인스턴스 목록으로 이동. 실패(오류 발생) 시 생성 페이지로 돌아가기.
     @PostMapping("/creation")
     public String createInstance(/*InstanceDto instanceDto*/) {
 
