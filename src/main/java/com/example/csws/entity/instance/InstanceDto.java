@@ -2,8 +2,7 @@ package com.example.csws.entity.instance;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Builder
 @Getter
@@ -21,7 +20,7 @@ public class InstanceDto {
     private int port;
     private String keyName;
     private String os;
-    private Date created;
+    private Timestamp created;
     private String userId;
     private String serverId;
 

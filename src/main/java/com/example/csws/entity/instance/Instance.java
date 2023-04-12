@@ -3,7 +3,7 @@ package com.example.csws.entity.instance;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Builder
 @Entity
@@ -24,7 +24,7 @@ public class Instance {
     @Column(name = "keyname")
     private String keyName;
     private String os;
-    private Date created;
+    private Timestamp created;
     @Column(name = "userid")
     private String userId;
     @Column(name = "serverid")
