@@ -41,14 +41,14 @@ public class InstanceServiceImpl implements InstanceService{
 
     // 유저id를 이용해 인스턴스 검색 후 Optional에 넣어서 반환. 객체가 없으면 null이 담겨있음.
     @Override
-    public Optional<InstanceDto> findByUserid(int userId) {
-        return Optional.ofNullable(instanceRepository.findByUserid(userId).get().toDto());
+    public Optional<InstanceDto> findByUserId(int userId) {
+        return Optional.ofNullable(instanceRepository.findByUserId(userId).get().toDto());
     }
 
     // 엔티티 리스트를 받아온 뒤, 각 엔티티를 dto로 변환하고 dto 리스트에 추가하여 반환.
     @Override
-    public List<InstanceDto> findAllByUserid(int userId) {
-        List<Instance> entityList = instanceRepository.findAllByUserid(userId);
+    public List<InstanceDto> findAllByUserId(int userId) {
+        List<Instance> entityList = instanceRepository.findAllByUserId(userId);
         List<InstanceDto> dtoList = new ArrayList<>();
         for (Instance entity : entityList) {
             dtoList.add(entity.toDto());
@@ -58,13 +58,13 @@ public class InstanceServiceImpl implements InstanceService{
 
     // serverId를 이용하여 검색. 과정은 위와 같음.
     @Override
-    public Optional<InstanceDto> findByServerid(int serverId) {
-        return Optional.ofNullable(instanceRepository.findByServerid(serverId).get().toDto());
+    public Optional<InstanceDto> findByServerId(int serverId) {
+        return Optional.ofNullable(instanceRepository.findByServerId(serverId).get().toDto());
     }
 
     @Override
-    public List<InstanceDto> findAllByServerid(int serverId) {
-        List<Instance> entityList = instanceRepository.findAllByServerid(serverId);
+    public List<InstanceDto> findAllByServerId(int serverId) {
+        List<Instance> entityList = instanceRepository.findAllByServerId(serverId);
         List<InstanceDto> dtoList = new ArrayList<>();
         for (Instance entity : entityList) {
             dtoList.add(entity.toDto());

@@ -8,10 +8,10 @@ import java.util.Optional;
 public interface InstanceService {
 
     public String createInstance(InstanceDto instanceDto);
-    public Optional<InstanceDto> findByUserid(int userId);
-    public List<InstanceDto> findAllByUserid(int userId);
-    public Optional<InstanceDto> findByServerid(int serverId);
-    public List<InstanceDto> findAllByServerid(int serverId);
+    public Optional<InstanceDto> findByUserId(int userId);
+    public List<InstanceDto> findAllByUserId(int userId);
+    public Optional<InstanceDto> findByServerId(int serverId);
+    public List<InstanceDto> findAllByServerId(int serverId);
 
     public String startInstance(int instanceId);
     public String stopInstance(int instanceId);
