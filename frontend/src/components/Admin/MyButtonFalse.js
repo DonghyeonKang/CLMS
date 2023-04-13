@@ -1,11 +1,15 @@
 import React from "react";
 import Button from "@mui/material/Button";
 
-const MyButtonFalse = ({ onClick, boxName}) => {
+const MyButtonFalse = ({ onClick, boxName, arrIds }) => {
   const handleClick = () => {
     const confirmed = window.confirm("정말 거절하시겠습니까?");
     if (confirmed) {
-      onClick();
+      if (arrIds && arrIds.length > 0) {
+        onClick();
+      } else {
+        alert("선택된 데이터가 없습니다!");
+      }
     }
   };
 
