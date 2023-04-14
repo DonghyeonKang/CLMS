@@ -26,9 +26,9 @@ public class Instance {
     private String os;
     private Timestamp created;
     @Column(name = "userid")
-    private String userId;
+    private int userId;
     @Column(name = "serverid")
-    private String serverId;
+    private int serverId;
 
     public InstanceDto toDto() {
         return InstanceDto.builder()

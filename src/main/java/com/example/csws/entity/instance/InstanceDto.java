@@ -21,8 +21,8 @@ public class InstanceDto {
     private String keyName;
     private String os;
     private Timestamp created;
-    private String userId;
-    private String serverId;
+    private int userId;
+    private int serverId;
 
     public Instance toEntity() {
         return Instance.builder()
