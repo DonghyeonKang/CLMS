@@ -8,9 +8,8 @@ import java.util.Optional;
 public interface InstanceService {
 
     public String createInstance(InstanceDto instanceDto);
-    public Optional<InstanceDto> findByUserId(int userId);
+    public Optional<InstanceDto> findById(int instanceId);
     public List<InstanceDto> findAllByUserId(int userId);
-    public Optional<InstanceDto> findByServerId(int serverId);
     public List<InstanceDto> findAllByServerId(int serverId);
 
     public String startInstance(int instanceId);

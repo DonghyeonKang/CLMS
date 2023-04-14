@@ -9,11 +9,9 @@ public interface InstanceRepository {
 
     public Instance save(Instance instance);
 
-    public Optional<Instance> findByUserId(int userId);
+    public Optional<Instance> findById(int instanceId);
 
     public List<Instance> findAllByUserId(int userId);
-
-    public Optional<Instance> findByServerId(int serverId);
 
     public List<Instance> findAllByServerId(int serverId);
 
