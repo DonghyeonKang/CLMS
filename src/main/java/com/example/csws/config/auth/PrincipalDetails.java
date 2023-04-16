@@ -19,6 +19,10 @@ public class PrincipalDetails implements UserDetails {
 		return user;
 	}
 
+    public int getId() {
+        return user.getId();
+    }
+
     @Override
     public String getPassword() {
         return user.getPassword();
