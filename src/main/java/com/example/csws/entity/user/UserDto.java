@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor // 모든 필드를 매개변수로 받는 생성자
 public class UserDto {
 
+    private int id;
     private String username;
     private String password;
     private String Role;
