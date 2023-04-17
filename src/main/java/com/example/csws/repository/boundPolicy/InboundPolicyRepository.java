@@ -7,12 +7,14 @@ import java.util.Optional;
 
 public interface InboundPolicyRepository {
 
-    public List<InboundPolicy> findAllByInstanceId(int instanceId);
+    public List<InboundPolicy> findAllByInstanceId(List<Integer> idList);
 
     public Optional<InboundPolicy> save(InboundPolicy inboundPolicy);
 
     public List<InboundPolicy> saveAll(List<InboundPolicy> inboundPolicyList);
 
     public void delete(InboundPolicy inboundPolicy);
+
+    public void deleteAll(List<InboundPolicy> inboundPolicyList);
 
 }
