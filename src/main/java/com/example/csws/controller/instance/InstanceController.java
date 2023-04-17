@@ -1,5 +1,6 @@
 package com.example.csws.controller.instance;
 
+import com.example.csws.config.auth.PrincipalDetails;
 import com.example.csws.entity.instance.InstanceDto;
 import com.example.csws.entity.instance.StartInstanceRequest;
 import com.example.csws.entity.user.User;
@@ -7,14 +8,12 @@ import com.example.csws.service.instance.InstanceService;
 import com.example.csws.service.server.ServerService;
 import com.example.csws.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +22,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/instances")
 public class InstanceController {
+
+    // 사용자 id 받아오기
+    // 컨트롤러 인수로 Authentication authentication 받기
+//    PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+//    principalDetails.getId();
 
     // 웹 뷰 파일들의 최상위 경로
     private static final String VIEWPATH = "/~~~/";
@@ -67,15 +71,12 @@ public class InstanceController {
     // 인스턴스 생성 페이지 이동.
     @GetMapping("/creation")
     public String createForm() {
-        // 세션에 로그인 정보 없으면 메인 페이지로 반환
-//        return "redirect:/";
-
         return VIEWPATH + "생성 페이지 패키지 경로";
     }
 
     // 인스턴스 생성 후 인스턴스 목록으로 이동. 실패(오류 발생) 시 생성 페이지로 돌아가기.
     @PostMapping("/creation")
-    public String createInstance(Model model) {
+    public String createInstance(Model model, Authentication authentication) {
 
         InstanceDto newDto = new InstanceDto();
         newDto.setName((String) model.getAttribute("name"));
@@ -89,8 +90,9 @@ public class InstanceController {
         // 현재 시간 저장(LocalDateTime을 mySQL에서 호환되도록 Timestamp로 형변환)
         Timestamp curTimestamp = Timestamp.valueOf(LocalDateTime.now());
         newDto.setCreated(curTimestamp);
-//        newDto.setUserId(); // 세션의 유저id 가져오기
-//        newDto.setServerId(); // 소속 서버 id 가져오기
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        newDto.setUserId(principalDetails.getId());
+        newDto.setServerId(1); // 소속 서버 id 가져오도록 수정해야 함. 임시로 임의의 값 설정.
 
         String result = instanceService.createInstance(newDto);
         if (result.equals("success")) { // 성공적으로 db에 insert 및 쉘 스크립트 실행
@@ -104,6 +106,11 @@ public class InstanceController {
     // 키페어 생성
     @PostMapping("/keypair")
     public String createKeypair(Model model) {
+
+        String hostName = (String) model.getAttribute("hostName");
+        String keyName = (String) model.getAttribute("keyName");
+        instanceService.createKeyPair(hostName, keyName);
+
         return null;
     }
 
@@ -148,7 +155,7 @@ public class InstanceController {
         }
 
         int serverId = (int) model.getAttribute("serverId");
-        List<InstanceDto> list = instanceService.findAllByUserId(serverId);
+        List<InstanceDto> list = instanceService.findAllByServerId(serverId);
         for (InstanceDto dto : list) {      // 조회 페이지에 띄울 내용만 새 dto 리스트에 담기
             InstanceDto newDto = new InstanceDto();
             newDto.setId(dto.getId());
