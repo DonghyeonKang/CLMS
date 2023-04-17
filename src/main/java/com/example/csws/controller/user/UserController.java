@@ -1,8 +1,20 @@
 package com.example.csws.controller.user;
 
+import com.example.csws.config.auth.PrincipalDetails;
+import com.example.csws.entity.user.Approval;
+import com.example.csws.entity.user.ApprovalDto;
+import com.example.csws.entity.user.ResetPasswordRequest;
 import com.example.csws.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.naming.AuthenticationNotSupportedException;
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 
 @RestController // restful api 구성시 필요
 @RequiredArgsConstructor    // final 로 선언된 필드 생성자 주입방식으로 DI 하게 해줌. DI 안 해주면 Nullporinter exception 나옴
@@ -12,31 +24,40 @@ public class UserController {
 
     // 회원 탈퇴
     @DeleteMapping()
-    public void deleteUser() {
-
+    public void deleteUser(HttpServletRequest req) {
+        userService.deleteUser(req.getParameter("username"));
     }
 
     // 비밀번호 재설정
     @PutMapping()
-    public void resetPassword() {
-
+    public void resetPassword(@RequestBody ResetPasswordRequest req) {
+        userService.resetPassword(req.getUsername(), req.getPassword());
     }
 
     // 관리자 인증 요청 리스트 조회
     @GetMapping("/manager/verification")
-    public void getManagerVerificationList() {
+    public List<Approval> getManagerVerificationList() {
+        System.out.println("controller");
+        return userService.getManagerVerificationList();
+    }
 
+    // 관리자 인증 요청하기
+    @PostMapping("/manager/verification")
+    public void managerVerificationRequest(@RequestBody ApprovalDto approvalDto, Authentication authentication) {   // dto 에 있는 값을 모두 안 받아도 될까? 그럼 이거도 dto 로 받게 하고 넘기면 될 텐데
+        approvalDto.setStatus("waiting");   // 초기값 waiting으로 설정
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();   // authentication 에서 userId를 가져옴
+        userService.managerVerificationRequest(approvalDto, Long.valueOf(principalDetails.getId()));    // long 으로 형변환 후 매개변수로 넣기
     }
 
     // 관리자 인증 요청 승인
-    @PostMapping("/manager/verification")
-    public void approveManagerVerification() {
-
+    @PostMapping("/manager/verification/accept") 
+    public void approveManagerVerification(@RequestBody Map<String, String> req) {
+        userService.approveManagerVerification(req.get("username"));
     }
 
     // 학생 목록 조회
     @GetMapping("/student/list")
-    public void getStudentList() {
-
+    public List<String> getStudentList(HttpServletRequest req) {
+        return userService.getStudentList(Integer.parseInt(req.getParameter("departmentId")));
     }
 }
