@@ -17,7 +17,7 @@ public interface InstanceService {
     public String restartInstance(int instanceId);
     public String deleteInstance(int instanceId);
 
-    public void createKeyPair(String username, int instanceId);
+    public void createKeyPair(String hostName, String keyName);
 
     public InstanceDto changeUserid(InstanceDto instanceDto);
 
