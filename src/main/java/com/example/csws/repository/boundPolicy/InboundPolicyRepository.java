@@ -9,7 +9,7 @@ public interface InboundPolicyRepository {
 
     public List<InboundPolicy> findAllByInstanceId(List<Integer> idList);
 
-    public Optional<InboundPolicy> save(InboundPolicy inboundPolicy);
+    public InboundPolicy save(InboundPolicy inboundPolicy);
 
     public List<InboundPolicy> saveAll(List<InboundPolicy> inboundPolicyList);
 
