@@ -110,8 +110,10 @@ public class InstanceServiceImpl implements InstanceService{
     }
 
     @Override
-    public void createKeyPair(String username, int instanceId) {
-
+    public void createKeyPair(String hostName, String keyName) {
+    // 1. 사용자가 키페어 이름 입력 후 다운로드 클릭
+    // 2. 키페어 생성 - 전송 - 개인키 삭제
+    // 3. 컨테이너 생성 - createContainer.sh - sendPublickey.sh
     }
 
     // userId가 수정되어있는 dto를 컨트롤러에서 받은 뒤 엔티티로 변환해 save(update).
