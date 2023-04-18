@@ -20,7 +20,7 @@ public class InboundPolicyServiceImpl implements InboundPolicyService{
 
         List<Integer> idList = new ArrayList<>();
         idList.add(instanceId);
-        List<InboundPolicy> entityList = inboundPolicyRepository.findAllByInstanceId(idList);
+        List<InboundPolicy> entityList = inboundPolicyRepository.findAllByInstanceIdIn(idList);
 
         List<InboundPolicyDto> dtoList = new ArrayList<>();
         for (InboundPolicy entity : entityList) {
@@ -58,6 +58,12 @@ public class InboundPolicyServiceImpl implements InboundPolicyService{
 
     @Override
     public void deleteAll(List<InboundPolicy> inboundPolicyList) {
-        inboundPolicyRepository.deleteAll(inboundPolicyList);
+
+        List<Long> idList = new ArrayList<>();
+        for (InboundPolicy entity : inboundPolicyList) {
+            idList.add((long) entity.getId());
+        }
+
+        inboundPolicyRepository.deleteAllByIdIn(idList);
     }
 }
