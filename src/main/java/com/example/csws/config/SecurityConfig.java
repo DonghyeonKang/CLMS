@@ -4,6 +4,7 @@ package com.example.csws.config;
 import com.example.csws.config.jwt.JwtAuthenticationFilter;
 import com.example.csws.config.jwt.JwtAuthorizationFilter;
 import com.example.csws.repository.user.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,14 +14,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity // 시큐리티 활성화 -> 기본 스프링 필터체인에 등록
-public class SecurityConfig extends WebSecurityConfigurerAdapter{	
+@RequiredArgsConstructor
+public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 	
-	@Autowired
-	private CorsConfig corsConfig;
-	
+	private final CorsConfig corsConfig;
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
