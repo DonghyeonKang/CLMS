@@ -33,7 +33,7 @@ public class InboundPolicyServiceImpl implements InboundPolicyService{
     @Override
     public InboundPolicyDto save(InboundPolicy inboundPolicy) {
 
-        InboundPolicy entity = inboundPolicyRepository.save(inboundPolicy).get();
+        InboundPolicy entity = inboundPolicyRepository.save(inboundPolicy);
 
         return entity.toDto();
     }
