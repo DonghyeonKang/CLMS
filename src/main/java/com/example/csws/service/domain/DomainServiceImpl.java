@@ -21,6 +21,6 @@ public class DomainServiceImpl implements DomainService {
         return domainRepository.save(domain);   // 저장함
     }
     public void deleteDomain(DomainDto domainDto) {
-        domainRepository.delete(domainDto.getInstanceId());
+        domainRepository.deleteById(domainDto.getInstanceId());
     }
 }
