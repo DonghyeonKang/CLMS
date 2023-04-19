@@ -7,5 +7,6 @@ import java.util.List;
 public interface UniversityRepository {
 
     public List<University> findAll();
+    public University findById(int universityId);
 
 }

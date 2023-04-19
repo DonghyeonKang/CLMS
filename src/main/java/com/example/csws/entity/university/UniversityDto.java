@@ -18,5 +18,4 @@ public class UniversityDto {
                 .name(name)
                 .build();
     }
-
 }

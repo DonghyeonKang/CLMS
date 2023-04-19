@@ -27,4 +27,9 @@ public class UniversityServiceImpl implements UniversityService{
 
         return dtoList;
     }
+
+    @Override
+    public University findById(int universityId) {
+        return universityRepository.findById(universityId);
+    }
 }
