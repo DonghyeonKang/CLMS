@@ -1,11 +1,12 @@
 package com.example.csws.entity.university;
 
+import com.example.csws.entity.department.Department;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -25,5 +26,4 @@ public class University {
         dto.setName(name);
         return dto;
     }
-
 }

@@ -13,9 +13,11 @@ import java.util.List;
 public class DomainServiceImpl implements DomainService {
     private DomainRepository domainRepository;
 
+    // instanceId 로 domain 조회
     public Domain findByInstanceId(String instanceId) {
         return domainRepository.findByInstanceId(instanceId);
     }
+
     public Domain createDomain(DomainDto domainDto) {
         Domain domain = domainDto.toEntity();   // 받은 dto를 entity로 바꿈
         return domainRepository.save(domain);   // 저장함

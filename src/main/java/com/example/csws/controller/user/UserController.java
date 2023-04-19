@@ -1,26 +1,30 @@
 package com.example.csws.controller.user;
 
 import com.example.csws.config.auth.PrincipalDetails;
+import com.example.csws.entity.department.DepartmentResponse;
+import com.example.csws.entity.university.UniversityDto;
 import com.example.csws.entity.user.Approval;
 import com.example.csws.entity.user.ApprovalDto;
 import com.example.csws.entity.user.ResetPasswordRequest;
+import com.example.csws.service.department.DepartmentService;
+import com.example.csws.service.university.UniversityService;
 import com.example.csws.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.AuthenticationNotSupportedException;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
 @RestController // restful api 구성시 필요
-@RequiredArgsConstructor    // final 로 선언된 필드 생성자 주입방식으로 DI 하게 해줌. DI 안 해주면 Nullporinter exception 나옴
+@RequiredArgsConstructor    // final 로 선언된 필드 생성자 주입방식으로 DI 하게 해줌. DI 안 해주면 NullPointer exception 나옴
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final UniversityService universityService;
+    private final DepartmentService departmentService;
+
 
     // 회원 탈퇴
     @DeleteMapping()
@@ -58,6 +62,18 @@ public class UserController {
     // 학생 목록 조회
     @GetMapping("/student/list")
     public List<String> getStudentList(HttpServletRequest req) {
-        return userService.getStudentList(Integer.parseInt(req.getParameter("departmentId")));
+        return userService.getStudentList(Integer.parseInt(req.getParameter("departmentId")));  // int 로 형변환해서 조회
+    }
+
+    // 모든 학교 조회
+    @GetMapping("/university")
+    public List<UniversityDto> getUniversities() {
+        return universityService.findAllUniversity();
+    }
+
+    // universityId 로 모든 학과 조회
+    @GetMapping("/departments")
+    public List<DepartmentResponse> getDepartments(HttpServletRequest req) {
+        return departmentService.findAllDepartment(Integer.parseInt(req.getParameter("universityId")));
     }
 }
