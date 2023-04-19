@@ -18,12 +18,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/servers")
+@RestController // rest api 를 다루기 위함
+@RequiredArgsConstructor  // final 로 선언된 필드만 생성자 주입 방식으로 DI 구현
+@RequestMapping("/servers") // endpoint mapping
 public class ServerController {
     private final ServerService serverService;
 
+    // 서버 등록
     @PostMapping("/register/new")
     public void registerServer(@RequestBody ServerRegisterRequest serverRegisterRequest) {
         System.out.println("Server Controller 시작");
@@ -32,6 +33,7 @@ public class ServerController {
         serverService.registerServer(serverDto);
     }
 
+    // 서버 등록 자동화 파일 다운로드
     @GetMapping("/register/installing")
     public void getServerizeFile(HttpServletResponse response) {
         String filePath = "/Users/donghyeonkang/Desktop/project/csws/src/main/java/com/example/csws/Automation.tar.gz";
@@ -48,12 +50,21 @@ public class ServerController {
         }
     }
 
+    // 서버 리스트 조회
     @GetMapping("/management/list")
     public List<Server> getServerList(HttpServletRequest req) {
         return serverService.getServerList(Integer.parseInt(req.getParameter("departmentId")));
     }
+
+    // 서버 리소스 조회
     @GetMapping("/management/resources")
     public ServerResourceResponse getServerResource(HttpServletRequest req) {
         return serverService.getServerResource(Integer.parseInt(req.getParameter("serverId")));
+    }
+
+    // 서버 삭제
+    @DeleteMapping("")
+    public void deleteServer(HttpServletRequest req) {
+        serverService.deleteServer(Integer.parseInt(req.getParameter("serverId"))); // serverId 파라미터로 받아옴
     }
 }

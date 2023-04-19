@@ -4,5 +4,4 @@ import com.example.csws.entity.server.Server;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JpaServerRepository extends JpaRepository<Server, Integer>, ServerRepository {
-
 }
