@@ -5,6 +5,7 @@ import com.example.csws.entity.server.ServerDto;
 import com.example.csws.entity.server.ServerResourceResponse;
 import com.example.csws.repository.server.ServerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
@@ -34,6 +35,15 @@ public class ServerService {
         serverResourceResponse.setDisk(getDiskStatus());
         serverResourceResponse.setRam(getRamStatus());
         return serverResourceResponse;
+    }
+
+    // 서버 삭제
+    public void deleteServer(int serverId) {
+        try {
+            serverRepository.deleteById(serverId);  // deleteById 로
+        } catch (EmptyResultDataAccessException e) {    // deleteById 가 던질 수 있는 예외 처리
+            System.out.println(e.toString());   // 프린트만 하는 게 아니라 exception return 할 수 있도록 처리해야한다.
+        }
     }
 
     // 디스크 사용량 조회
