@@ -61,6 +61,8 @@ public class UserService {  // 사용자 회원가입, 사용자 정보 불러�
         // userId로 approval 조회
         Approval approval = approvalRepository.findById(Long.valueOf(user.getId()))// long 이어야 한다고 에러나서 형변환 해줌
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
+
+        // 엔티티 영속성 설정
         entityManager.persist(approval);
 
         // 조회한 approval accept. entity 의 값을 바꾸면 추적해서 업데이트 하는 거 아니었나?
