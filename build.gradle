@@ -30,6 +30,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'	// failResponse 에서 json 작업 하기 위해
 }
 
 tasks.named('test') {
