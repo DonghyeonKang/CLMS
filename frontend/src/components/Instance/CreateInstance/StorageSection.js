@@ -8,13 +8,13 @@ const StorageSection = ({setData, data}) => {
     return (
         <Storage>
             <Title>스토리지 구성</Title>
-            <Select label="storage" onChange={storageHandler} defaultValue={data.storage} size='small'>
-                <MenuItem value='1'>1GB</MenuItem>
-                <MenuItem value='2'>2GB</MenuItem>
-                <MenuItem value='4'>4GB</MenuItem>
-                <MenuItem value='8'>8GB</MenuItem>
-                <MenuItem value='16'>16GB</MenuItem>
-                <MenuItem value='32'>32GB</MenuItem>
+            <Select label="storage" onChange={storageHandler} value={data.storage ?? ''} size='small'>
+                <MenuItem value='1G'>1GB</MenuItem>
+                <MenuItem value='2G'>2GB</MenuItem>
+                <MenuItem value='4G'>4GB</MenuItem>
+                <MenuItem value='8G'>8GB</MenuItem>
+                <MenuItem value='16G'>16GB</MenuItem>
+                <MenuItem value='32G'>32GB</MenuItem>
             </Select>
         </Storage>
     );

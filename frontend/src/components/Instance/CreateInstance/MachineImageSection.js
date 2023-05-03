@@ -1,13 +1,9 @@
 import styled from "styled-components";
 import ubuntu from '../../../img/ubuntu.png'
-import CentOs from '../../../img/CentOs.png'
 
 const MachineImageSection = ({setData, data}) => {
     const setUbuntu = () => {
       setData({...data, machineImage: 'Ubuntu'});
-    };
-    const setCentOS = () => {
-      setData({...data, machineImage: 'CentOS'});
     };
     return (
         <OS>
@@ -21,16 +17,6 @@ const MachineImageSection = ({setData, data}) => {
               (<OSTab>
                 <div>Ubuntu</div>
                 <OSImg src={ubuntu} onClick={setUbuntu}/>
-              </OSTab>)}
-              
-              {data.machineImage === 'CentOS' ? 
-              (<OSTabSelected>
-                <div>CentOS</div>
-                <OSImg src={CentOs} onClick={setCentOS}/>
-              </OSTabSelected>) : 
-              (<OSTab>
-                <div>CentOS</div>
-                <OSImg src={CentOs} onClick={setCentOS}/>
               </OSTab>)}
             </OSTabs>
         </OS>

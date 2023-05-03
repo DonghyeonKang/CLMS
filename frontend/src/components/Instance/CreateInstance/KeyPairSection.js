@@ -15,7 +15,7 @@ const KeyPairSection = ({setData, data}) => {
         <KeyPair>
             <Title>키 페어</Title>
             <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-              <TextField label='인스턴스 이름' onChange={keyPairHandler} style={{width:'60%'}} size="small"/>
+              <TextField label='키 페어' onChange={keyPairHandler} style={{width:'60%'}} size="small"/>
               <CreateKeyPair onClick={()=>setModalOpen(true)}>새 키 페어 생성</CreateKeyPair>
             </div>
         </KeyPair>
