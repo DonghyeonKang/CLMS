@@ -1,16 +1,15 @@
 #!/user/bin/bash
-
+#bash
 RemoveContainer(){
-
+    
     # 인수가 잘 들어왔는지 확인
-    if [ $# -lt 3 ]; then
+    if [ $# -lt 2 ]; then
         echo "3" #인수가 부족합니다.
         exit 1
     fi
 
     local userName=$1 # 컨테이너를 실행시킨 유저 이름
     local userCode=$2 # 컨테이너를 실행시킨 유저 이름 뒤에 들어갈 코드
-    local hPort=$3
 
     # 삭제할 도커 컨테이너 이름
     local containerName=${userName}${userCode}
@@ -29,7 +28,7 @@ RemoveContainer(){
     fi
 
    # Users 디렉토리로 이동
-    cd ~/sh/$userDir || exit 1
+    cd ~/$userDir || exit 1
 
     # 사용자 텍스트 파일에서 해당 컨테이너의 코드 삭제
     ##  유저 코드가 텍스트 파일에 존재하는지 확인
@@ -41,19 +40,59 @@ RemoveContainer(){
         echo "5" ; exit 1
     fi
 
-    # 방화벽도 닫음
-    sudo ufw deny $hPort
-    sudo ufw deny $hPort/tcp
-    sudo ufw delete deny $hPort
-    sudo ufw delete deny $hPort/tcp
+    cd ~/
 
-    # 개인키 존재 확인 후 삭제
-    cd ~/Keys
-    if [ -e ~/Keys/${containerName} ]; then
-        rm ~/Keys/${containerName}
+    # 방화벽도 닫음
+    local PORTS=$(awk -F ':' '{ print $1 }' Ports/$containerName.txt)
+    IFS=$'\n'
+    for port in $PORTS
+    do 
+        sudo iptables -D INPUT -p tcp --dport $port -j ACCEPT
+        echo "$port 삭제"
+    done
+
+    sudo netfilter-persistent save
+
+
+    # # 개인키 존재 확인 후 삭제 csws에서 할 것
+    # cd ~/Keys
+    # if [ -e ~/Keys/$hostName/$containerName.pem ]; then
+    #     rm ~/Keys/$hostName/$containerName.pem
+    # else
+    #     echo "9"; exit 1
+    # fi
+
+    cd ~/Ports
+    if [ -e ~/Ports/$containerName.txt ]; then
+        rm ~/Ports/$containerName.txt
     else
         echo "9"; exit 1
     fi
+
 }
 
-RemoveContainer $1 $2 $3 && echo "99"
+# 아마 없으면 인수 안 줘도 될 거임
+# DeleteIPs() 
+# {
+#     local Port=$1 #3,3,3
+#     local Ip=$2 #4,4,4
+
+#     # local exe="$(for i in $Port[@]; do echo "sudo ufw "; done)"
+#     # eval $exe
+#     # IFS=$IFS_OLD
+
+#     IFS=$',' read -r -a arr1 <<< "$Port"
+#     IFS=$',' read -r -a arr2 <<< "$Ip"
+#     # output="${arr1[@]} ${arr2[@]}"
+#     # echo "$output $output1"
+#     for i in "${!arr1[@]}"; do 
+#         port="${arr1[i]}"
+#         ip="${arr2[i]}"
+#         local exe=`echo "sudo ufw delete allow from $ip to any port $port"`
+#         eval $exe
+#     done
+#     IFS=$IFS_OLD
+# }
+
+RemoveContainer $1 $2 && echo "99"
+# $5 = 포트 $6 =ip 의 쌍
