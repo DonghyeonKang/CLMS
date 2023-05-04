@@ -1,5 +1,7 @@
 package com.example.csws.entity.user;
 
+import com.example.csws.entity.department.Department;
+import com.example.csws.entity.university.University;
 import lombok.*;
 
 @Builder
@@ -18,14 +20,14 @@ public class UserDto {
     private int universityId;
     private int departmentId;
 
-    public User toEntity() {
+    public User toEntity(Department department, University university) {
         return User.builder()
                 .username(username)
                 .password(password)
                 .roles(Role)
                 .approval(approval)
-                .departmentId(departmentId)
-                .universityId(universityId)
+                .department(department)
+                .university(university)
                 .build();
     }
 }

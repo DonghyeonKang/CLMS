@@ -1,5 +1,7 @@
 package com.example.csws.entity.user;
 
+import com.example.csws.entity.department.Department;
+import com.example.csws.entity.university.University;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,8 +27,12 @@ public class User {
     private String roles;
     private String phone;
     private String approval;
-    private int universityId;
-    private int departmentId;
+    @ManyToOne(targetEntity = University.class) // university 엔티티와 관계를 설정할 것임을 명시
+    @JoinColumn(name = "university_id") // university 엔티티의 id 값으로 칼럼을 join 함. join 한 칼럼명 설정도 할 수 있는데 기본인 university_id 로 사용
+    private University university;
+    @ManyToOne(targetEntity = Department.class)
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     // ENUM으로 안하고 ,로 해서 구분해서 ROLE을 입력 -> 그걸 파싱!!
     public List<String> getRoleList(){
