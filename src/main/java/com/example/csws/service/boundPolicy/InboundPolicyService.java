@@ -11,7 +11,7 @@ public interface InboundPolicyService {
 
     public InboundPolicyDto save(InboundPolicy inboundPolicy);
 
-    public List<InboundPolicyDto> saveAll(List<InboundPolicy> inboundPolicyList);
+    public List<InboundPolicyDto> saveAll(List<InboundPolicyDto> inboundPolicyList);
 
     public void delete(InboundPolicy inboundPolicy);
 
