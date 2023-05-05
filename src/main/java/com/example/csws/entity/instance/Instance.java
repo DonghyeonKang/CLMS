@@ -1,5 +1,7 @@
 package com.example.csws.entity.instance;
 
+import com.example.csws.entity.server.Server;
+import com.example.csws.entity.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,10 +27,12 @@ public class Instance {
     private String keyName;
     private String os;
     private Timestamp created;
-    @Column(name = "userid")
-    private int userId;
-    @Column(name = "serverid")
-    private int serverId;
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "user_id")
+    private User user;
+    @ManyToOne(targetEntity = Server.class)
+    @JoinColumn(name = "server_id")
+    private Server server;
 
     public InstanceDto toDto() {
         return InstanceDto.builder()
@@ -42,8 +46,8 @@ public class Instance {
                 .keyName(keyName)
                 .os(os)
                 .created(created)
-                .userId(userId)
-                .serverId(serverId)
+                .userId(user.getId())
+                .serverId(server.getId())
                 .build();
     }
 

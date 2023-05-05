@@ -1,5 +1,7 @@
 package com.example.csws.entity.instance;
 
+import com.example.csws.entity.server.Server;
+import com.example.csws.entity.user.User;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -24,7 +26,7 @@ public class InstanceDto {
     private int userId;
     private int serverId;
 
-    public Instance toEntity() {
+    public Instance toEntity(User user, Server server) {
         return Instance.builder()
                 .id(id)
                 .name(name)
@@ -36,8 +38,8 @@ public class InstanceDto {
                 .keyName(keyName)
                 .os(os)
                 .created(created)
-                .userId(userId)
-                .serverId(serverId)
+                .user(user)
+                .server(server)
                 .build();
     }
 }

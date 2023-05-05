@@ -3,7 +3,11 @@ package com.example.csws.service.instance;
 import com.example.csws.common.shRunner.ShRunner;
 import com.example.csws.entity.instance.Instance;
 import com.example.csws.entity.instance.InstanceDto;
+import com.example.csws.entity.server.Server;
+import com.example.csws.entity.user.User;
 import com.example.csws.repository.instance.InstanceRepository;
+import com.example.csws.repository.server.ServerRepository;
+import com.example.csws.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InstanceServiceImpl implements InstanceService{
 
+    private final UserRepository userRepository;
+    private final ServerRepository serverRepository;
     private final InstanceRepository instanceRepository;
     private final ShRunner shRunner;
 
@@ -27,7 +33,9 @@ public class InstanceServiceImpl implements InstanceService{
     // 5) 용량. 6) 이미지 이름
     @Override
     public String createInstance(InstanceDto instanceDto) {
-        Instance entity = instanceRepository.save(instanceDto.toEntity());
+        User newUser = userRepository.getReferenceById(Long.parseLong(Integer.toString(instanceDto.getUserId())));
+        Server baseServer = serverRepository.findById(instanceDto.getServerId()).get();
+        Instance entity = instanceRepository.save(instanceDto.toEntity(newUser, baseServer));
 
         try {
             shRunner.execCommand("CreateContainer.sh", Integer.toString(entity.getPort()), "22",
@@ -117,9 +125,14 @@ public class InstanceServiceImpl implements InstanceService{
     }
 
     // userId가 수정되어있는 dto를 컨트롤러에서 받은 뒤 엔티티로 변환해 save(update).
+    // dto 내부의 새로운 user의 email로 user 엔티티 조회 후 toEntity() 메서드 파라미터로 넘겨주기.
     @Override
     public InstanceDto changeUserid(InstanceDto instanceDto) {
-        Instance entity = instanceRepository.save(instanceDto.toEntity());
+        // getReferenceById 메서드에 필요한 인자는 Long인데 우리가 설정한 엔티티는 id가 int로 되어있음.
+        User newUser = userRepository.getReferenceById(Long.parseLong(Integer.toString(instanceDto.getUserId())));
+        Server baseServer = serverRepository.findById(instanceDto.getServerId()).get();
+        Instance entity = instanceRepository.save(instanceDto.toEntity(newUser, baseServer));
+
         return entity.toDto();
     }
 }

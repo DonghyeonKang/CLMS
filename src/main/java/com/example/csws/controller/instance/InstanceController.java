@@ -204,7 +204,7 @@ public class InstanceController {
             return "/";
         }
         InstanceDto newDto = dto.get();
-
+        // 새로운 user의 email로 user 엔티티 받아온 뒤, userId 설정
         User student = userService.getUser(email);
         newDto.setUserId(student.getId());
 
