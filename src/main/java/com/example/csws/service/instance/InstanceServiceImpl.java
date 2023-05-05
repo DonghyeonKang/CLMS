@@ -33,7 +33,7 @@ public class InstanceServiceImpl implements InstanceService{
     // 5) 용량. 6) 이미지 이름
     @Override
     public String createInstance(InstanceDto instanceDto) {
-        User newUser = userRepository.getReferenceById(Long.parseLong(Integer.toString(instanceDto.getUserId())));
+        User newUser = userRepository.getReferenceById((long)instanceDto.getUserId());
         Server baseServer = serverRepository.findById(instanceDto.getServerId()).get();
         Instance entity = instanceRepository.save(instanceDto.toEntity(newUser, baseServer));
 
@@ -129,7 +129,7 @@ public class InstanceServiceImpl implements InstanceService{
     @Override
     public InstanceDto changeUserid(InstanceDto instanceDto) {
         // getReferenceById 메서드에 필요한 인자는 Long인데 우리가 설정한 엔티티는 id가 int로 되어있음.
-        User newUser = userRepository.getReferenceById(Long.parseLong(Integer.toString(instanceDto.getUserId())));
+        User newUser = userRepository.getReferenceById((long) instanceDto.getUserId());
         Server baseServer = serverRepository.findById(instanceDto.getServerId()).get();
         Instance entity = instanceRepository.save(instanceDto.toEntity(newUser, baseServer));
 
