@@ -1,28 +1,20 @@
+import axios from "axios";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-//인스턴스 API 객체형태로 받아와서 뿌리기
+//관리자일때랑 학생일때 구분해서 API 요청 만들기
 const InstanceList = () => {
-    const navigate = useNavigate();
-    const [list,] = useState([
-      {
-        name: 1,
-        ID: 2,
-        state: 3,
-        storage: 4,
-        IP: 5,
-        key: 6,
-      },
-      {
-        name: 2,
-        ID: 3,
-        state: 4,
-        storage: 5,
-        IP: 6,
-        key: 7,
-      },
-    ]);
+  const navigate = useNavigate();
+  const [list,setList] = useState();
+  useEffect(()=>{
+    try {
+      axios.get('http://203.255.3.23:5000/instances/list/my').then((response)=> setList(response.data.instances));
+    } catch (error) {
+      console.error(error);
+    }
+  },[]);
     
     return (
         <>
@@ -33,19 +25,19 @@ const InstanceList = () => {
                       <InstanceHeader style={{minWidth:'200px'}}>인스턴스 ID</InstanceHeader>
                       <InstanceHeader style={{minWidth:'60px'}}>상태</InstanceHeader>
                       <InstanceHeader style={{minWidth:'60px'}}>용량</InstanceHeader>
-                      <InstanceHeader style={{minWidth:'250px'}}>IPv4 주소 및 포트</InstanceHeader>
+                      <InstanceHeader style={{minWidth:'60px'}}>포트</InstanceHeader>
                       <InstanceHeader style={{minWidth:'120px'}}>키 이름</InstanceHeader>
                   </tr>
                 </thead>
                 <tbody>
-                  {list.map((i)=>{return (
-                  <tr key={i.ID}>
+                  {list?.map((i)=>{return (
+                  <tr key={i.instanceId}>
                     <InstanceBody>{i.name}</InstanceBody>
-                    <InstanceId onClick={() => navigate(`${Date.now()}`)}>{i.ID}</InstanceId>
-                    <InstanceBody>{i.state}</InstanceBody>
+                    <InstanceId onClick={() => navigate(`${i.instanceId}`)}>{i.instanceId}</InstanceId>
+                    <InstanceBody>{i.status}</InstanceBody>
                     <InstanceBody>{i.storage}</InstanceBody>
-                    <InstanceBody>{i.IP}</InstanceBody>
-                    <InstanceBody>{i.key}</InstanceBody>
+                    <InstanceBody>{i.port}</InstanceBody>
+                    <InstanceBody>{i.keyName}</InstanceBody>
                   </tr>)})}
                 </tbody>
             </InstanceTable>
