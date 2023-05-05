@@ -1,9 +1,14 @@
 package com.example.csws.controller.instance;
 
 import com.example.csws.config.auth.PrincipalDetails;
+import com.example.csws.entity.boundPolicy.InboundPolicyDto;
+import com.example.csws.entity.domain.Domain;
+import com.example.csws.entity.domain.DomainDto;
 import com.example.csws.entity.instance.InstanceDto;
 import com.example.csws.entity.instance.StartInstanceRequest;
 import com.example.csws.entity.user.User;
+import com.example.csws.service.boundPolicy.InboundPolicyService;
+import com.example.csws.service.domain.DomainService;
 import com.example.csws.service.instance.InstanceService;
 import com.example.csws.service.server.ServerService;
 import com.example.csws.service.user.UserService;
@@ -33,9 +38,9 @@ public class InstanceController {
 
     private final UserService userService;
     private final InstanceService instanceService;
-//    private final DomainService domainService;
-    private final ServerService serverService;
-//    private final InboundPolicyService inboundPolicyService;
+    private final DomainService domainService;
+//    private final ServerService serverService;
+    private final InboundPolicyService inboundPolicyService;
 
     // return VIEWPATH + "웹 페이지 경로" : 이동할 웹 페이지 경로를 반환(사용자에게 경로 숨김).
     // return "redirect:매핑 이름" : 해당 매핑으로 리다이렉트
@@ -204,7 +209,7 @@ public class InstanceController {
             return "/";
         }
         InstanceDto newDto = dto.get();
-
+        // 새로운 user의 email로 user 엔티티 받아온 뒤, userId 설정
         User student = userService.getUser(email);
         newDto.setUserId(student.getId());
 
@@ -230,30 +235,74 @@ public class InstanceController {
     // 특정 인스턴스의 도메인 조회(instanceId)
     @GetMapping("/domain")
     public String domainList(Model model) {
-        return null;
+
+        Long instanceId = (Long) model.getAttribute("instanceId");
+        Domain domain = domainService.findByInstanceId(String.valueOf(instanceId));
+        model.addAttribute("domain", domain);
+
+        return VIEWPATH + "도메인 페이지 경로";
     }
 
     // 특정 인스턴스의 도메인 저장(추가)
     @PostMapping("/domain")
     public String domainCreate(Model model) {
-        return null;
+
+        Long instanceId = (Long) model.getAttribute("instanceId");
+        String domainName = (String) model.getAttribute("domainName");
+
+        DomainDto newDto = new DomainDto(domainName, Math.toIntExact(instanceId));
+
+        domainService.createDomain(newDto);
+        model.addAttribute("domain", newDto);
+
+        return VIEWPATH + "도메인 페이지 경로";
     }
 
     // 특정 인스턴스의 도메인 삭제
     @DeleteMapping("/domain")
     public String domainDelete(Model model) {
-        return null;
+
+        Long instanceId = (Long) model.getAttribute("instanceId");
+        String domainName = (String) model.getAttribute("domainName");
+
+        DomainDto newDto = new DomainDto(domainName, Math.toIntExact(instanceId));
+
+        domainService.deleteDomain(newDto);
+
+        return VIEWPATH + "도메인 페이지 경로";
     }
 
     // 특정 인스턴스의 인바운드 리스트 조회
     @GetMapping("/inbounds/list")
     public String inboundList(Model model) {
-        return null;
+
+        Long instanceId;
+        if (model.containsAttribute("instanceId")) {
+            instanceId = (long) model.getAttribute("instanceId");
+        } else {
+            return "/";     // instanceId 없는 접근일 경우 메인으로 보냄
+        }
+
+        List<InboundPolicyDto> dtoList = inboundPolicyService.findAllByInstanceId(Math.toIntExact(instanceId));
+        model.addAttribute("inbounds", dtoList);
+
+        return VIEWPATH + "인바운드 리스트 페이지 경로";
     }
 
     @PostMapping("/inbounds/setting")
     public String inboundSetting(Model model) {
-        return null;
+
+        List<InboundPolicyDto> dtoList;
+        if (model.containsAttribute("inbounds")) {
+            dtoList = (List<InboundPolicyDto>) model.getAttribute("inbounds");
+        } else {
+            return "/";     // inbound 리스트 없으면 메인으로 반환
+        }
+
+        List<InboundPolicyDto> savedList = inboundPolicyService.saveAll(dtoList);
+        model.addAttribute("inbounds", savedList);
+
+        return VIEWPATH + "인바운드 리스트 페이지 경로";
     }
 
 }
