@@ -1,5 +1,6 @@
 package com.example.csws.entity.boundPolicy;
 
+import com.example.csws.entity.instance.Instance;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,11 +16,11 @@ public class InboundPolicyDto {
     private int port;
     private int instanceId;
 
-    public InboundPolicy toEntity() {
+    public InboundPolicy toEntity(Instance instance) {
         return InboundPolicy.builder()
                 .id(id)
                 .port(port)
-                .instanceId(instanceId)
+                .instance(instance)
                 .build();
     }
 

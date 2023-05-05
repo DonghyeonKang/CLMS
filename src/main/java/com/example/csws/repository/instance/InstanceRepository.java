@@ -11,6 +11,8 @@ public interface InstanceRepository {
 
     public Optional<Instance> findById(int instanceId);
 
+    public Instance getReferenceById(int instanceId);
+
     public List<Instance> findAllByUserId(int userId);
 
     public List<Instance> findAllByServerId(int serverId);
