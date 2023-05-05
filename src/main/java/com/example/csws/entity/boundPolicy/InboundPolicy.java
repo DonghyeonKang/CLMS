@@ -1,14 +1,12 @@
 package com.example.csws.entity.boundPolicy;
 
+import com.example.csws.entity.instance.Instance;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Builder
@@ -21,13 +19,15 @@ public class InboundPolicy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int port;
-    private int instanceId;
+    @ManyToOne(targetEntity = Instance.class)
+    @JoinColumn(name = "instanceId")
+    private Instance instance;
 
     public InboundPolicyDto toDto() {
         return InboundPolicyDto.builder()
                 .id(id)
                 .port(port)
-                .instanceId(instanceId)
+                .instanceId(instance.getId())
                 .build();
     }
 
