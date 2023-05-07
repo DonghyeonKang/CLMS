@@ -10,13 +10,15 @@ import lombok.Setter;
 public class RegisterStudentRequest {
     private String username;
     private String password;
-    private String university;
-    private String department;
+    private String universityId;
+    private String departmentId;
 
     public UserDto toUserDto() {
         return UserDto.builder()
                 .username(username)
                 .password(password)
+                .departmentId(Integer.parseInt(departmentId))
+                .universityId(Integer.parseInt(universityId))
                 .build();
     }
 }
