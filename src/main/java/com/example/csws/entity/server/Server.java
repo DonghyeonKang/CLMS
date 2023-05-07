@@ -20,5 +20,7 @@ public class Server {
     private String name;
     private String ipv4;
     private String serverUsername;
-    private int departmentId;
+    @ManyToOne(targetEntity = Department.class)
+    @JoinColumn(name = "department_id")
+    private Department department;
 }
