@@ -1,8 +1,10 @@
 package com.example.csws.service.server;
 
+import com.example.csws.entity.department.Department;
 import com.example.csws.entity.server.Server;
 import com.example.csws.entity.server.ServerDto;
 import com.example.csws.entity.server.ServerResourceResponse;
+import com.example.csws.repository.department.DepartmentRepository;
 import com.example.csws.repository.server.ServerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,11 +14,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ServerService {
     private final ServerRepository serverRepository;
+    private final DepartmentRepository departmentRepository;
 
     // 서버 등록
     public void registerServer(ServerDto serverDto) {
-        System.out.println("Server Service 시작");
-        Server server = serverDto.toEntity();
+        // department 객체 가져오기
+        Department department = departmentRepository.getReferenceById(serverDto.getDepartmentId());
+        // dto to entity
+        Server server = serverDto.toEntity(department);
         serverRepository.save(server);
     }
 
