@@ -35,8 +35,6 @@ public class RegisterController {
 
             // setting for student ,,,,,,, 나중에 수정해야함
             userDto.setRole("ROLE_USER");
-            userDto.setDepartmentId(1);
-            userDto.setUniversityId(1);
 
             // register
             registerService.register(userDto);
@@ -56,8 +54,6 @@ public class RegisterController {
 
             // setting for student ,,,,,,, 나중에 수정해야함
             userDto.setRole("ROLE_MANAGER");
-            userDto.setDepartmentId(1);
-            userDto.setUniversityId(1);
 
             // register
             registerService.register(userDto);

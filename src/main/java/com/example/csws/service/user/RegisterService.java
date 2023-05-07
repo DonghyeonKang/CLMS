@@ -33,6 +33,7 @@ public class RegisterService {
         // department, university 객체 가져오기
         Department department = departmentRepository.getReferenceById(userDto.getDepartmentId());
         University university = universityRepository.getReferenceById(userDto.getUniversityId());
+
         // dto to entity
         User user = userDto.toEntity(department, university);
         // jpa의 save
