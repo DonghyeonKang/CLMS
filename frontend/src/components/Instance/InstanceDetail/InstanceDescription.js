@@ -1,7 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-const InstanceDescription = () => {
+//인스턴스 상태 API 만들어지면 추가하기
+const InstanceDescription = ({data, domainName}) => {
   const [IOption, setIOption] = useState(false);
     return (
         <>
@@ -20,11 +21,26 @@ const InstanceDescription = () => {
             </DetailHeader>
             
             <DescriptionContent>
-                <DescriptionGrid>인스턴스 ID</DescriptionGrid>
-                <DescriptionGrid>퍼블릭 IPv4 주소</DescriptionGrid>
-                <DescriptionGrid>인스턴스 상태</DescriptionGrid>
-                <DescriptionGrid>퍼블릭 IPv4 DNS</DescriptionGrid>
-                <DescriptionGrid>자동 할당 IP 주소(퍼블릭 IP)</DescriptionGrid>
+                <DescriptionGrid>
+                  <GridTitle>인스턴스 ID</GridTitle>
+                  <GridContent>{data?.instanceId}</GridContent>
+                </DescriptionGrid>
+                <DescriptionGrid>
+                  <GridTitle>퍼블릭 IPv4 주소</GridTitle>
+                  <GridContent>{data?.address}</GridContent>
+                </DescriptionGrid>
+                <DescriptionGrid>
+                  <GridTitle>인스턴스 상태</GridTitle>
+                  <GridContent>{data?.status}</GridContent>
+                </DescriptionGrid>
+                <DescriptionGrid>
+                  <GridTitle>퍼블릭 IPv4 DNS</GridTitle>
+                  <GridContent>{domainName}</GridContent>
+                </DescriptionGrid>
+                <DescriptionGrid>
+                  <GridTitle>자동 할당 IP 주소(퍼블릭 IP)</GridTitle>
+                  <GridContent>{data?.address}</GridContent>
+                </DescriptionGrid>
             </DescriptionContent>
         </>
         
@@ -36,15 +52,16 @@ export default InstanceDescription;
 const DetailHeader = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background-color: #fafafa;
   border: 1px solid #eaeded;
   width: 100%;
-  min-width: 1150px;
+  min-width: 900px;
 `;
 
 const Title = styled.div`
-  width: 85%;
-  min-width: 900px;
+  width: 50%;
+  min-width: 500px;
   padding: 1%;
   font-size: 20px;
   font-weight: 600;
@@ -56,6 +73,7 @@ const InstanceState = styled.div`
   margin-right: 2%;
   min-width: 190px;
 `;
+
 const State = styled.div`
   padding: 4px 15px;
   font-weight: 600;
@@ -65,10 +83,12 @@ const State = styled.div`
     color: black;
   }
 `;
+
 const SetState = styled.div`
   padding: 2px 12px;
   border: 0.5px solid #879596;
   font-weight: 600;
+  min-width: 150px;
   &:hover{
     background-color: #fafafa;
     border: 2px solid #879596;
@@ -83,17 +103,26 @@ const DescriptionContent = styled.div`
   gap: 0.5%;
   row-gap: 5px;
   width: 100%;
-  min-width: 1150px;
+  min-width: 900px;
   margin-bottom: 5%;
   background-color: white;
 `;
 
 const DescriptionGrid = styled.div`
   width: 100%;
-  min-width: 300px;
-  height: 50px;
+  height: 100px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
   background-color: white;
 `
+
+const GridTitle = styled.div`
+  margin: 3%;
+  font-size: 16px;
+  font-weight: 100;
+`;
+
+const GridContent = styled.div`
+  margin-left: 5%;
+  font-size: 20px;
+`;
