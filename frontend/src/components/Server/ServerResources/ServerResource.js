@@ -1,7 +1,21 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import { List, ListItemButton } from "@mui/material";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const ServerResource = ({server,studentList,navigate}) => {
+//아직 API에 serverId 쿼리 적용 안한거 같음
+const ServerResource = ({server,studentList,serverId}) => {
+    const navigate = useNavigate();
+    const [resources,setResources] = useState();
+    //서버 리소스
+    useEffect(()=>{
+        try {
+          axios.get(`http://203.255.3.23:5000/servers/management/resources?serverId=${serverId}`).then((response)=> setResources(response.data));
+        } catch (error) {
+          console.error(error);
+        }
+      },[serverId]);
     return (
         <>
         <ServerAddress>{server}</ServerAddress>
@@ -11,8 +25,8 @@ const ServerResource = ({server,studentList,navigate}) => {
                 <List style={{maxHeight: 300, overflow: 'auto', border:'1px solid #eaeded'}}>
                 {studentList?.map((item)=>{
                         return(
-                        <ListItemButton component='div' onClick={()=>navigate('/dashboard')}>
-                           {item}
+                        <ListItemButton component='div' onClick={()=>navigate('/dashboard')} key={item?.username}>
+                           {item?.username}
                         </ListItemButton>
                     )})}
                 </List>
@@ -21,13 +35,16 @@ const ServerResource = ({server,studentList,navigate}) => {
                 <Title>서버 리소스</Title>
                 <Resources>
                     <Resource>
-                        서버 램 사용량
+                        <GridTitle>서버 램 사용량</GridTitle>
+                        <GridContent>{resources?.ram}</GridContent>
                     </Resource>
                     <Resource>
-                        서버 디스크 사용량
+                        <GridTitle>서버 디스크 사용량</GridTitle>
+                        <GridContent>{resources?.disk}</GridContent>
                     </Resource>
                     <Resource>
-                        서버와 CSWS 연결 상태
+                        <GridTitle>서버와 CSWS 연결 상태</GridTitle>
+                        <GridContent>O</GridContent>
                      </Resource>
                 </Resources>
             </ResourceList>
@@ -85,6 +102,9 @@ const Resource = styled.div`
     margin: 30px 0;
     height: 80px;
     border: 1px solid #eaeded;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
 `;
 
 const Title = styled.div`
@@ -94,4 +114,16 @@ const Title = styled.div`
     padding: 10px 0;
     background-color: #fafafa;
     text-align: center;
+`;
+
+
+const GridTitle = styled.div`
+  margin: 3%;
+  font-size: 16px;
+  font-weight: 100;
+`;
+
+const GridContent = styled.div`
+  margin-left: 5%;
+  font-size: 20px;
 `;
