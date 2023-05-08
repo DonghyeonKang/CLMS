@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.transaction.Transactional;
 
 
 @Builder
@@ -19,7 +18,7 @@ import javax.transaction.Transactional;
 @AllArgsConstructor
 @Entity
 @DynamicUpdate
-public class Approval {
+public class ManagerAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +26,13 @@ public class Approval {
     private String status;
 
     // entity 에 setter 를 구현하지 말고 메서드를 구현하라해서 update 하는 메서드 구현함
-    public void updateApprovalStatus() {
+    // 승인
+    public void acceptAuthorityStatus() {
         this.status = "accepted";
+    }
+
+    // 거절
+    public void denyAuthorityStatus() {
+        this.status = "denied";
     }
 }
