@@ -10,7 +10,7 @@ const Navigation = () => {
     return (
         <>
             <Nav>
-                {/*관리자면 <Link onClick={()=>navigate('/serverResource')}>서버 리소스</Link>*/}
+                {/*관리자면 <Link onClick={()=>navigate('/serverResources')}>서버 리소스</Link>*/}
                 <Link onClick={() => navigate('/dashboard')}>대시보드</Link>
                 {location.pathname.split('/')[2] ? 
                 (<>
