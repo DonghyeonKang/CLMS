@@ -3,12 +3,21 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import KeyPairModal from "./KeyPairModal";
 import { TextField } from "@mui/material";
+import axios from "axios";
 
+//인스턴스 생성 버튼 누르면 API 요청 하게 함수 수정하기
 const KeyPairSection = ({setData, data}) => {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const keyPairHandler = (event) => {
     setData({...data, keyPair: event.target.value});
+  }
+  const createInstance = () => {
+    try{
+      axios.post('http://203.255.3.23:5000/instances/creation',data).then((response)=>console.log(response));
+    } catch (error) {
+      console.error(error);
+    };
   }
     return (
       <>
@@ -21,7 +30,7 @@ const KeyPairSection = ({setData, data}) => {
         </KeyPair>
         <Btn>
             <Cancel onClick={() => navigate("/dashboard")}>취소</Cancel>
-            <Create onClick={() => navigate("/dashboard")}>인스턴스 생성</Create> 
+            <Create onClick={() => createInstance()}>인스턴스 생성</Create> 
         </Btn>
         {modalOpen ? <KeyPairModal setModalOpen={setModalOpen} /> : <></>}
       </> 
