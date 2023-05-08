@@ -14,7 +14,7 @@ const KeyPairModal = ({setModalOpen}) => {
             'name': e.target.value
         });
     }
-
+    //키 페어 생성
     const createKeyPair = () => {
         try{
             axios.post('http://203.255.3.23:5000/instances/keypair',{keyPairData}).then((response)=>console.log(response));

@@ -12,7 +12,7 @@ const ServerResources = () => {
     const [server,setServer] = useState('');
     const [studentList,setStudentList] = useState([]);
     const [serverId,setServerId] = useState(1);
-
+    //서버 리스트
     const loadServerList = () => {
         try {
             axios.get(`http://203.255.3.23:5000/servers/management/list?departmentId=0`).then((response)=> setData(response.data.servers));
@@ -20,7 +20,7 @@ const ServerResources = () => {
             console.error(error);
           }
     }
-
+    //학생 리스트 (serverId 쿼리로)
     const loadStudentList = () => {
         try {
             axios.get(`http://203.255.3.23:5000/user/student/list`).then((response)=> setStudentList(response.data.students));

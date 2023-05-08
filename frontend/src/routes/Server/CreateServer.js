@@ -17,7 +17,7 @@ const CreateServer = () => {
     const handleServerNickName = (e) => {
         setServerData({...serverData, serverName:e.target.value});
     }
-    
+    //서버 생성
     const registerServer = () => {
         try{
             axios.post('http://203.255.3.23:5000/servers/register/new',serverData).then((response)=>console.log(response));

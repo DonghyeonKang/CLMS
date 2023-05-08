@@ -12,6 +12,7 @@ const KeyPairSection = ({setData, data}) => {
   const keyPairHandler = (event) => {
     setData({...data, keyPair: event.target.value});
   }
+  //인스턴스 생성
   const createInstance = () => {
     try{
       axios.post('http://203.255.3.23:5000/instances/creation',data).then((response)=>console.log(response));

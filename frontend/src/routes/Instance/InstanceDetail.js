@@ -12,7 +12,7 @@ const InstanceDetail = () => {
   const [instanceDetail,setInstanceDetail] = useState();
   const [domainName,setDomainName] = useState('');
   const {instanceId} = useParams();
-
+  //인스턴스 상세
   useEffect(()=>{
     try {
       axios.get(`http://203.255.3.23:5000/instances/detail?instanceid=${instanceId}`).then((response)=> setInstanceDetail(response.data));
@@ -20,7 +20,7 @@ const InstanceDetail = () => {
       console.error(error);
     }
   },[instanceId]);
-  
+  //인스턴스 도메인
   useEffect(()=>{
     try {
       axios.get(`http://203.255.3.23:5000/instances/domain?instanceid=${instanceId}`).then((response)=> setDomainName(response.data.domainName));

@@ -8,6 +8,7 @@ import styled from "styled-components";
 const InstanceList = () => {
   const navigate = useNavigate();
   const [list,setList] = useState();
+  //인스턴스 리스트
   useEffect(()=>{
     try {
       axios.get('http://203.255.3.23:5000/instances/list/my').then((response)=> setList(response.data.instances));

@@ -29,7 +29,7 @@ const EditInboundRules = () => {
         setId((prev)=>prev+1);
     };
 
-/*
+/* 인바운드 규칙 리스트
     useEffect(()=>{
       try {
         axios.get(`http://203.255.3.23:5000/instances/inbounds/list`).then((response)=> setData(response.data.inbounds));
@@ -37,6 +37,8 @@ const EditInboundRules = () => {
         console.error(error);
       }
     },[]);
+    
+    인바운드 규칙 수정 API 추가해야함
 */
 
 
