@@ -9,12 +9,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApprovalDto {
+public class ManagerAuthorityDto {
     private String username;
     private String status;
 
-    public Approval toApproval(Long userId) {
-        return Approval.builder()
+    public ManagerAuthority toManagerAuthority(Long userId) {
+        return ManagerAuthority.builder()
                 .userId(userId)
                 .status(status)
                 .build();
