@@ -10,7 +10,7 @@ import Navigation from "../../components/Navigation";
 const CreateInstance = () => {
   const [data,setData] = useState({
     name: '',
-    storage: '1',
+    storage: '1G',
     machineImage: '',
     keyPair: '',
   });

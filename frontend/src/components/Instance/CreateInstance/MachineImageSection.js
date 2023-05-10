@@ -1,36 +1,22 @@
 import styled from "styled-components";
 import ubuntu from '../../../img/ubuntu.png'
-import CentOs from '../../../img/CentOs.png'
 
 const MachineImageSection = ({setData, data}) => {
     const setUbuntu = () => {
-      setData({...data, machineImage: 'Ubuntu'});
-    };
-    const setCentOS = () => {
-      setData({...data, machineImage: 'CentOS'});
+      setData({...data, machineImage: 'ubuntu:latest'});
     };
     return (
         <OS>
             <Title>운영체제 종류</Title>
             <OSTabs>
-              {data.machineImage === 'Ubuntu' ? 
+              {data.machineImage === 'ubuntu:latest' ? 
               (<OSTabSelected>
-                <div>Ubuntu</div>
+                <div>ubuntu:latest</div>
                 <OSImg src={ubuntu} onClick={setUbuntu}/>
               </OSTabSelected>) : 
               (<OSTab>
-                <div>Ubuntu</div>
+                <div>ubuntu:latest</div>
                 <OSImg src={ubuntu} onClick={setUbuntu}/>
-              </OSTab>)}
-              
-              {data.machineImage === 'CentOS' ? 
-              (<OSTabSelected>
-                <div>CentOS</div>
-                <OSImg src={CentOs} onClick={setCentOS}/>
-              </OSTabSelected>) : 
-              (<OSTab>
-                <div>CentOS</div>
-                <OSImg src={CentOs} onClick={setCentOS}/>
               </OSTab>)}
             </OSTabs>
         </OS>

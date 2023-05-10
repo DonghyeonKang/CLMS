@@ -26,7 +26,8 @@ const HeaderContent = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 96%;
-  height: 35px;
+  min-width: 900px;
+  height: 40px;
   padding: 1% 2%;
   background-color: #232f3e;
   color: white;

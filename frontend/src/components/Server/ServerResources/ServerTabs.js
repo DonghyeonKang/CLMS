@@ -3,14 +3,15 @@ import styled from "styled-components";
 
 const ServerTabs = ({serverList,server,setServer}) => {
     const navigate = useNavigate();
+    
     return(
     <Header>
         <div>
             {serverList?.map((item)=>{
                 return(
                 server === item ? 
-                <SelectedServerTab onClick={()=>setServer(item)}>{item}</SelectedServerTab> :
-                <ServerTab onClick={()=>setServer(item)}>{item}</ServerTab>)
+                <SelectedServerTab onClick={()=>setServer(item)} key={item}>{item}</SelectedServerTab> :
+                <ServerTab onClick={()=>setServer(item)} key={item}>{item}</ServerTab>)
             })}
         </div>
         <CreateServer onClick={()=>navigate('/createServer')}>서버 등록</CreateServer>

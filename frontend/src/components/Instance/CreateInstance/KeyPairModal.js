@@ -1,12 +1,26 @@
+import { TextField } from "@mui/material";
+import axios from "axios";
 import { useState } from "react";
 import styled from "styled-components";
 
+//키페어 생성 요청 보내고 나서 수행할 기능 만들기
 const KeyPairModal = ({setModalOpen}) => {
-    const [keyPairName, setKeyPairName] = useState('');
-    const [keyPairType, setKeyPairType] = useState('RSA');
-    const [privateKeyFileFormat, setPrivateKeyFileFormat] = useState('.pem');
+    const [keyPairData, setKeyPairData] = useState({});
+    const [, setKeyPairType] = useState('RSA');
+    const [, setPrivateKeyFileFormat] = useState('.pem');
     const keyPairNameHandler = (e) => {
-        setKeyPairName(e.target.value);
+        setKeyPairData({
+            'instanceId': 1,
+            'name': e.target.value
+        });
+    }
+    //키 페어 생성
+    const createKeyPair = () => {
+        try{
+            axios.post('http://203.255.3.23:5000/instances/keypair',{keyPairData}).then((response)=>console.log(response));
+          } catch (error) {
+            console.error(error);
+          };
     }
     return (
         <CreateKeyPair>
@@ -22,24 +36,18 @@ const KeyPairModal = ({setModalOpen}) => {
                     <BodyContent>
                         <KeyPairName>
                             <div style={{marginBottom:'5px'}}>키 페어 이름</div>
-                            <input placeholder="키 페어 이름" onChange={keyPairNameHandler} required />
+                            <TextField label="키페어 이름" onChange={keyPairNameHandler} fullWidth variant="outlined" size="small"/>
                         </KeyPairName>
                         <KeyPairType>
                             <div style={{marginBottom:'5px'}}>키페어 유형</div>
                             <div>
-                                <label><input type='radio' name="type" onClick={()=>setKeyPairType('RSA')}/>RSA</label>
-                            </div>
-                            <div>
-                                <label><input type='radio' name="type" onClick={()=>setKeyPairType('ED25519')}/>ED25519</label>
+                                <label><input type='radio' name="type" onClick={()=>setKeyPairType('RSA')}/>  RSA</label>
                             </div>
                         </KeyPairType>
                         <PrivateKeyFileFormat>
                             <div style={{marginBottom:'5px'}}>개인 키 파일 형식</div>
                             <div>
-                                <label><input type='radio' name="format" onClick={()=>setPrivateKeyFileFormat('.pem')}/>.pem</label>
-                            </div>
-                            <div>
-                                <label><input type='radio' name="format" onClick={()=>setPrivateKeyFileFormat('.ppk')}/>.ppk</label>
+                                <label><input type='radio' name="format" onClick={()=>setPrivateKeyFileFormat('.pem')}/>  .pem</label>
                             </div>
                         </PrivateKeyFileFormat>
                     </BodyContent>
@@ -48,7 +56,7 @@ const KeyPairModal = ({setModalOpen}) => {
                 <ModalBtn>
                     <Btn>
                         <Cancel onClick={()=>setModalOpen(false)}>취소</Cancel>
-                        <Create>키 페어 생성</Create>
+                        <Create onClick={()=>createKeyPair()}>키 페어 생성</Create>
                     </Btn>
                 </ModalBtn>
             </ModalContent>

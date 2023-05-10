@@ -3,25 +3,35 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import KeyPairModal from "./KeyPairModal";
 import { TextField } from "@mui/material";
+import axios from "axios";
 
+//인스턴스 생성 버튼 누르면 API 요청 하게 함수 수정하기
 const KeyPairSection = ({setData, data}) => {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const keyPairHandler = (event) => {
     setData({...data, keyPair: event.target.value});
   }
+  //인스턴스 생성
+  const createInstance = () => {
+    try{
+      axios.post('http://203.255.3.23:5000/instances/creation',data).then((response)=>console.log(response));
+    } catch (error) {
+      console.error(error);
+    };
+  }
     return (
       <>
         <KeyPair>
             <Title>키 페어</Title>
             <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-              <TextField label='인스턴스 이름' onChange={keyPairHandler} style={{width:'60%'}} size="small"/>
+              <TextField label='키 페어' onChange={keyPairHandler} style={{width:'60%'}} size="small"/>
               <CreateKeyPair onClick={()=>setModalOpen(true)}>새 키 페어 생성</CreateKeyPair>
             </div>
         </KeyPair>
         <Btn>
             <Cancel onClick={() => navigate("/dashboard")}>취소</Cancel>
-            <Create onClick={() => navigate("/dashboard")}>인스턴스 생성</Create> 
+            <Create onClick={() => createInstance()}>인스턴스 생성</Create> 
         </Btn>
         {modalOpen ? <KeyPairModal setModalOpen={setModalOpen} /> : <></>}
       </> 
