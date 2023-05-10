@@ -6,7 +6,7 @@ const StorageSection = ({setData, data}) => {
     setData({...data, storage: event.target.value});
   };
     return (
-        <Storage>
+        <Content>
             <Title>스토리지 구성</Title>
             <Select label="storage" onChange={storageHandler} value={data.storage ?? ''} size='small'>
                 <MenuItem value='1G'>1GB</MenuItem>
@@ -16,13 +16,13 @@ const StorageSection = ({setData, data}) => {
                 <MenuItem value='16G'>16GB</MenuItem>
                 <MenuItem value='32G'>32GB</MenuItem>
             </Select>
-        </Storage>
+        </Content>
     );
 };
 
 export default StorageSection;
 
-const Storage = styled.div`
+const Content = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
