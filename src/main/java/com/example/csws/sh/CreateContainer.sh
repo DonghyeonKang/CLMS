@@ -8,7 +8,6 @@ CreateContainer(){
     local storageSize=$5
     local imageName=$6 # 실행시킬 컨테이너의 이미지
 
-
     local userDir="Users" # 유저들의 컨테이너 코드 정보를 저장할 디렉토리
     local txtFile="${userName}.txt"
 
@@ -23,6 +22,8 @@ CreateContainer(){
         echo "6" #유저 코드는 5자리 이하로 입력해 주세요
         exit 1
     fi
+
+    cd ~/
 
     # Users 디렉토리가 존재하지 않으면 생성
     if [ ! -d ${userDir} ]; then
@@ -46,7 +47,7 @@ CreateContainer(){
     fi
 
     # 도커 컨테이너 실행
-    docker run -it --privileged -d -p $hPort:$cPort --name ${userName}${userCode} --storage-opt size=$storageSize $imageName /sbin/init
+    docker run -d --privileged -p $hPort:$cPort --name ${userName}${userCode} -u csws --storage-opt size=$storageSize $imageName tail -f /dev/null
     # docker run -it -p $hPort:$cPort --name ${userName}${userCode} $imageName || exit
 }
 
@@ -62,22 +63,43 @@ OpenPort()
 
     # 스프링에서 랜덤으로 지정한 포트 값을 받아옴
     local hPort=$1
-    local userName=$2
-    local userCode=$3
 
-    sudo -S ufw allow $hPort/tcp
+    sudo iptables -A INPUT -p tcp --dport $hPort -j ACCEPT
+    sudo netfilter-persistent save
 }
 
-GetKey()
-{   
-    local cPort=$1
-    local userName=$2 # 컨테이너를 실행시키는 유저 이름
-    local userCode=$3 # 컨테이너를 실행시키는 유저 이름 뒤에 들어갈 코드
+SavePort()
+{
+    local hPort=$1 # 호스트 포트
+    local cPort=$2 # 컨테이너 포트
 
+    local userName=$3 # 컨테이너를 실행시키는 유저 이름
+    local userCode=$4 # 컨테이너를 실행시키는 유저 이름 뒤에 들어갈 코드
 
-	docker exec -u 0 $userName$userCode bash -c "echo 'Port $cPort' >> /etc/ssh/sshd_config"
-    docker exec -u 0 $userName$userCode bash -c "mv /root/.ssh/id_rsa /root/.ssh/$userName$userCode"
-    docker cp $userName$userCode:/root/.ssh/$userName$userCode ~/Keys
+    local portDir="Ports"
+    local portTxt="$userName$userCode.txt"
+
+    cd ~/
+
+    # Users 디렉토리가 존재하지 않으면 생성
+    if [ ! -d ${portDir} ]; then
+        mkdir ${portDir}
+    fi
+
+    cd $portDir
+
+    if [ ! -e "$portTxt" ]; then
+        touch "$portTxt"
+    fi
+
+    # 유저 포트가 텍스트 파일에 존재하는지 확인
+    if grep -qxF "$hPort" "$portTxt"; then
+        echo "4" #이미 사용 중인 유저 포트입니다.
+        exit 1
+    else
+        echo "$hPort:$cPort" >> "$portTxt"
+    fi
 }
 
-CreateContainer $1 $2 $3 $4 $5 $6 && OpenPort $1 $3 $4 && GetKey $2 $3 $4 && echo "99"
+CreateContainer $1 $2 $3 $4 $5 $6 && OpenPort $1 && SavePort $1 $2 $3 $4 && echo "99"
+# GetKey의 $7은 사용자 서버의 이름
