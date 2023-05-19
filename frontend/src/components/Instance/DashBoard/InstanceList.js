@@ -3,19 +3,22 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { baseUrl } from "../../../Atoms";
 
 //관리자일때랑 학생일때 구분해서 API 요청 만들기
 const InstanceList = () => {
+  const [BASEURL,] = useRecoilState(baseUrl);
   const navigate = useNavigate();
   const [list,setList] = useState();
   //인스턴스 리스트
   useEffect(()=>{
     try {
-      axios.get('http://203.255.3.23:5000/instances/list/my').then((response)=> setList(response.data.instances));
+      axios.get(BASEURL + '/instances/list/my').then((response)=> setList(response.data.instances));
     } catch (error) {
       console.error(error);
     }
-  },[]);
+  },[BASEURL]);
     
     return (
         <>

@@ -4,9 +4,12 @@ import styled from "styled-components";
 import Header from "../../components/Header";
 import axios from "axios";
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { baseUrl } from "../../Atoms";
 
 //post 요청 구현하고 페이지 전환 기능 추가하기
 const CreateServer = () => {
+    const [BASEURL,] = useRecoilState(baseUrl);
     const navigate = useNavigate();
     const [serverData,setServerData] = useState({serverUsername:"pika"});
 
@@ -20,7 +23,7 @@ const CreateServer = () => {
     //서버 생성
     const registerServer = () => {
         try{
-            axios.post('http://203.255.3.23:5000/servers/register/new',serverData).then((response)=>console.log(response));
+            axios.post(BASEURL + '/servers/register/new',serverData).then((response)=>console.log(response));
           } catch (error) {
             console.error(error);
           };
