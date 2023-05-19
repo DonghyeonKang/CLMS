@@ -1,5 +1,5 @@
 import Container from '@mui/material/Container';
-import MyBox from '../FindPw/MyBox';
+import MyBox from './MyBox';
 
 const MyContainer = ({ children }) => {
   return (
