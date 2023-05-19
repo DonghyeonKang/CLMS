@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
 import styled from 'styled-components'
 import MyTextFieldID from '../../components/User/MUI/MyTextFieldID';
 import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
@@ -9,6 +10,8 @@ import MyButton from "../../components/User/MUI/MyButton";
 import MyTypography from '../../components/User/MUI/MyTypography';
 import MyBox from '../../components/User/MUI/MyBox';
 import MyAvatar from '../../components/User/MUI/MyAvatar'; 
+import MyTextFieldNumber from '../../components/User/MUI/MyTextFieldNumber';
+import axios from 'axios';
 
 const StyledText = styled.div`
 color:red;
@@ -22,6 +25,7 @@ const User = {
 }
 
 const SignUp = () => {
+    const [NumberValid, setNumberValid] = useState(false); // NumberValid 상태 추가
     const navigate = useNavigate();
     //이메일, 비밀번호, 비밀번호 확인
     const [email, setEmail] = useState('');
@@ -33,6 +37,7 @@ const SignUp = () => {
     const [pw2Valid, setPw2Valid] = useState(false);
     const [notAllow,setNotAllow] = useState(true);
     //이메일 오류메세지
+    const [sendButtonDisabled, setSendButtonDisabled] = useState(false);
     const handleEmail = (e)=> {
       setEmail(e.target.value);
       const regex =
@@ -66,14 +71,17 @@ const SignUp = () => {
     }
     //회원가입 버튼 눌렀을 시 메세지
     const onClickConfirmButton =() =>{
-      if(email === User.email){
-        alert('이미 등록된 이메일입니다.');
-      }
-      else if(pw!==pw2){
+      if(pw!==pw2){
         alert('비밀번호를 다시 확인해주세요.');
       }
       else {
-        navigate('/login/VerifyEmail');
+        axios.post('203.255.3.23:5000/register/student', { username: email, password: pw })
+        .then(response => {
+          navigate('/login');
+        })
+        .catch(error => {
+          console.error(error);
+        });
       }
     }
     //Enter로 버튼 클릭 가능하게
@@ -84,28 +92,48 @@ const SignUp = () => {
     }
     //버튼 활성화 실시간으로
     useEffect(() =>{
-      if(emailValid && pwValid && pw2Valid){
+      if(NumberValid && pwValid && pw2Valid){
         setNotAllow(false);
         return;
       }
       setNotAllow(true);
-    },[emailValid,pwValid,pw2Valid]);
+    },[NumberValid,pwValid,pw2Valid]);
+
+    const [showEmailField, setShowEmailField] = useState(false);
+
+    const handleButtonClick = () => {
+      if (email === User.email) {
+        alert('존재하는 메일입니다.');
+      } else {
+        setShowEmailField(true);
+        setSendButtonDisabled(true);
+      }
+    };
     
     return (
       <Container component="main" maxWidth="xs">
       <MyBox>
         <MyAvatar/>
         <MyTypography>CSWS</MyTypography>
-        <MyTextFieldID
-          value={email}
-          onChange={handleEmail}
-          onKeyPress={onCheckEnter}/>
-        <div>
-          {
-            !emailValid && email.length > 0 && (
-              <StyledText>올바른 이메일 형식을 입력해주세요</StyledText>
-            )}
-        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={9}>
+            <MyTextFieldID
+              value={email}
+              onChange={handleEmail}
+              onKeyPress={onCheckEnter}
+              disabled={showEmailField}/>
+            <div>
+              {
+                !emailValid && email.length > 0 && (
+                  <StyledText>올바른 이메일 형식을 입력해주세요</StyledText>
+                )}
+            </div></Grid>
+        <Grid item xs={3}>
+          <MyButton onClick={handleButtonClick} disabled={!emailValid || sendButtonDisabled} >
+            전송
+          </MyButton>
+          </Grid></Grid>
+          {showEmailField && <MyTextFieldNumber onNumberValidChange={setNumberValid}/>}
         <MyTextFieldPW
           value={pw}
           onChange={handlePw}
