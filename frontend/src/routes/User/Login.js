@@ -14,6 +14,7 @@ import MyTypography from '../../components/User/MUI/MyTypography';
 import MyAvatar from '../../components/User/MUI/MyAvatar'; 
 import MyTextFieldID from '../../components/User/MUI/MyTextFieldID';
 import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
+import axios from 'axios';
 
 
 
@@ -56,6 +57,7 @@ const Login = () => {
     }
   };
 
+  //
   const handlePw = (e)=> {
     setPw(e.target.value);
     if(e.target.value.length > 0) {
@@ -65,23 +67,31 @@ const Login = () => {
     }
   }
 
-
-  const onClickConfirmButton =() =>{
-    if(email === User.email && pw=== User.pw){
-      alert('로그인 성공!.');
-      setUserState(1);
-      navigate('/');
-    } else {
-      alert('이메일 또는 비밀번호가 일치하지 않습니다.');
-    }
+  //로그인 버튼 눌렀을 때
+  const onClickConfirmButton = () => {
+    axios.post('203.255.3.23:5000/login', {  username: email, password: pw })
+      .then(response => {
+        if (response.data.success) {
+          alert('로그인 성공!');
+          setUserState(1);
+          navigate('/');
+        } else {
+          alert('이메일 또는 비밀번호가 일치하지 않습니다.');
+        }
+      })
+      .catch(error => {
+        alert('로그인 실패: ' + error.message);
+      });
   }
 
+//Enter가 버튼 클릭 기능으로 구현되도록 설정
   const onCheckEnter = (e) => {
     if(e.key === 'Enter' && notAllow===false ) {
       onClickConfirmButton()
     }
-  
   }
+
+//비밀번호 표시 아이콘 눌렀을 때
   const handlePasswordType = e => {
     setPasswordType(prevState => {
       return {
@@ -100,11 +110,7 @@ const Login = () => {
         <MyTypography>
           CSWS
         </MyTypography>
-        <MyTextFieldID
-          value={email}
-          onChange={handleEmail}
-          onKeyPress={onCheckEnter}
-        />
+        <MyTextFieldID value={email} onChange={handleEmail} onKeyPress={onCheckEnter}/>
         <MyTextFieldPW
           type={passwordType.type}
           value={pw}
@@ -125,11 +131,14 @@ const Login = () => {
           로그인
         </MyButton>
         <Grid container>
+        <Grid item xs>
+            <Link sx={{ fontSize: '1rem' }} href="/login/findpw">비밀번호 찾기</Link>
+          </Grid>
           <Grid item xs>
-            <Link href="login/FindPw">비밀번호 재설정</Link>
+            <Link sx={{ fontSize: '1rem' }} href="/login/Signup">회원가입(학생)</Link>
           </Grid>
           <Grid item>
-            <Link href="login/Signup">회원가입</Link>
+            <Link sx={{ fontSize: '1rem' }} href="/login/SignupAd">회원가입(관리자)</Link>
           </Grid>
         </Grid>
       </MyBox>

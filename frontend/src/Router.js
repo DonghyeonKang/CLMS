@@ -4,7 +4,6 @@ import Login from "./routes/User/Login"
 import Admin from "./routes/Admin";
 import SignUp from "./routes/User/SignUp"
 import SignUpAd from "./routes/User/SignUpAd"
-import VerifyEmail from "./routes/User/VerifyEmail";
 import FindPw from "./routes/User/FindPw";
 import ChangePw from "./routes/User/ChangePw";
 import DashBoard from "./routes/Instance/DashBoard";
@@ -24,10 +23,9 @@ const Router = () => {
           <Route path="/Admin" exact element={<Admin/>}/>
           <Route path="/login" exact element={<Login/>}/>
             <Route path="/login/signup" exact element={<SignUp/>}/>
-              <Route path="/login/signup/signupad" exact element={<SignUpAd/>}/>
+              <Route path="/login/signupad" exact element={<SignUpAd/>}/>
             <Route path="/login/findpw" exact element={<FindPw/>}/>
               <Route path="/login/findpw/ChangePw" exact element={<ChangePw/>}/>
-            <Route path="/login/VerifyEmail" exact element={<VerifyEmail/>}/>
           <Route path="/serverResources" exact element={<ServerResources/>}/>
           <Route path="/createServer" exact element={<CreateServer/>}/>
           <Route path="/dashboard" exact element={<DashBoard/>}/>
