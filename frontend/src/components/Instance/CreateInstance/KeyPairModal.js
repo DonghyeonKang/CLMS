@@ -1,10 +1,13 @@
 import { TextField } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { baseUrl } from "../../../Atoms";
 
 //키페어 생성 요청 보내고 나서 수행할 기능 만들기
 const KeyPairModal = ({setModalOpen}) => {
+    const [BASEURL,] = useRecoilState(baseUrl);
     const [keyPairData, setKeyPairData] = useState({});
     const [, setKeyPairType] = useState('RSA');
     const [, setPrivateKeyFileFormat] = useState('.pem');
@@ -17,7 +20,7 @@ const KeyPairModal = ({setModalOpen}) => {
     //키 페어 생성
     const createKeyPair = () => {
         try{
-            axios.post('http://203.255.3.23:5000/instances/keypair',{keyPairData}).then((response)=>console.log(response));
+            axios.post(BASEURL + '/instances/keypair',{keyPairData}).then((response)=>console.log(response));
           } catch (error) {
             console.error(error);
           };
@@ -162,7 +165,7 @@ const ModalBackground = styled.div`
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 140%;
     z-index: 3;
     opacity: 0.5;
     background-color: #f2f3f3;

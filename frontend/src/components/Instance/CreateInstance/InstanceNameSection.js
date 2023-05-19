@@ -6,16 +6,16 @@ const InstanceNameSection = ({setData, data}) => {
       setData({...data, name:event.target.value});
     };
     return (
-        <Name>
+        <Content>
             <Title>인스턴스 이름</Title>
             <TextField label='인스턴스 이름' onChange={nameHandler} size="small"/>
-        </Name>
+        </Content>
     );
 };
 
 export default InstanceNameSection;
 
-const Name = styled.div`
+const Content = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -3,22 +3,24 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { baseUrl } from "../../../Atoms";
 
 //post랑 delete 기능 구현하기
 const TabsContent = ({data, domainName}) => {
+  const [BASEURL,] = useRecoilState(baseUrl);
   const navigate = useNavigate();
   const [list,setList] = useState('detail');
   const [inboundRules, setInboundRules] = useState();
   const [newDomain,setNewDomain] = useState('');
   const [owner,setOwner] = useState('');
   const {instanceId} = useParams();
-
   //인바운드 리스트 조회 instanceId 별로 조회하게 수정하기
   //post, delete 요청 기능 구현하기
   //도메인 변경
   const saveDomain = () => {
     try {
-      axios.post(`http://203.255.3.23:5000/instances/domain`,{instanceId, domainName}).then((response)=> console.log(response));
+      axios.post(BASEURL + `/instances/domain`,{instanceId, newDomain}).then((response)=> console.log(response));
     } catch (error) {
       console.error(error);
     }
@@ -26,27 +28,27 @@ const TabsContent = ({data, domainName}) => {
   //도메인 삭제
   const deleteDomain = () => {
     try {
-      axios.delete(`http://203.255.3.23:5000/instances/domain`,{instanceId}).then((response)=> console.log(response));
+      axios.delete(BASEURL + `/instances/domain`,{instanceId}).then((response)=> console.log(response));
     } catch (error) {
       console.error(error);
     }
   };
-  /*소유자 변경 API
+//소유자 변경 API
   const changeOwner = () => {
     try {
-      axios.post(``,{owner, instanceId}).then((response)=> console.log(response));
+      axios.patch(BASEURL + `/instances/owner`,{owner, instanceId}).then((response)=> console.log(response));
     } catch (error) {
       console.error(error);
     }
-  };*/
+  };
   //인바운드 리스트 불러오기
   useEffect(()=>{
     try {
-      axios.get(`http://203.255.3.23:5000/instances/inbounds/list`).then((response)=> setInboundRules(response.data.inbounds));
+      axios.get(BASEURL + `/instances/inbounds/list`).then((response)=> setInboundRules(response.data.inbounds));
     } catch (error) {
       console.error(error);
     }
-  },[]);
+  },[BASEURL]);
 
     return (
         <>
@@ -139,8 +141,8 @@ const TabsContent = ({data, domainName}) => {
                     <GridContent>123</GridContent>
                   </DetailGrid>
                   <InputGrid>
-                    <TextField label="인스턴스 소유자 변경" onChange={(i)=>setOwner(i)} size="small" style={{marginRight:'5%'}}/>
-                    <Button onClick={()=>console.log(owner)} variant="outlined">소유자 변경</Button>
+                    <TextField label="인스턴스 소유자 변경" onChange={(i)=>setOwner(i.target.value)} size="small" style={{marginRight:'5%'}}/>
+                    <Button onClick={()=>changeOwner()} variant="outlined">소유자 변경</Button>
                   </InputGrid>
                 </>
                 }
