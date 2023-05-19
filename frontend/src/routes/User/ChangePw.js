@@ -9,18 +9,23 @@ import MyBox from '../../components/User/MUI/MyBox';
 import MyAvatar from '../../components/User/MUI/MyAvatar'; 
 import styled from 'styled-components'
 
+
+// 비밀번호 양식 표시 TEXT스타일
 const StyledText = styled.div`
 color:red;
 font-size:0.8rem;
 `;
 
 const ChangePw = () => {
-    const navigate = useNavigate();
-    const [pw, setPw] = useState('');
+    const navigate = useNavigate(); 
+    const [pw, setPw] = useState(''); 
     const [pw2, setPw2] = useState('');
     const [pwValid, setPwValid] = useState(false);
     const [pw2Valid, setPw2Valid] = useState(false);
     const [notAllow,setNotAllow] = useState(true);
+
+
+    // 비밀번호가 비밀번호 양식에 맞는지 확인
     const handlePw = (e)=> {
       setPw(e.target.value);
       const regex =
@@ -31,6 +36,8 @@ const ChangePw = () => {
         setPwValid(false);
       }
     }
+
+    // 비밀번호 확인이 비밀번호 양식에 맞는지 확인
     const handlePw2 = (e)=> {
       setPw2(e.target.value);
       const regex =pw;
@@ -40,21 +47,25 @@ const ChangePw = () => {
         setPw2Valid(false);
       }
     }
+    
+    // 비밀번호 변경 버튼 눌렀을 때
     const onClickConfirmButton =() =>{
-      if(pw!==pw2){
+      if(pw!==pw2){ // 비밀번호와 비밀번호가 일치하지 않을 때
         alert('비밀번호를 다시 확인해주세요.');
       }
       else {
-        alert('비밀번호 변경완료!');
-        navigate('/login');
+        alert('비밀번호 변경완료!'); // 비밀번호와 비밀번호가 일치할 때
+        navigate('/login');// login 페이지로 이동
       }
     }
-    //Enter로 버튼 클릭 가능하게
+
+    //Enter가 버튼 클릭 기능으로 구현되도록 설정
     const onCheckEnter = (e) => {
       if(e.key === 'Enter' && notAllow===false ) {
         onClickConfirmButton()
       }
     }
+
     //버튼 활성화 실시간으로
     useEffect(() =>{
       if(pwValid && pw2Valid){
@@ -64,6 +75,7 @@ const ChangePw = () => {
       setNotAllow(true);
     },[pwValid,pw2Valid]);
     
+    //페이지 UI 설정
     return (
       <Container component="main" maxWidth="xs">
       <MyBox>
@@ -99,6 +111,7 @@ const ChangePw = () => {
       </MyBox>
     </Container>
     );
+    
 };
 
 export default ChangePw;
