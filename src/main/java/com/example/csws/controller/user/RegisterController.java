@@ -53,7 +53,7 @@ public class RegisterController {
             UserDto userDto = model.toUserDto();
 
             // setting for student ,,,,,,, 나중에 수정해야함
-            userDto.setRole("ROLE_MANAGER");
+            userDto.setRole("ROLE_USER");
 
             // register
             registerService.register(userDto);

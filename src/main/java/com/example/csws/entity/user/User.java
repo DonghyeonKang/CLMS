@@ -26,7 +26,6 @@ public class User {
     private String password;
     private String roles;
     private String phone;
-    private String approval;
     @ManyToOne(targetEntity = University.class) // university 엔티티와 관계를 설정할 것임을 명시
     @JoinColumn(name = "university_id") // university 엔티티의 id 값으로 칼럼을 join 함. join 한 칼럼명 설정도 할 수 있는데 기본인 university_id 로 사용
     private University university;
@@ -40,5 +39,9 @@ public class User {
             return Arrays.asList(this.roles.split(","));
         }
         return new ArrayList<>();
+    }
+
+    public void setManager() {
+        this.roles = "ROLE_MANAGER";
     }
 }
