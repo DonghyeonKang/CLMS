@@ -3,19 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { List, ListItemButton } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { baseUrl } from "../../../Atoms";
 
 //아직 API에 serverId 쿼리 적용 안한거 같음
 const ServerResource = ({server,studentList,serverId}) => {
+    const [BASEURL,] = useRecoilState(baseUrl);
     const navigate = useNavigate();
     const [resources,setResources] = useState();
     //서버 리소스
     useEffect(()=>{
         try {
-          axios.get(`http://203.255.3.23:5000/servers/management/resources?serverId=${serverId}`).then((response)=> setResources(response.data));
+          axios.get(BASEURL + `/servers/management/resources?serverId=${serverId}`).then((response)=> setResources(response.data));
         } catch (error) {
           console.error(error);
         }
-      },[serverId]);
+      },[serverId, BASEURL]);
     return (
         <>
         <ServerAddress>{server}</ServerAddress>

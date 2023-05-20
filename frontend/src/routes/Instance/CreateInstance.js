@@ -6,6 +6,8 @@ import KeyPairSection from "../../components/Instance/CreateInstance/KeyPairSect
 import MachineImageSection from "../../components/Instance/CreateInstance/MachineImageSection";
 import StorageSection from "../../components/Instance/CreateInstance/StorageSection";
 import Navigation from "../../components/Navigation";
+import SelectServer from "../../components/Instance/CreateInstance/SelectServer";
+import CreateInstanceButtons from "../../components/Instance/CreateInstance/CreateInstanceButtons";
 
 const CreateInstance = () => {
   const [data,setData] = useState({
@@ -13,6 +15,7 @@ const CreateInstance = () => {
     storage: '1G',
     machineImage: '',
     keyPair: '',
+    serverId: '',
   });
     return (
       <>
@@ -22,8 +25,10 @@ const CreateInstance = () => {
           <Box>
             <InstanceNameSection setData={setData} data={data}/>
             <StorageSection setData={setData} data={data}/>
-            <MachineImageSection setData={setData} data={data}/>
+            <SelectServer setData={setData} data={data}/>
             <KeyPairSection setData={setData} data={data}/>
+            <MachineImageSection setData={setData} data={data}/>
+            <CreateInstanceButtons data={data}/>
           </Box>
         </Content>  
       </>

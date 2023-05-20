@@ -2,13 +2,16 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import {baseUrl} from "../../Atoms"
 
 const MyTable = ({ onRowSelectionModelChange }) => {
+  const [BASEURL,] = useRecoilState(baseUrl);
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://203.255.3.23:5000/user/manager/verification")
+      .get(BASEURL+"/user/manager/verification")
       .then((response) => {
         setRows(response.data.requests);
       });

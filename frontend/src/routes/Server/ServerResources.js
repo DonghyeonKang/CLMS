@@ -4,9 +4,12 @@ import Header from "../../components/Header";
 import ServerTabs from "../../components/Server/ServerResources/ServerTabs";
 import ServerResource from "../../components/Server/ServerResources/ServerResource";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { baseUrl } from "../../Atoms";
 
 //serverId 별로 학생 리스트 요청하도록 구현하기
 const ServerResources = () => {
+    const [BASEURL,] = useRecoilState(baseUrl);
     const [data, setData] = useState([]);
     const [serverList,setServerList] = useState([]);
     const [server,setServer] = useState('');
@@ -15,7 +18,7 @@ const ServerResources = () => {
     //서버 리스트
     const loadServerList = () => {
         try {
-            axios.get(`http://203.255.3.23:5000/servers/management/list?departmentId=0`).then((response)=> setData(response.data.servers));
+            axios.get(BASEURL + `/servers/management/list?departmentId=0`).then((response)=> setData(response.data.servers));
           } catch (error) {
             console.error(error);
           }
@@ -23,7 +26,7 @@ const ServerResources = () => {
     //학생 리스트 (serverId 쿼리로)
     const loadStudentList = () => {
         try {
-            axios.get(`http://203.255.3.23:5000/user/student/list`).then((response)=> setStudentList(response.data.students));
+            axios.get(BASEURL + `/user/student/list`).then((response)=> setStudentList(response.data.students));
           } catch (error) {
             console.error(error);
           }

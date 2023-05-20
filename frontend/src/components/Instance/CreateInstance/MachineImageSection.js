@@ -6,7 +6,7 @@ const MachineImageSection = ({setData, data}) => {
       setData({...data, machineImage: 'ubuntu:latest'});
     };
     return (
-        <OS>
+        <Content>
             <Title>운영체제 종류</Title>
             <OSTabs>
               {data.machineImage === 'ubuntu:latest' ? 
@@ -19,13 +19,13 @@ const MachineImageSection = ({setData, data}) => {
                 <OSImg src={ubuntu} onClick={setUbuntu}/>
               </OSTab>)}
             </OSTabs>
-        </OS>
+        </Content>
     );
 };
 
 export default MachineImageSection;
 
-const OS = styled.div`
+const Content = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -56,6 +56,7 @@ const OSTab = styled.div`
   align-items: center;
   border: 2px solid #eaeded;
   padding: 1%;
+  margin: -20px;
 `;
 
 const OSTabSelected = styled(OSTab)`
