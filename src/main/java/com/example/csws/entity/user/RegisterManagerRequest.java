@@ -19,7 +19,6 @@ public class RegisterManagerRequest {
                 .username(username)
                 .password(password)
                 .phone(phone)
-                .approval("ROLE_USER")
                 .departmentId(Integer.parseInt(departmentId))
                 .universityId(Integer.parseInt(universityId))
                 .build();

@@ -17,7 +17,6 @@ public class RegisterStudentRequest {
         return UserDto.builder()
                 .username(username)
                 .password(password)
-                .approval("ROLE_USER")
                 .departmentId(Integer.parseInt(departmentId))
                 .universityId(Integer.parseInt(universityId))
                 .build();

@@ -14,9 +14,8 @@ public class UserDto {
     private int id;
     private String username;
     private String password;
-    private String Role;
+    private String role;
     private String phone;
-    private String approval;
     private int universityId;
     private int departmentId;
 
@@ -24,8 +23,7 @@ public class UserDto {
         return User.builder()
                 .username(username)
                 .password(password)
-                .roles(Role)
-                .approval(approval)
+                .roles(role)
                 .department(department)
                 .university(university)
                 .build();

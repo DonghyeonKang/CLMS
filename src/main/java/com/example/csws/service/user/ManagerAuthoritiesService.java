@@ -39,15 +39,17 @@ public class ManagerAuthoritiesService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND)); // 예외처리
 
-        // userId로 approval 조회
+        // userId로 roles 조회
         ManagerAuthority managerAuthority = managerAuthoritiesRepository.findById(Long.valueOf(user.getId()))
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND)); // managerAuthority 가 존제하지 않음 에러로 수정해야함
 
         // 엔티티 영속성 설정
         entityManager.persist(managerAuthority);
+        entityManager.persist(user);
 
         // 조회한 approval accept.
         managerAuthority.acceptAuthorityStatus();
+        user.setManager();
     }
 
     // 관리자 인증 요청 거절
