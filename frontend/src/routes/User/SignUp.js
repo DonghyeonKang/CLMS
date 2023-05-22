@@ -11,6 +11,8 @@ import MyTypography from '../../components/User/MUI/MyTypography';
 import MyBox from '../../components/User/MUI/MyBox';
 import MyAvatar from '../../components/User/MUI/MyAvatar'; 
 import MyTextFieldNumber from '../../components/User/MUI/MyTextFieldNumber';
+import { useRecoilState } from "recoil";
+import {baseUrl} from "../../Atoms"
 import axios from 'axios';
 
 const StyledText = styled.div`
@@ -25,6 +27,7 @@ const User = {
 }
 
 const SignUp = () => {
+    const [BASEURL,] = useRecoilState(baseUrl);
     const [NumberValid, setNumberValid] = useState(false); // NumberValid 상태 추가
     const navigate = useNavigate();
     //이메일, 비밀번호, 비밀번호 확인
@@ -75,7 +78,7 @@ const SignUp = () => {
         alert('비밀번호를 다시 확인해주세요.');
       }
       else {
-        axios.post('203.255.3.23:5000/register/student', { username: email, password: pw })
+        axios.post(BASEURL+'/register/student', { username: email, password: pw })
         .then(response => {
           navigate('/login');
         })

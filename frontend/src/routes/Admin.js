@@ -6,7 +6,6 @@ import MyTypography from "../components/User/MUI/MyTypography";
 import Grid from "@mui/material/Grid";
 import MyButtonFalse from "../components/Admin/MyButtonFalse";
 import MyButtonTrue from "../components/Admin/MyButtonTrue";
-
 import MyTable from "../components/Admin/MyTable";
 
 const Admin = () => {
