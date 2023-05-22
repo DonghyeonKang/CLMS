@@ -11,7 +11,8 @@ import { baseUrl } from "../../Atoms";
 const CreateServer = () => {
     const [BASEURL,] = useRecoilState(baseUrl);
     const navigate = useNavigate();
-    const [serverData,setServerData] = useState({serverUsername:"pika"});
+    //departmentId 값 받아오면 넣기
+    const [serverData,setServerData] = useState({departmentId: 1});
 
     const handleServerIP = (e) => {
         setServerData({...serverData, Ipv4:e.target.value});
@@ -19,6 +20,10 @@ const CreateServer = () => {
 
     const handleServerNickName = (e) => {
         setServerData({...serverData, serverName:e.target.value});
+    }
+
+    const handleServerUserName = (e) => {
+        setServerData({...serverData, serverUsername:e.target.value});
     }
     //서버 생성
     const registerServer = () => {
@@ -34,13 +39,15 @@ const CreateServer = () => {
             <Content>
                 <ContentBody>
                     <Title>서버 등록</Title>
-                    <ServerIP>
+                    <Input>
                         <TextField label="등록할 서버의 고정 IP 주소" onChange={(e)=>handleServerIP(e)} fullWidth variant="standard"/>
-                    </ServerIP>
-                    <ServerNickname>
+                    </Input>
+                    <Input>
                         <TextField label="서버 별명 입력" onChange={(e)=>handleServerNickName(e)} fullWidth variant="standard"/>
-                    </ServerNickname>
-                    <DownloadFile href=" " download>서버화 위한 다운로드 파일</DownloadFile>
+                    </Input>
+                    <Input>
+                        <TextField label="유저 이름 입력" onChange={(e)=>handleServerUserName(e)} fullWidth variant="standard"/>
+                    </Input>
                     <Button variant="contained" onClick={()=>registerServer()}>서버 등록</Button>
                     {/*<Button variant="contained" onClick={()=>navigate('/serverResources')}>서버 등록</Button>*/}
                 </ContentBody>
@@ -75,19 +82,8 @@ const Title = styled.div`
     font-weight: 600;
 `;
 
-const ServerIP = styled.div`
+const Input = styled.div`
     width: 400px;
     font-size: 28px;
     margin: 30px;
-`;
-
-const ServerNickname = styled.div`
-    width: 400px;
-    font-size: 28px;
-    margin: 30px;
-`;
-
-const DownloadFile = styled.a`
-    margin: 30px;
-    font-size: 24px;
 `;
