@@ -13,10 +13,12 @@ const ServerResource = ({server,studentList,serverId}) => {
     const [resources,setResources] = useState();
     //서버 리소스
     useEffect(()=>{
-        try {
-          axios.get(BASEURL + `/servers/management/resources?serverId=${serverId}`).then((response)=> setResources(response.data));
-        } catch (error) {
-          console.error(error);
+        if(serverId !== '' && serverId !== undefined){
+            try {
+              axios.get(BASEURL + `/servers/management/resources?serverId=${serverId}`).then((response)=> setResources(response.data));
+            } catch (error) {
+              console.error(error);
+            }
         }
       },[serverId, BASEURL]);
     return (
@@ -47,7 +49,7 @@ const ServerResource = ({server,studentList,serverId}) => {
                     </Resource>
                     <Resource>
                         <GridTitle>서버와 CSWS 연결 상태</GridTitle>
-                        <GridContent>O</GridContent>
+                        <GridContent>{resources?.connection}</GridContent>
                      </Resource>
                 </Resources>
             </ResourceList>
