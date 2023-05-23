@@ -12,16 +12,26 @@ const MyTextFieldNumber = ({ onNumberValidChange }) => {
   const [resetKey, setResetKey] = useState(0);
   const [textFieldValue, setTextFieldValue] = useState('');
   const [numberValid, setNumberValid] = useState(false);
+  const [timerExpired, setTimerExpired] = useState(false);
+  const [timerRunning, setTimerRunning] = useState(true);
 
   const handleResetTimer = () => {
-    setResetKey(resetKey + 1);
-  };
+    if (!numberValid) {
+      setResetKey(resetKey + 1);
+      setTimerExpired(false);
+      window.alert("메일을 다시 전송하였습니다!");
 
+    }
+  };
   const showAlert = () => {
-    if (number === parseInt(textFieldValue)) {
+    if (timerExpired) {
+      window.alert("인증 시간 초과!");
+    } else if (number === parseInt(textFieldValue)) {
       window.alert("인증 완료 되었습니다!");
       setShowEmailField(true);
       setNumberValid(true);
+      setTimerRunning(false); // 타이머 중지
+
     } else {
       window.alert("번호가 틀렸습니다!");
       setNumberValid(false);
@@ -32,10 +42,11 @@ const MyTextFieldNumber = ({ onNumberValidChange }) => {
     setTextFieldValue(event.target.value);
   };
 
-  // Call the parent component's callback to notify the change in number validity
   useEffect(() => {
     onNumberValidChange(numberValid);
   }, [numberValid, onNumberValidChange]);
+
+  const isTextFieldEmpty = textFieldValue === '';
 
   return (
     <Box display="contents">
@@ -51,15 +62,21 @@ const MyTextFieldNumber = ({ onNumberValidChange }) => {
           />
         </Grid>
         <Grid item xs={3}>
-          <MyButton onClick={showAlert}>인증</MyButton>
+          <MyButton onClick={showAlert} disabled={isTextFieldEmpty || numberValid}>
+            인증
+          </MyButton>
         </Grid>
       </Grid>
       <Grid container>
         <Grid item xs>
-          <Link onClick={handleResetTimer}>인증번호 재전송</Link>
+          <Link onClick={handleResetTimer}>
+            인증번호 재전송
+          </Link>
         </Grid>
         <Grid item>
-          <Timer key={resetKey} onReset={handleResetTimer} />
+          {timerExpired ? '00:00' : (
+            <Timer key={resetKey} onTimerExpired={() => setTimerExpired(true)} timerRunning={timerRunning} />
+          )}
         </Grid>
       </Grid>
     </Box>

@@ -25,6 +25,7 @@ const FindPw = () => {
   const [notAllow, setNotAllow] = useState(true);
   const [showEmailField, setShowEmailField] = useState(false);
   const [NumberValid, setNumberValid] = useState(false); 
+  const [sendButtonDisabled, setSendButtonDisabled] = useState(false);
 
   // 이메일 인증 번호 실시간 조회
   useEffect(() => {
@@ -55,6 +56,7 @@ const FindPw = () => {
   const handleButtonClick = () => {
     if (email === User.email) { // 이메일이 서버에 존재할 때
       setShowEmailField(true); 
+      setSendButtonDisabled(true);
     } else { // 존재하지 않을 때
       alert('존재하지 않는 이메일입니다.');
     }
@@ -84,7 +86,7 @@ const FindPw = () => {
             />
           </Grid>
           <Grid item xs={3}>
-            <MyButton onClick={handleButtonClick} disabled={!emailValid}>전송</MyButton>
+            <MyButton onClick={handleButtonClick} disabled={!emailValid || sendButtonDisabled}>전송</MyButton>
           </Grid>
         </Grid>
         {showEmailField && <MyTextFieldNumber onNumberValidChange={setNumberValid} />}

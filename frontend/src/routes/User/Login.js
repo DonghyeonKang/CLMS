@@ -6,6 +6,7 @@ import Container from '@mui/material/Container';
 import MyBox from '../../components/User/MUI/MyBox';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useRecoilState } from "recoil";
+import {baseUrl} from "../../Atoms"
 import { loginState } from "../../Atoms";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -17,7 +18,6 @@ import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
 import axios from 'axios';
 
 
-
 //더미데이터
 const User = {
   email: 'wkdroal11@gmail.com',
@@ -25,6 +25,7 @@ const User = {
 }
 
 const Login = () => {
+  const [BASEURL,] = useRecoilState(baseUrl);
   const navigate = useNavigate(); 
   //이메일,비밀번호
   const [email, setEmail] = useState('');
@@ -69,7 +70,7 @@ const Login = () => {
 
   //로그인 버튼 눌렀을 때
   const onClickConfirmButton = () => {
-    axios.post('203.255.3.23:5000/login', {  username: email, password: pw })
+    axios.post(BASEURL+'/login', {  username: email, password: pw })
       .then(response => {
         if (response.data.success) {
           alert('로그인 성공!');
