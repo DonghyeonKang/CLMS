@@ -4,6 +4,7 @@ import com.example.csws.config.auth.PrincipalDetails;
 import com.example.csws.entity.boundPolicy.InboundPolicyDto;
 import com.example.csws.entity.domain.Domain;
 import com.example.csws.entity.domain.DomainDto;
+import com.example.csws.entity.instance.CreateInstanceRequest;
 import com.example.csws.entity.instance.InstanceDto;
 import com.example.csws.entity.instance.StartInstanceRequest;
 import com.example.csws.entity.user.User;
@@ -81,31 +82,35 @@ public class InstanceController {
 
     // 인스턴스 생성 후 인스턴스 목록으로 이동. 실패(오류 발생) 시 생성 페이지로 돌아가기.
     @PostMapping("/creation")
-    public String createInstance(Model model, Authentication authentication) {
-
+    public String createInstance(@RequestBody CreateInstanceRequest request, Authentication authentication) {
         InstanceDto newDto = new InstanceDto();
-        newDto.setName((String) model.getAttribute("name"));
+
+        // request 의 데이터 dto 에 넣기
+        newDto.setName(request.getName());
+        newDto.setStorage(Double.parseDouble(request.getStorage().substring(0, request.getStorage().length() - 2)));
+        newDto.setKeyName(request.getKeyName());
+        newDto.setOs(request.getOs());
+        newDto.setAddress(request.getAddress());
+        newDto.setPort(Integer.parseInt(request.getPort()));
+        newDto.setServerId(Integer.parseInt(request.getServerId()));
+
+        // dto default 값 추가
         newDto.setCode(1); // 필요없으면 향후 삭제 예정.
         newDto.setState("running");
-        newDto.setStorage((Double) model.getAttribute("storage"));
-        newDto.setAddress((String) model.getAttribute("address"));
-        newDto.setPort((int) model.getAttribute("port"));
-        newDto.setKeyName((String) model.getAttribute("keyName"));
-        newDto.setOs((String) model.getAttribute("os"));
-        // 현재 시간 저장(LocalDateTime을 mySQL에서 호환되도록 Timestamp로 형변환)
-        Timestamp curTimestamp = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp curTimestamp = Timestamp.valueOf(LocalDateTime.now()); // 현재 시간 저장(LocalDateTime을 mySQL에서 호환되도록 Timestamp로 형변환)
         newDto.setCreated(curTimestamp);
+
+        // 로그인된 사용자의 userId 추가
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         newDto.setUserId(principalDetails.getId());
-        newDto.setServerId(1); // 소속 서버 id 가져오도록 수정해야 함. 임시로 임의의 값 설정.
 
+        // 요청에 따라 쉘 스크립트 실행
         String result = instanceService.createInstance(newDto);
         if (result.equals("success")) { // 성공적으로 db에 insert 및 쉘 스크립트 실행
             return "redirect:/instances/listUserid";
         } else {
             return "redirect:/instances/creation";
         }
-
     }
 
     // 키페어 생성

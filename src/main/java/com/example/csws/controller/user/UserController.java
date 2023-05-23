@@ -76,7 +76,7 @@ public class UserController {
     // 학생 목록 조회
     @GetMapping("/student/list")
     public List<String> getStudentList(HttpServletRequest req) {
-        return userService.getStudentList(Integer.parseInt(req.getParameter("departmentId")));  // int 로 형변환해서 조회
+        return userService.getStudentList(Integer.parseInt(req.getParameter("serverId")));  // int 로 형변환해서 조회
     }
 
     // 모든 학교 조회
