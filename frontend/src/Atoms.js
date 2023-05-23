@@ -8,5 +8,5 @@ export const loginState = atom({
 
 export const baseUrl = atom({
     key: `baseurl`,
-    default: 'http://203.255.3.23:5000',
+    default: 'http://localhost:5000',
 });
