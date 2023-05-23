@@ -23,7 +23,7 @@ public class InstanceDto {
     private String keyName;
     private String os;
     private Timestamp created;
-    private int userId;
+    private Long userId;
     private int serverId;
 
     public Instance toEntity(User user, Server server) {

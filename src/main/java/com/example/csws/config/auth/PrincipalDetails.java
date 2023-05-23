@@ -19,7 +19,7 @@ public class PrincipalDetails implements UserDetails {
 		return user;
 	}
 
-    public int getId() {
+    public Long getId() {
         return user.getId();
     }
 
