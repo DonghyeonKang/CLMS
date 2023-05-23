@@ -3,13 +3,17 @@ package com.example.csws.service.server;
 import com.example.csws.entity.department.Department;
 import com.example.csws.entity.server.Server;
 import com.example.csws.entity.server.ServerDto;
+import com.example.csws.entity.server.ServerListResponse;
 import com.example.csws.entity.server.ServerResourceResponse;
 import com.example.csws.repository.department.DepartmentRepository;
 import com.example.csws.repository.server.ServerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ServerService {
@@ -26,8 +30,21 @@ public class ServerService {
     }
 
     // 학과 서버 목록 조회
-    public List<Server> getServerList(int departmentId) {
-        List<Server> serverList = serverRepository.findAllByDepartmentId(departmentId);
+    public List<ServerListResponse> getServerList(int departmentId) {
+        List<ServerListResponse> serverList = new ArrayList<>();
+
+        List<Server> servers = serverRepository.findAllByDepartmentId(departmentId);
+        for(Server server : servers) {
+            serverList.add(
+                    ServerListResponse.builder()
+                            .serverId(server.getId())
+                            .name(server.getName())
+                            .ipv4(server.getIpv4())
+                            .build()
+            );
+        }
+
+        System.out.println(serverList);
         return serverList;
     }
 
