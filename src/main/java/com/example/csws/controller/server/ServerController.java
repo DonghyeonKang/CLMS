@@ -1,11 +1,9 @@
 package com.example.csws.controller.server;
 
-import com.example.csws.entity.server.Server;
-import com.example.csws.entity.server.ServerDto;
-import com.example.csws.entity.server.ServerRegisterRequest;
-import com.example.csws.entity.server.ServerResourceResponse;
+import com.example.csws.entity.server.*;
 import com.example.csws.service.server.ServerService;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,8 +50,14 @@ public class ServerController {
 
     // 서버 리스트 조회
     @GetMapping("/management/list")
-    public List<Server> getServerList(HttpServletRequest req) {
-        return serverService.getServerList(Integer.parseInt(req.getParameter("departmentId")));
+    public JSONObject getServerList(HttpServletRequest req) {
+        List<ServerListResponse> serverList =  serverService.getServerList(Integer.parseInt(req.getParameter("departmentId")));
+        System.out.println(serverList);
+
+        JSONObject obj = new JSONObject();
+        obj.put("servers", serverList);
+
+        return obj;
     }
 
     // 서버 리소스 조회

@@ -13,7 +13,7 @@ const SelectServer = ({data, setData}) => {
       };
     const loadServerList = () => {
         try {
-            axios.get(BASEURL + `/servers/management/list?departmentId=0`).then((response)=> setServerList(response.data.servers));
+            axios.get(BASEURL + `/servers/management/list?departmentId=1`).then((response)=> setServerList(response.data.servers));
           } catch (error) {
             console.error(error);
           }
