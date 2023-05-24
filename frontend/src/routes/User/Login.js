@@ -18,29 +18,20 @@ import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
 import axios from 'axios';
 
 
-//더미데이터
-const User = {
-  email: 'wkdroal11@gmail.com',
-  pw: '12341234'
-}
-
 const Login = () => {
   const [BASEURL,] = useRecoilState(baseUrl);
   const navigate = useNavigate(); 
-  //이메일,비밀번호
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
-  //유효성 검사
   const [,setUserState] = useRecoilState(loginState);
   const [emailValid, setEmailValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
-  //버튼 활성화
   const [notAllow,setNotAllow] = useState(true);
-  //비밀번호 보이기,숨기기
   const [passwordType, setPasswordType] = useState({
     type: 'password',
     visible: false})
-  //이메일과 비밀번호 동기적 사용
+
+  //
   useEffect(() =>{
     if(emailValid && pwValid){
         setNotAllow(false);
@@ -48,6 +39,7 @@ const Login = () => {
       }
       setNotAllow(true);
       },[emailValid,pwValid]);
+      
   //
   const handleEmail = (e)=> {
     setEmail(e.target.value);
@@ -70,7 +62,7 @@ const Login = () => {
 
   //로그인 버튼 눌렀을 때
   const onClickConfirmButton = () => {
-    axios.post(BASEURL+'/login', {  username: email, password: pw })
+    axios.post(BASEURL+'/login', { username: email, password: pw })
       .then(response => {
         if (response.data.success) {
           alert('로그인 성공!');

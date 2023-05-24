@@ -6,7 +6,6 @@ import axios from "axios";
 import { useRecoilState } from "recoil";
 import { baseUrl } from "../../../Atoms";
 
-//아직 API에 serverId 쿼리 적용 안한거 같음
 const ServerResource = ({server,studentList,serverId}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
     const navigate = useNavigate();
@@ -38,6 +37,7 @@ const ServerResource = ({server,studentList,serverId}) => {
             </StudentList>
             <ResourceList>
                 <Title>서버 리소스</Title>
+                {/* 램 사용량, 디스크 사용량 나중에 차트로 수정 */}
                 <Resources>
                     <Resource>
                         <GridTitle>서버 램 사용량</GridTitle>
@@ -70,6 +70,8 @@ const ServerAddress = styled.div`
     padding: 10px 0;
     background-color: #fafafa;
     border: 1px solid #eaeded;
+    border-radius: 20px;
+    margin: 20px 0;
 `;
 
 const ServerDetail = styled.div`

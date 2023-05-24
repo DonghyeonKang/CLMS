@@ -119,7 +119,7 @@ public class InstanceController {
         instanceService.createKeyPair(testName.get("hostName"), testName.get("keyName"));
 
         // 키페어 생성 후 메인 페이지 복귀
-        return "/";
+        return "성공";
     }
 
     // 본인 혹은 타인(관리자 권한)의 인스턴스 목록 조회(userId)
