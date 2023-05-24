@@ -99,6 +99,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 		response.setHeader("Authorization", accessToken);
 		response.setHeader("Set-Cookie", refreshCookie.toString());
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("success", true);
+
+		response.getWriter().print(jsonObject);
 	}
 
 	// 검증 결과가 실패라면
