@@ -9,7 +9,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: "Helvetica", "Arial", sans-serif;
     font-size: 20px;
     color: #545b67;
-    background-color: #f2f3f3;
+    background-color: #ffffff;
   }
 `;
 

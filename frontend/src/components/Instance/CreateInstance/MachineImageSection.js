@@ -34,7 +34,9 @@ const Content = styled.div`
   padding: 2%;
   margin-bottom: 5%;
   box-shadow: 2px 2px #dbdfe0;
-  background-color: #fafafa;
+  background-color: #ffffff;
+  border: 3px solid #f2f3f3;
+  border-radius: 20px;
 `;
 
 const Title = styled.div`
@@ -55,12 +57,13 @@ const OSTab = styled.div`
   justify-content: center;
   align-items: center;
   border: 2px solid #eaeded;
+  border-radius: 10px;
   padding: 1%;
   margin: -20px;
 `;
 
 const OSTabSelected = styled(OSTab)`
-  border: 2px solid #0073bb;
+  border: 2px solid #3eb5c4;
   background-color: #f1faff;
 `;
 

@@ -14,7 +14,7 @@ const CreateInstanceButtons = ({data}) => {
       axios.post(BASEURL + '/instances/creation',data).then((response)=>console.log(response));
     } catch (error) {
       console.error(error);
-    };
+    }
   }
     return (
     <Btn>
@@ -27,7 +27,7 @@ export default CreateInstanceButtons;
 
 const Btn = styled.div`
   width: 100vw;
-  height: 5vh;
+  height: 25px;
   display: flex;
   justify-content: end;
   align-items: flex-end;
@@ -36,14 +36,16 @@ const Btn = styled.div`
 
 const Create = styled.div`
   cursor: pointer;
-  padding: 4px 15px;
+  padding: 6px 15px;
   height: 25px;
-  background-color: #ec7211;
+  background-color: #3eb5c4;
+  border-radius: 20px;
   margin-left: 20px;
   color: white;
   font-weight: 600;
+  border: none;
   &:hover{
-    background-color: #eb5f07;
+    background-color: #2da4b3;
   }
 `;
 
