@@ -162,16 +162,20 @@ const Create = styled.div`
   cursor: pointer;
   margin-left: 20px;
   padding: 4px 15px;
-  background-color: #ec7211;
+  background-color: #3eb5c4;
+  border: none;
+  border-radius: 20px;
   color: white;
   &:hover{
-    background-color: #eb5f07;
+    background-color: #2da4b3;
   }
 `;
 
 const Cancel = styled.div`
   cursor: pointer;
   padding: 4px 15px;
+  
+  border-radius: 20px;
   &:hover{
     background-color: #fafafa;
     color: black;
