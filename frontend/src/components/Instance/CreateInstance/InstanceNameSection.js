@@ -43,9 +43,7 @@ const Content = styled.div`
   padding: 2%;
   margin-bottom: 5%;
   box-shadow: 2px 2px #dbdfe0;
-  background-color: #ffffff;
-  border: 3px solid #f2f3f3;
-  border-radius: 20px;
+  background-color: #fafafa;
 `;
 
 const Title = styled.div`
