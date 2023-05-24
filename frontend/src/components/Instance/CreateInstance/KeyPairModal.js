@@ -11,11 +11,29 @@ const KeyPairModal = ({setModalOpen}) => {
     const [keyPairData, setKeyPairData] = useState({});
     const [, setKeyPairType] = useState('RSA');
     const [, setPrivateKeyFileFormat] = useState('.pem');
+    const [validate,setValidate] = useState(false);
+    const validation = (str) => {
+      const reg = /[a-zA-Zㄱ-ㅎ가-힣0-9]+/gim;
+      return reg.test(str);
+    }
     const keyPairNameHandler = (e) => {
+        const value = e.target.value
         setKeyPairData({
             'instanceId': 1,
-            'name': e.target.value
+            'name': value
         });
+        if(value.length >= 2 && value.length <= 15){
+            for(let i=0;i<value.length;i++){
+              if(validation(value[i])){
+                setValidate(true);
+              }else {
+                setValidate(false);
+                break;
+              }
+            }
+          } else {
+            setValidate(false);
+          }
     }
     //키 페어 생성
     const createKeyPair = () => {
@@ -39,7 +57,7 @@ const KeyPairModal = ({setModalOpen}) => {
                     <BodyContent>
                         <KeyPairName>
                             <div style={{marginBottom:'5px'}}>키 페어 이름</div>
-                            <TextField label="키페어 이름" onChange={keyPairNameHandler} fullWidth variant="outlined" size="small"/>
+                            <TextField label="키페어 이름" onChange={keyPairNameHandler} error={!validate} fullWidth variant="outlined" size="small"/>
                         </KeyPairName>
                         <KeyPairType>
                             <div style={{marginBottom:'5px'}}>키페어 유형</div>
