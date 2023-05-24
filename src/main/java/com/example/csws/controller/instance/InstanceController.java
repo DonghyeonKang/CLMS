@@ -1,17 +1,15 @@
 package com.example.csws.controller.instance;
 
 import com.example.csws.config.auth.PrincipalDetails;
+import com.example.csws.entity.boundPolicy.InboundPolicy;
 import com.example.csws.entity.boundPolicy.InboundPolicyDto;
 import com.example.csws.entity.domain.Domain;
 import com.example.csws.entity.domain.DomainDto;
-import com.example.csws.entity.instance.CreateInstanceRequest;
-import com.example.csws.entity.instance.InstanceDto;
-import com.example.csws.entity.instance.StartInstanceRequest;
+import com.example.csws.entity.instance.*;
 import com.example.csws.entity.user.User;
 import com.example.csws.service.boundPolicy.InboundPolicyService;
 import com.example.csws.service.domain.DomainService;
 import com.example.csws.service.instance.InstanceService;
-import com.example.csws.service.server.ServerService;
 import com.example.csws.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -22,6 +20,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -115,28 +114,28 @@ public class InstanceController {
 
     // 키페어 생성
     @PostMapping("/keypair")
-    public String createKeypair(Model model) {
+    public String createKeypair(@RequestBody Map<String, String> testName) {
 
-        String hostName = (String) model.getAttribute("hostName");
-        String keyName = (String) model.getAttribute("keyName");
-        instanceService.createKeyPair(hostName, keyName);
+        instanceService.createKeyPair(testName.get("hostName"), testName.get("keyName"));
 
+        // 키페어 생성 후 메인 페이지 복귀
         return "성공";
     }
 
     // 본인 혹은 타인(관리자 권한)의 인스턴스 목록 조회(userId)
-    @GetMapping("/listUserId")  // userId랑 serverId 다 post매핑으로 바꾸는게 나을듯?
-    public String listByUserId(Model model) {
+    @GetMapping("/listUserId")  // 본인의 목록을 조회하면 userId가 null로 넘어온다. null을 허용하기 위한 어노테이션.
+    public String listByUserId(@RequestParam(value = "userId", required = false) Integer userId, Model model) {
 
-        List<InstanceDto> newList = new ArrayList<>(); // 반환할 리스트
-        int userId;
+        // 반환할 리스트
+        List<InstanceDto> newList = new ArrayList<>();
+
         // 프론트에서 userId가 넘어오면 관리자가 타 학생의 userId로 조회한다는 의미.
-        if (model.containsAttribute("userId")) {
-            userId = (int)model.getAttribute("userId"); // 조회할 학생의 id 가져오기.
+        if (userId == null) { // 프론트에서 안 넘어오면 Authentication에서 학생 본인 userId 받아오기.
+
+            userId = null;
+            // 로그인 세션이 없는 경우(비정상적인 접근)에 대한 예외 처리 추가 필요.
         }
-        else {  // 프론트에서 안 넘어오면 로그인 세션의 학생 본인 userId 받아오기.
-            userId = 0; // 임의이 값. 추후 Authentication에서 userId 받아오게 수정 예정. 로그인 예외 처리도 할 것.
-        }
+
         // userId로 인스턴스 리스트 받아오기.
         List<InstanceDto> list = instanceService.findAllByUserId(userId); // 중복 코드는 따로 메서드로 만들어도 좋음.
         for (InstanceDto dto : list) {      // 조회 페이지에 띄울 내용만 새 dto 리스트에 담기
@@ -149,22 +148,22 @@ public class InstanceController {
             newDto.setOs(dto.getOs());
             newList.add(newDto);
         }
-        model.addAttribute("instanceList", newList);   // 모델에 올리기.
+        model.addAttribute("instanceList", newList);   // 모델에 올려 뷰로 넘기기.
 
         return VIEWPATH + "리스트 조회 페이지 경로";  // 뷰 페이지로 넘어가기.
     }
 
     // 특정 서버 소속의 인스턴스 목록 조회(serverId)
     @GetMapping("/listServerId")
-    public String listByServerId(Model model) {
+    public String listByServerId(@RequestParam(value = "serverId", required = false) Integer serverId, Model model) {
 
         List<InstanceDto> newList = new ArrayList<>(); // 반환할 리스트
+
         // 서버 id를 안 넘겨줬을 경우 실패 에러 띄우기
-        if (!model.containsAttribute("serverId")) {
+        if (serverId == null) {
             return "/";
         }
 
-        int serverId = (int) model.getAttribute("serverId");
         List<InstanceDto> list = instanceService.findAllByServerId(serverId);
         for (InstanceDto dto : list) {      // 조회 페이지에 띄울 내용만 새 dto 리스트에 담기
             InstanceDto newDto = new InstanceDto();
@@ -183,17 +182,18 @@ public class InstanceController {
 
     // 소유자 변경 페이지 이동.
     @GetMapping("/owner")
-    public String owner(Model model) {  // 변경하려는 인스턴스 상세 정보 반환하기.
+    public String owner(@RequestParam(value = "instanceId", required = false) Integer instanceId, Model model) {  // 변경하려는 인스턴스 상세 정보 반환하기.
 
-        // 인스턴스 id 없을 경우 id 없음 에러 띄우기
-        if (!model.containsAttribute("instanceId")) {
+        // 조회할 인스턴스 id가 프론트에서 넘어오지 않았을 경우 에러 띄우기
+        if (instanceId == null) {
+            System.out.println("null owner");
             return "/";
         }
+        System.out.println(instanceId + " owner");
 
-        int instanceId = (int) model.getAttribute("instanceId");
         Optional<InstanceDto> dto = instanceService.findById(instanceId);
 
-        if (dto.isEmpty()) {    // 반환 객체가 null일 경우 db에 인스턴스 정보 없음 에러 띄우기
+        if (dto.isEmpty()) {    // DB 조회 객체가 null일 경우, db에 인스턴스 정보 없음 에러 띄우기
             return "/";
         }
 
@@ -203,34 +203,32 @@ public class InstanceController {
     }
 
     // 소유자 변경 로직.
-    @PostMapping("/owner")
-    public String changeOwner(Model model) {
+    @PatchMapping("/owner")
+    public String changeOwner(@RequestBody OwnerInstanceRequest ownerInstanceRequest, Model model) {
 
         // instanceId, 소유권 변경할 학생의 username(email) 프론트에서 넘겨받기.
-        int instanceId = (int) model.getAttribute("instanceId");
-        String email = (String) model.getAttribute("email");
-        Optional<InstanceDto> dto = instanceService.findById(instanceId);
-        if (dto.isEmpty()) {    // 반환 객체가 null일 경우 db에 인스턴스 정보 없음 에러 띄우기
+        Optional<InstanceDto> dto = instanceService.findById(ownerInstanceRequest.getInstanceId());
+
+        // 반환 객체가 null일 경우 db에 인스턴스 정보 없음 에러 띄우기
+        if (dto.isEmpty()) {
             return "/";
         }
         InstanceDto newDto = dto.get();
+
         // 새로운 user의 email로 user 엔티티 받아온 뒤, userId 설정
-        User student = userService.getUser(email);
-        newDto.setUserId(student.getId());
+        User student = userService.getUser(ownerInstanceRequest.getUsername());
+        Long newUserId = student.getId();
+        newDto.setUserId(newUserId);
 
         instanceService.createInstance(newDto); // 기존에 존재하던 객체를 업데이트
 
-        return "redirect:listUserid";
+        return "redirect:listUserid?userId=" + newUserId;   // 해당 학생의 userId로 인스턴스 리스트 조회하는 페이지 이동
     }
 
     // 인스턴스 세부사항 조회(instanceId 이용)
     @GetMapping("/detail")
-    public String detail(Model model) {
+    public String detail(@RequestParam Integer instanceId, Model model) {
 
-        if (model.containsAttribute("instanceId")) {
-            return "/"; // id 없음 에러
-        }
-        int instanceId = (int) model.getAttribute("instanceId");
         InstanceDto dto = instanceService.findById(instanceId).get();
         model.addAttribute("instance", dto);
 
@@ -239,9 +237,8 @@ public class InstanceController {
 
     // 특정 인스턴스의 도메인 조회(instanceId)
     @GetMapping("/domain")
-    public String domainList(Model model) {
+    public String domainList(@RequestParam Integer instanceId, Model model) {
 
-        Long instanceId = (Long) model.getAttribute("instanceId");
         Domain domain = domainService.findByInstanceId(String.valueOf(instanceId));
         model.addAttribute("domain", domain);
 
@@ -250,12 +247,9 @@ public class InstanceController {
 
     // 특정 인스턴스의 도메인 저장(추가)
     @PostMapping("/domain")
-    public String domainCreate(Model model) {
+    public String domainCreate(@RequestBody DomainInstanceRequest domainInstanceRequest, Model model) {
 
-        Long instanceId = (Long) model.getAttribute("instanceId");
-        String domainName = (String) model.getAttribute("domainName");
-
-        DomainDto newDto = new DomainDto(domainName, Math.toIntExact(instanceId));
+        DomainDto newDto = new DomainDto(domainInstanceRequest.getDomainName(), domainInstanceRequest.getInstanceId());
 
         domainService.createDomain(newDto);
         model.addAttribute("domain", newDto);
@@ -265,12 +259,9 @@ public class InstanceController {
 
     // 특정 인스턴스의 도메인 삭제
     @DeleteMapping("/domain")
-    public String domainDelete(Model model) {
+    public String domainDelete(@RequestBody DomainInstanceRequest domainInstanceRequest, Model model) {
 
-        Long instanceId = (Long) model.getAttribute("instanceId");
-        String domainName = (String) model.getAttribute("domainName");
-
-        DomainDto newDto = new DomainDto(domainName, Math.toIntExact(instanceId));
+        DomainDto newDto = new DomainDto(domainInstanceRequest.getDomainName(), domainInstanceRequest.getInstanceId());
 
         domainService.deleteDomain(newDto);
 
@@ -279,32 +270,30 @@ public class InstanceController {
 
     // 특정 인스턴스의 인바운드 리스트 조회
     @GetMapping("/inbounds/list")
-    public String inboundList(Model model) {
+    public String inboundList(@RequestParam(required = false) Integer instanceId, Model model) {
 
-        Long instanceId;
-        if (model.containsAttribute("instanceId")) {
-            instanceId = (long) model.getAttribute("instanceId");
-        } else {
+        if (instanceId == null) {
             return "/";     // instanceId 없는 접근일 경우 메인으로 보냄
         }
 
-        List<InboundPolicyDto> dtoList = inboundPolicyService.findAllByInstanceId(Math.toIntExact(instanceId));
+        List<InboundPolicyDto> dtoList = inboundPolicyService.findAllByInstanceId(instanceId);
         model.addAttribute("inbounds", dtoList);
 
         return VIEWPATH + "인바운드 리스트 페이지 경로";
     }
 
-    @PostMapping("/inbounds/setting")
-    public String inboundSetting(Model model) {
+    @PutMapping("/inbounds/setting")
+    public String inboundSetting(@RequestBody List<InboundPolicyDto> inbounds, Model model) {
 
-        List<InboundPolicyDto> dtoList;
-        if (model.containsAttribute("inbounds")) {
-            dtoList = (List<InboundPolicyDto>) model.getAttribute("inbounds");
-        } else {
+        if (inbounds == null) {
             return "/";     // inbound 리스트 없으면 메인으로 반환
         }
 
-        List<InboundPolicyDto> savedList = inboundPolicyService.saveAll(dtoList);
+        for (InboundPolicyDto inbound : inbounds) {
+            System.out.println(inbound.toString());
+        }
+
+        List<InboundPolicyDto> savedList = inboundPolicyService.saveAll(inbounds);
         model.addAttribute("inbounds", savedList);
 
         return VIEWPATH + "인바운드 리스트 페이지 경로";
