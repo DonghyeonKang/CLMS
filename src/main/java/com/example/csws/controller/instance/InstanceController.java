@@ -121,7 +121,7 @@ public class InstanceController {
         String keyName = (String) model.getAttribute("keyName");
         instanceService.createKeyPair(hostName, keyName);
 
-        return null;
+        return "성공";
     }
 
     // 본인 혹은 타인(관리자 권한)의 인스턴스 목록 조회(userId)
