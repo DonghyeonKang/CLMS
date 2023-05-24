@@ -42,6 +42,8 @@ const Main = () => {
             /></div>
         </Slider>
         </SliderWrapper>
+
+        
       </Content>
     </>
   );
@@ -50,6 +52,7 @@ const Main = () => {
 const Content = styled.div`
   padding-top: 55px;
   width: 97%;
+  height: 200vh;
 `;
 const SlideImage = styled.img`
   width: 100%;

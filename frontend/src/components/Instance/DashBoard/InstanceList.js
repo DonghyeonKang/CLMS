@@ -57,7 +57,7 @@ const InstanceTable = styled.table`
 `;
 
 const InstanceHeader = styled.th`
-  background-color: #fafafa;
+  background-color: #f2f3f3;
   text-align: left;
   padding: 3px 0;
   padding-left: 10px;
@@ -68,7 +68,7 @@ const InstanceBody = styled.td`
   text-align: left;
   padding: 5px 0;
   padding-left: 10px;
-  background-color: white;
+  background-color: #fafafa;
 `;
 
 const InstanceId = styled(InstanceBody)`

@@ -11,9 +11,12 @@ import MyTypography from '../../components/User/MUI/MyTypography';
 import MyBox from '../../components/User/MUI/MyBox';
 import MyAvatar from '../../components/User/MUI/MyAvatar'; 
 import MyTextFieldNumber from '../../components/User/MUI/MyTextFieldNumber';
+import MyTextFieldUnivStu from '../../components/User/MUI/MyTextFieldUnivStu';
+import MyTextFieldDeptStu from '../../components/User/MUI/MyTextFieldDeptStu';
 import { useRecoilState } from "recoil";
 import {baseUrl} from "../../Atoms"
 import axios from 'axios';
+
 
 const StyledText = styled.div`
 color:red;
@@ -156,7 +159,9 @@ const SignUp = () => {
             !pw2Valid && pw2.length > 0 && (
               <StyledText>비밀번호가 일치하지 않습니다</StyledText>
             )}
-        </div>        
+        </div>
+        <MyTextFieldUnivStu/>      
+        <MyTextFieldDeptStu/>  
         <MyButton
           disabled={notAllow}
           onClick={onClickConfirmButton}

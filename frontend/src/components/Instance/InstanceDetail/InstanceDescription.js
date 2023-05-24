@@ -11,12 +11,12 @@ const InstanceDescription = ({data, domainName}) => {
               <InstanceState>
                 <State onClick={()=>{setIOption((prev)=>!prev)}}>{IOption ? '인스턴스 상태 ▲' : '인스턴스 상태 ▼'}</State>
                 {IOption ? (
-                  <div style={{position:'absolute', backgroundColor:'white'}}>
+                  <SetStates>
                     <SetState onClick={()=>{setIOption((prev)=>!prev)}}>인스턴스 시작</SetState>
                     <SetState onClick={()=>{setIOption((prev)=>!prev)}}>인스턴스 중지</SetState>
                     <SetState onClick={()=>{setIOption((prev)=>!prev)}}>인스턴스 재부팅</SetState>
                     <SetState onClick={()=>{setIOption((prev)=>!prev)}}>인스턴스 종료</SetState>
-                  </div>) : (<></>)}
+                  </SetStates>) : (<></>)}
               </InstanceState>
             </DetailHeader>
             
@@ -53,10 +53,12 @@ const DetailHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #fafafa;
+  background-color: #f2f3f3;
   border: 1px solid #eaeded;
+  border-radius: 20px;
   width: 100%;
   min-width: 900px;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.div`
@@ -76,6 +78,7 @@ const InstanceState = styled.div`
 
 const State = styled.div`
   padding: 4px 15px;
+  width: 160px;
   font-weight: 600;
   background-color: white;
   &:hover{
@@ -84,11 +87,16 @@ const State = styled.div`
   }
 `;
 
+const SetStates = styled.div`
+  background-color: white;
+  position: absolute;
+`;
+
 const SetState = styled.div`
-  padding: 2px 12px;
+  padding: 4px 15px;
   border: 0.5px solid #879596;
   font-weight: 600;
-  min-width: 150px;
+  width: 160px;
   &:hover{
     background-color: #fafafa;
     border: 2px solid #879596;
@@ -100,12 +108,12 @@ const DescriptionContent = styled.div`
   display: grid;
   grid-template-columns: repeat(3,33%);
   grid-auto-flow: row;
-  gap: 0.5%;
-  row-gap: 5px;
   width: 100%;
   min-width: 900px;
   margin-bottom: 5%;
-  background-color: white;
+  background-color: #ffffff;
+  border: 2px solid #f2f3f3;
+  border-radius: 20px;
 `;
 
 const DescriptionGrid = styled.div`
@@ -113,7 +121,6 @@ const DescriptionGrid = styled.div`
   height: 100px;
   display: flex;
   flex-direction: column;
-  background-color: white;
 `
 
 const GridTitle = styled.div`

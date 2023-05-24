@@ -30,28 +30,29 @@ const Header = styled.div`
 const ServerTab = styled.div`
     cursor: pointer;
     display: inline-block;
-    background-color: #fafafa;
-    border: 1px solid #eaeded;
-    padding: 5px 10px;
+    padding: 5px 15px;
+    margin-right: 20px;
     &:hover{
-    color: #0073bb;
+        color: #3eb5c4;
+        border-bottom: 2px solid  #3eb5c4;
   }
 `;
 
 const SelectedServerTab = styled(ServerTab)`
-    border-bottom: 2px solid  #0073bb;
-    color:  #0073bb;
+    border-bottom: 2px solid  #3eb5c4;
+    color:  #3eb5c4;
 `;
 
 const CreateServer = styled.div`
     cursor: pointer;
-    padding: 4px 15px;
+    padding: 5px 15px;
     height: 25px;
-    background-color: #ec7211;
+    background-color: #3eb5c4;
+    border-radius: 20px;
     margin-left: 20px;
     color: white;
     font-weight: 600;
     &:hover{
-        background-color: #eb5f07;
+        background-color: #2da4b3;
     }
 `;

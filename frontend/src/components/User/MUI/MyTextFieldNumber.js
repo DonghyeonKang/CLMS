@@ -15,6 +15,8 @@ const MyTextFieldNumber = ({ onNumberValidChange }) => {
   const [timerExpired, setTimerExpired] = useState(false);
   const [timerRunning, setTimerRunning] = useState(true);
 
+
+  //이메일 재전송
   const handleResetTimer = () => {
     if (!numberValid) {
       setResetKey(resetKey + 1);
@@ -23,6 +25,8 @@ const MyTextFieldNumber = ({ onNumberValidChange }) => {
 
     }
   };
+
+  //이메일 인증 버튼 눌렀을 시
   const showAlert = () => {
     if (timerExpired) {
       window.alert("인증 시간 초과!");
@@ -31,7 +35,6 @@ const MyTextFieldNumber = ({ onNumberValidChange }) => {
       setShowEmailField(true);
       setNumberValid(true);
       setTimerRunning(false); // 타이머 중지
-
     } else {
       window.alert("번호가 틀렸습니다!");
       setNumberValid(false);
@@ -42,10 +45,12 @@ const MyTextFieldNumber = ({ onNumberValidChange }) => {
     setTextFieldValue(event.target.value);
   };
 
+
   useEffect(() => {
     onNumberValidChange(numberValid);
   }, [numberValid, onNumberValidChange]);
 
+  //빈칸일 때 버튼 비활성화
   const isTextFieldEmpty = textFieldValue === '';
 
   return (

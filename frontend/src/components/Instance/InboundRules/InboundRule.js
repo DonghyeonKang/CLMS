@@ -33,9 +33,9 @@ export default ExistingInboundRule;
 const DeleteRule = styled.td`
   cursor: pointer;
   background-color: white;
-  border: 1px solid black;
+  border: 3px solid #3eb5c4;
+  border-radius: 20px;
   text-align: center;
-  width: 50px;
   padding: 0 8px;
   font-weight: 600;
   &:hover{

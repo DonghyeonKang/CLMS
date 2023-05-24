@@ -26,12 +26,13 @@ const Title = styled.div`
 
 const InstanceCreate = styled.div`
   cursor: pointer;
-  padding: 4px 15px;
+  padding: 6px 15px;
   height: 25px;
-  background-color: #ec7211;
+  background-color: #3eb5c4;
+  border-radius: 20px;
   color: white;
   font-weight: 600;
   &:hover{
-    background-color: #eb5f07;
+    background-color: #2da4b3;
   }
 `
