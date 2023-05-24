@@ -10,6 +10,8 @@ import MyTable from "../components/Admin/MyTable";
 
 const Admin = () => {
   const [arrIds, setArrIds] = useState([]);
+
+  //
   const handleClick = () => {
     console.log(arrIds);
   };
