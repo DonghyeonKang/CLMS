@@ -32,13 +32,11 @@ const User = {
   
 const SignUpAd = () => {
     const [BASEURL,] = useRecoilState(baseUrl);
-    const [NumberValid, setNumberValid] = useState(false); // NumberValid 상태 추가
+    const [NumberValid, setNumberValid] = useState(false);
     const navigate = useNavigate();
-    //이메일, 비밀번호, 비밀번호 확인
     const [email, setEmail] = useState('');
     const [pw, setPw] = useState('');
     const [pw2, setPw2] = useState('');
-    //유효성 검사
     const [emailValid, setEmailValid] = useState(false);
     const [pwValid, setPwValid] = useState(false);
     const [pw2Valid, setPw2Valid] = useState(false);
@@ -46,8 +44,10 @@ const SignUpAd = () => {
     const [UnivDept, setDeptValid] = useState(false);
     const [TelValid, setTelValid] = useState(false);
     const [notAllow,setNotAllow] = useState(true);
-    //이메일 오류메세지
     const [sendButtonDisabled, setSendButtonDisabled] = useState(false);
+    const [showEmailField, setShowEmailField] = useState(false);
+
+    //
     const handleEmail = (e)=> {
       setEmail(e.target.value);
       const regex =
@@ -58,6 +58,7 @@ const SignUpAd = () => {
         setEmailValid(false);
       }
     }
+
     //비밀번호 오류메세지
     const handlePw = (e)=> {
       setPw(e.target.value);
@@ -69,6 +70,7 @@ const SignUpAd = () => {
         setPwValid(false);
       }
     }
+
     //비밀번호 확인 오류메세지
     const handlePw2 = (e)=> {
       setPw2(e.target.value);
@@ -79,6 +81,7 @@ const SignUpAd = () => {
         setPw2Valid(false);
       }
     }
+
     //회원가입 버튼 눌렀을 시 메세지
     const onClickConfirmButton =() =>{
       if(pw!==pw2){
@@ -94,12 +97,14 @@ const SignUpAd = () => {
         });
       }
     }
+
     //Enter로 버튼 클릭 가능하게
     const onCheckEnter = (e) => {
       if(e.key === 'Enter' && notAllow===false ) {
         onClickConfirmButton()
       }
     }
+
     //버튼 활성화 실시간으로
     useEffect(() =>{
       if(NumberValid && pwValid && pw2Valid && UnivValid && UnivDept && TelValid ){
@@ -109,8 +114,7 @@ const SignUpAd = () => {
       setNotAllow(true);
     },[NumberValid,pwValid,pw2Valid,UnivValid,UnivDept,TelValid]);
 
-    const [showEmailField, setShowEmailField] = useState(false);
-
+    //
     const handleButtonClick = () => {
       if (email === User.email) {
         alert('존재하는 메일입니다.');
@@ -120,9 +124,7 @@ const SignUpAd = () => {
       }
     };
 
-
-
-
+    //
     const handleUniv = (e) => {
         setUnivValid(e.target.value);
         if (e.target.value.length > 0) { // 이메일에 한글자로 입력을 했을 시
@@ -132,6 +134,7 @@ const SignUpAd = () => {
         }
       };
 
+    //
     const handleDept = (e) => {
         setDeptValid(e.target.value);
         if (e.target.value.length > 0) { // 이메일에 한글자로 입력을 했을 시
@@ -141,12 +144,13 @@ const SignUpAd = () => {
         }
       };
 
-      const handleTel = (e) => {
-        setTelValid(e.target.value);
-        if (e.target.value.length > 0) { // 이메일에 한글자로 입력을 했을 시
-            setTelValid(true);
+    //
+    const handleTel = (e) => {
+      setTelValid(e.target.value);
+      if (e.target.value.length > 0) { // 이메일에 한글자로 입력을 했을 시
+          setTelValid(true);
         } else { // 이메일에 아무것도 입력 안 했을 시
-            setTelValid(false);
+          setTelValid(false);
         }
       };
 
