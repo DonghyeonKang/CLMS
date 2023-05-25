@@ -57,7 +57,6 @@ const OSTab = styled.div`
   justify-content: center;
   align-items: center;
   border: 2px solid #eaeded;
-  border-radius: 10px;
   padding: 1%;
   margin: -20px;
 `;

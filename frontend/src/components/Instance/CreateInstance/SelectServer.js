@@ -21,7 +21,7 @@ const SelectServer = ({data, setData}) => {
 
     useEffect(()=>{
         loadServerList();
-    },[data, BASEURL]);
+    },[BASEURL]);
 
     return (
     <Content>
