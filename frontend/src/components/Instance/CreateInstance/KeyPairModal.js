@@ -22,7 +22,7 @@ const KeyPairModal = ({setModalOpen}) => {
             'instanceId': 1,
             'name': value
         });
-        if(value.length >= 2 && value.length <= 15){
+        if(value.length >= 1 && value.length <= 250){
             for(let i=0;i<value.length;i++){
               if(validation(value[i])){
                 setValidate(true);
@@ -37,11 +37,15 @@ const KeyPairModal = ({setModalOpen}) => {
     }
     //키 페어 생성
     const createKeyPair = () => {
-        try{
-            axios.post(BASEURL + '/instances/keypair',{keyPairData}).then((response)=>console.log(response));
-          } catch (error) {
-            console.error(error);
-          };
+        if(validate){
+            try{
+                axios.post(BASEURL + '/instances/keypair',{keyPairData}).then((response)=>console.log(response));
+              } catch (error) {
+                console.error(error);
+              };
+        } else {
+            alert('올바른 키 페어 이름을 입력해 주세요.');
+        }
     }
     return (
         <CreateKeyPair>

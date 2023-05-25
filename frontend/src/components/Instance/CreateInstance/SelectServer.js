@@ -21,12 +21,12 @@ const SelectServer = ({data, setData}) => {
 
     useEffect(()=>{
         loadServerList();
-    },[data, BASEURL]);
+    },[BASEURL]);
 
     return (
     <Content>
         <Title>서버 선택</Title>
-        <Select label="server" onChange={serverIdHandler} value={data.serverId ?? ''} size='small'>
+        <Select labelId="server" onChange={serverIdHandler} value={data.serverId ?? ''} size='small'>
             {serverList.map((i)=><MenuItem value={i?.id} key={i?.id}>{i?.name}</MenuItem>)}
         </Select>
     </Content>);

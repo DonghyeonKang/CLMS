@@ -4,9 +4,8 @@ import KeyPairModal from "./KeyPairModal";
 import { TextField } from "@mui/material";
 
 
-const KeyPairSection = ({setData, data}) => {
+const KeyPairSection = ({setData, data, validate, setValidate}) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [validate,setValidate] = useState(false);
   const validation = (str) => {
     const reg = /[a-zA-Zㄱ-ㅎ가-힣0-9]+/gim;
     return reg.test(str);
@@ -54,7 +53,9 @@ const Content = styled.div`
   padding: 2%;
   margin-bottom: 5%;
   box-shadow: 2px 2px #dbdfe0;
-  background-color: #fafafa;
+  background-color: #ffffff;
+  border: 3px solid #f2f3f3;
+  border-radius: 20px;
 `;
 
 const KeyPair = styled.div`

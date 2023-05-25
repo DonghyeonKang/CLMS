@@ -1,9 +1,7 @@
 import { TextField } from "@mui/material";
-import { useState } from "react";
 import styled from "styled-components";
 
-const InstanceNameSection = ({setData, data}) => {
-    const [validate,setValidate] = useState(false);
+const InstanceNameSection = ({setData, data, validate, setValidate}) => {
     const validation = (str) => {
       const reg = /[a-zA-Zㄱ-ㅎ가-힣0-9]+/gim;
       return reg.test(str);
@@ -43,7 +41,9 @@ const Content = styled.div`
   padding: 2%;
   margin-bottom: 5%;
   box-shadow: 2px 2px #dbdfe0;
-  background-color: #fafafa;
+  background-color: #ffffff;
+  border: 3px solid #f2f3f3;
+  border-radius: 20px;
 `;
 
 const Title = styled.div`
