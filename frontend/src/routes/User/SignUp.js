@@ -42,7 +42,9 @@ const SignUp = () => {
   const [notAllow,setNotAllow] = useState(true);
   const [sendButtonDisabled, setSendButtonDisabled] = useState(false);
   const [showEmailField, setShowEmailField] = useState(false);
-  
+  const [UnivStu, setUnivStu] = useState('');
+  const [DeptStu, setDeptStu] = useState('');
+
   const handleEmail = (e) => {
     setEmail(e.target.value);
     const regex =
@@ -75,11 +77,12 @@ const SignUp = () => {
     }
   }
 
+
   const onClickConfirmButton = () => {
     if(pw !== pw2){
       alert('비밀번호를 다시 확인해주세요.');
     } else {
-      axios.post(BASEURL+'/register/student', { username: email, password: pw })
+      axios.post(BASEURL+'/register/student', { username: email, password: pw, universityId: UnivStu , departmentId: DeptStu })
         .then(response => {
           navigate('/login');
         })
@@ -96,12 +99,12 @@ const SignUp = () => {
   }
 
   useEffect(() => {
-    if(NumberValid && pwValid && pw2Valid){
+    if(NumberValid && pwValid && pw2Valid && UnivStu && DeptStu ){
       setNotAllow(false);
     } else {
       setNotAllow(true);
     }
-  }, [NumberValid, pwValid, pw2Valid]);
+  }, [NumberValid, pwValid, pw2Valid, UnivStu , DeptStu]);
 
   const handleButtonClick = () => {
     if (email === User.email) {
@@ -117,6 +120,7 @@ const SignUp = () => {
         });
     }
   };
+  
   
   return (
     <Container component="main" maxWidth="xs">
@@ -170,8 +174,8 @@ const SignUp = () => {
             )
           }
         </div>
-        <MyTextFieldUnivStu/>      
-        <MyTextFieldDeptStu/>  
+        <MyTextFieldUnivStu setUnivStu={setUnivStu}/>
+        <MyTextFieldDeptStu universityId={UnivStu} setDeptStu={setDeptStu}/>  
         <MyButton
           disabled={notAllow}
           onClick={onClickConfirmButton}
