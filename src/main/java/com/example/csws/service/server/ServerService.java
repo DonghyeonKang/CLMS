@@ -40,11 +40,11 @@ public class ServerService {
                             .id(server.getId())
                             .name(server.getName())
                             .ipv4(server.getIpv4())
+                            .hostname(server.getServerUsername())
                             .build()
             );
         }
 
-        System.out.println(serverList);
         return serverList;
     }
 
