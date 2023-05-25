@@ -6,8 +6,6 @@ import MyTypography from '../../components/User/MUI/MyTypography';
 import MyTextFieldID from "../../components/User/SignUpAd/MyTextFieldID";
 import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
 import MyTextFieldPW2 from '../../components/User/MUI/MyTextFieldPW2';
-import MyTextFieldUniv from "../../components/User/SignUpAd/MyTextFieldUniv";
-import MyTextFieldDept from "../../components/User/SignUpAd/MyTextFieldDept";
 import MyTextFieldTel from "../../components/User/SignUpAd/MyTextFieldTel";
 import MyButton from "../../components/User/SignUpAd/MyButton";
 import axios from 'axios';
@@ -17,7 +15,8 @@ import {baseUrl} from "../../Atoms"
 import styled from 'styled-components'
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-
+import MyTextFieldUnivStu from '../../components/User/MUI/MyTextFieldUnivStu';
+import MyTextFieldDeptStu from '../../components/User/MUI/MyTextFieldDeptStu';
 
 const StyledText = styled.div`
 color:red;
@@ -40,12 +39,12 @@ const SignUpAd = () => {
     const [emailValid, setEmailValid] = useState(false);
     const [pwValid, setPwValid] = useState(false);
     const [pw2Valid, setPw2Valid] = useState(false);
-    const [UnivValid, setUnivValid] = useState(false);
-    const [UnivDept, setDeptValid] = useState(false);
     const [TelValid, setTelValid] = useState(false);
     const [notAllow,setNotAllow] = useState(true);
     const [sendButtonDisabled, setSendButtonDisabled] = useState(false);
     const [showEmailField, setShowEmailField] = useState(false);
+    const [UnivStu, setUnivStu] = useState('');
+    const [DeptStu, setDeptStu] = useState('');
 
     //
     const handleEmail = (e)=> {
@@ -88,7 +87,7 @@ const SignUpAd = () => {
         alert('비밀번호를 다시 확인해주세요.');
       }
       else {
-        axios.post(BASEURL+'/register/student', { username: email, password: pw })
+        axios.post(BASEURL+'/register/student', { username: email, password: pw, universityId: UnivStu , departmentId: DeptStu, phone: TelValid})
         .then(response => {
           navigate('/login');
         })
@@ -107,12 +106,12 @@ const SignUpAd = () => {
 
     //버튼 활성화 실시간으로
     useEffect(() =>{
-      if(NumberValid && pwValid && pw2Valid && UnivValid && UnivDept && TelValid ){
+      if(NumberValid && pwValid && pw2Valid && UnivStu && DeptStu && TelValid ){
         setNotAllow(false);
         return;
       }
       setNotAllow(true);
-    },[NumberValid,pwValid,pw2Valid,UnivValid,UnivDept,TelValid]);
+    },[NumberValid,pwValid,pw2Valid,UnivStu,DeptStu,TelValid]);
 
     //
     const handleButtonClick = () => {
@@ -124,27 +123,6 @@ const SignUpAd = () => {
       }
     };
 
-    //
-    const handleUniv = (e) => {
-        setUnivValid(e.target.value);
-        if (e.target.value.length > 0) { // 이메일에 한글자로 입력을 했을 시
-            setUnivValid(true);
-        } else { // 이메일에 아무것도 입력 안 했을 시
-            setUnivValid(false);
-        }
-      };
-
-    //
-    const handleDept = (e) => {
-        setDeptValid(e.target.value);
-        if (e.target.value.length > 0) { // 이메일에 한글자로 입력을 했을 시
-            setDeptValid(true);
-        } else { // 이메일에 아무것도 입력 안 했을 시
-            setDeptValid(false);
-        }
-      };
-
-    //
     const handleTel = (e) => {
       setTelValid(e.target.value);
       if (e.target.value.length > 0) { // 이메일에 한글자로 입력을 했을 시
@@ -199,8 +177,8 @@ const SignUpAd = () => {
               <StyledText>비밀번호가 일치하지 않습니다</StyledText>
             )}
         </div>    
-            <MyTextFieldUniv onChange={handleUniv}/>
-            <MyTextFieldDept onChange={handleDept}/>
+            <MyTextFieldUnivStu setUnivStu={setUnivStu}/>
+            <MyTextFieldDeptStu universityId={UnivStu} setDeptStu={setDeptStu}/>  
             <MyTextFieldTel  onChange={handleTel}/>
             <MyButton disabled={notAllow} OnClick={onClickConfirmButton}/>
         </MyBox>
