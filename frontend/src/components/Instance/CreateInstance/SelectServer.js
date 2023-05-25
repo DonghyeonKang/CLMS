@@ -4,12 +4,27 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { baseUrl } from "../../../Atoms";
+import { arSD } from "@mui/x-data-grid";
 
-const SelectServer = ({data, setData}) => {
+const SelectServer = ({data, setData, setHostname}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
-    const [serverList,setServerList] = useState([]);
+    const [serverList,setServerList] = useState([
+      {
+        id: 1,
+        name: 'aasd',
+        hostname: 'asdfasdf',
+      },
+      {
+        id: 2,
+        name: 'fasd',
+        hostname: 'fdafsda',
+      }
+    ]);
     const serverIdHandler = (event) => {
-      setData({...data, serverId: event.target.value});
+      const value = event.target.value;
+      setData({...data, serverId: value});
+      const hostname = serverList?.filter((i)=>i?.id === value)[0]?.hostname;
+      setHostname(hostname);
       };
     const loadServerList = () => {
         try {
