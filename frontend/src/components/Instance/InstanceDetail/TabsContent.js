@@ -34,7 +34,6 @@ const TabsContent = ({data, domainName}) => {
     if(domainValidation(value)){
       //정규표현식 만족하면
       setDomainValidate(true);
-      console.log(value.length);
       if(value.length <= 8 || value.length >= 250){
         //글자수 만족 못하면
         setDomainValidate(false);
@@ -62,10 +61,14 @@ const TabsContent = ({data, domainName}) => {
   //요청 보낸 다음 기능 추가하기
   //도메인 변경
   const saveDomain = () => {
-    try {
-      axios.post(BASEURL + `/instances/domain`,{instanceId, newDomain}).then((response)=> console.log(response));
-    } catch (error) {
-      console.error(error);
+    if(domainValidate){
+      try {
+        axios.post(BASEURL + `/instances/domain`,{instanceId, newDomain}).then((response)=> console.log(response));
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      alert('도메인 주소를 입력해 주세요.')
     }
   };
   //도메인 삭제
@@ -78,10 +81,14 @@ const TabsContent = ({data, domainName}) => {
   };
 //소유자 변경 API
   const changeOwner = () => {
-    try {
-      axios.patch(BASEURL + `/instances/owner`,{owner, instanceId}).then((response)=> console.log(response));
-    } catch (error) {
-      console.error(error);
+    if(ownerValidate){
+      try {
+        axios.patch(BASEURL + `/instances/owner`,{owner, instanceId}).then((response)=> console.log(response));
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      alert('사용자 이름(이메일)을 입력해 주세요.');
     }
   };
   //인바운드 리스트 불러오기 (instanceId 별로 조회하게 수정하기)

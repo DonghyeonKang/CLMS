@@ -17,18 +17,20 @@ const CreateInstance = () => {
     keyPair: '',
     serverId: '',
   });
+  const [nameValidate,setNameValidate] = useState(false);
+  const [keyPairValidate,setKeyPairValidate] = useState(false);
     return (
       <>
         <Header/>
         <Content>
           <Navigation/>
           <Box>
-            <InstanceNameSection setData={setData} data={data}/>
+            <InstanceNameSection setData={setData} data={data} validate={nameValidate} setValidate={setNameValidate}/>
             <StorageSection setData={setData} data={data}/>
             <SelectServer setData={setData} data={data}/>
-            <KeyPairSection setData={setData} data={data}/>
+            <KeyPairSection setData={setData} data={data} validate={keyPairValidate} setValidate={setKeyPairValidate}/>
             <MachineImageSection setData={setData} data={data}/>
-            <CreateInstanceButtons data={data}/>
+            <CreateInstanceButtons data={data} validate={nameValidate&&keyPairValidate}/>
           </Box>
         </Content>  
       </>
