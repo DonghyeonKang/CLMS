@@ -4,9 +4,8 @@ import KeyPairModal from "./KeyPairModal";
 import { TextField } from "@mui/material";
 
 
-const KeyPairSection = ({setData, data}) => {
+const KeyPairSection = ({setData, data, validate, setValidate}) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [validate,setValidate] = useState(false);
   const validation = (str) => {
     const reg = /[a-zA-Zㄱ-ㅎ가-힣0-9]+/gim;
     return reg.test(str);

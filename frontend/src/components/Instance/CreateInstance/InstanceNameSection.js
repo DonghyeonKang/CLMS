@@ -1,9 +1,7 @@
 import { TextField } from "@mui/material";
-import { useState } from "react";
 import styled from "styled-components";
 
-const InstanceNameSection = ({setData, data}) => {
-    const [validate,setValidate] = useState(false);
+const InstanceNameSection = ({setData, data, validate, setValidate}) => {
     const validation = (str) => {
       const reg = /[a-zA-Zㄱ-ㅎ가-힣0-9]+/gim;
       return reg.test(str);
