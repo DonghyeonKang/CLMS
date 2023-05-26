@@ -8,18 +8,7 @@ import { arSD } from "@mui/x-data-grid";
 
 const SelectServer = ({data, setData, setHostname}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
-    const [serverList,setServerList] = useState([
-      {
-        id: 1,
-        name: 'aasd',
-        hostname: 'asdfasdf',
-      },
-      {
-        id: 2,
-        name: 'fasd',
-        hostname: 'fdafsda',
-      }
-    ]);
+    const [serverList,setServerList] = useState([]);
     const serverIdHandler = (event) => {
       const value = event.target.value;
       setData({...data, serverId: value});
