@@ -1,19 +1,30 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { loginState } from "../Atoms";
+import { useRecoilState } from "recoil";
+import { loginState, tokenState } from "../Atoms";
 import mainlogo from "../img/Logo.png" ;
 
-//학생: 대시보드, 관리자: 서버 리소스, 어드민: 관리자 인증
-
 const Header = () => {
-  const isLoggedIn = useRecoilValue(loginState);
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
+  const [, setToken] = useRecoilState(tokenState);
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setIsLoggedIn(0);
+    setToken(null);
+    localStorage.removeItem('jwt');
+    navigate('/login');
+  };
+
   return (
     <HeaderContent>
       <HeaderLogo src={mainlogo} onClick={() => navigate('/')}/>
-      {(isLoggedIn === 0) ? <HeaderBtn onClick={() => navigate('/login')}>로그인</HeaderBtn> : 
-      <HeaderBtn onClick={() => navigate('/dashboard')}>대시보드</HeaderBtn>
+      {isLoggedIn === 0 ? 
+        <HeaderBtn onClick={() => navigate('/login')}>로그인</HeaderBtn> : 
+        <ButtonGroup>
+          <HeaderBtn onClick={() => navigate('/dashboard')}>대시보드</HeaderBtn>
+          <HeaderBtn onClick={handleLogout}>로그아웃</HeaderBtn>
+        </ButtonGroup>
       }
     </HeaderContent>
   );
@@ -53,4 +64,9 @@ const HeaderBtn = styled.button`
   &:hover{
     background-color: #2da4b3;
   }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;

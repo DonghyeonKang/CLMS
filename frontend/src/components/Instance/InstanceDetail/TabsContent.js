@@ -94,7 +94,7 @@ const TabsContent = ({data, domainName}) => {
   //인바운드 리스트 불러오기 (instanceId 별로 조회하게 수정하기)
   useEffect(()=>{
     try {
-      axios.get(BASEURL + `/instances/inbounds/list`).then((response)=> setInboundRules(response.data.inbounds));
+      axios.get(BASEURL + `/instances/inbounds/list?instanceId=1`).then((response)=> setInboundRules(response.data.inbounds));
     } catch (error) {
       console.error(error);
     }
