@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { baseUrl } from "../../../Atoms";
-import { arSD } from "@mui/x-data-grid";
 
 const SelectServer = ({data, setData, setHostname}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
