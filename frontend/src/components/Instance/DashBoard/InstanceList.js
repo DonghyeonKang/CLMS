@@ -7,10 +7,10 @@ import { useRecoilState } from "recoil";
 import { baseUrl } from "../../../Atoms";
 
 //관리자일때랑 학생일때 구분해서 API 요청 만들기
-const InstanceList = () => {
+const InstanceList = ({setUserId, setAddress}) => {
   const [BASEURL,] = useRecoilState(baseUrl);
   const navigate = useNavigate();
-  const [list,setList] = useState();
+  const [list,setList] = useState([]);
   //인스턴스 리스트
   useEffect(()=>{
     try {
@@ -20,6 +20,12 @@ const InstanceList = () => {
     }
   },[BASEURL]);
     
+  useEffect(()=>{
+    if(list.length>=1){
+      setUserId(list[0]?.userId);
+      setAddress(list[0]?.address);
+    }
+  },[list])
     return (
         <>
             <InstanceTable>
