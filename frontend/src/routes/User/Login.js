@@ -16,14 +16,15 @@ import MyAvatar from '../../components/User/MUI/MyAvatar';
 import MyTextFieldID from '../../components/User/MUI/MyTextFieldID';
 import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
 import axios from 'axios';
-
+import { tokenState } from '../../Atoms';
 
 const Login = () => {
+  const [, setToken] = useRecoilState(tokenState);
+  const [loginStatus, setLoginStatus] = useRecoilState(loginState);
   const [BASEURL,] = useRecoilState(baseUrl);
   const navigate = useNavigate(); 
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
-  const [,setUserState] = useRecoilState(loginState);
   const [emailValid, setEmailValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [notAllow,setNotAllow] = useState(true);
@@ -39,6 +40,14 @@ const Login = () => {
       }
       setNotAllow(true);
       },[emailValid,pwValid]);
+
+  //로그인 상태에 따라 토큰을 관리.
+  useEffect(() => {
+    if (!loginStatus) {
+      setToken(null);
+      localStorage.removeItem('jwt');
+    }
+  }, [loginStatus, setToken]);
       
   //
   const handleEmail = (e)=> {
@@ -66,7 +75,9 @@ const Login = () => {
       .then(response => {
         if (response.data.success) {
           alert('로그인 성공!');
-          setUserState(1);
+          setLoginStatus(true);
+          setToken(response.data.token);
+          localStorage.setItem('jwt', response.data.token); 
           navigate('/');
         } else {
           alert('이메일 또는 비밀번호가 일치하지 않습니다.');
@@ -75,16 +86,16 @@ const Login = () => {
       .catch(error => {
         alert('로그인 실패: ' + error.message);
       });
-  }
+  };
 
-//Enter가 버튼 클릭 기능으로 구현되도록 설정
+  //Enter가 버튼 클릭 기능으로 구현되도록 설정
   const onCheckEnter = (e) => {
     if(e.key === 'Enter' && notAllow===false ) {
       onClickConfirmButton()
     }
   }
 
-//비밀번호 표시 아이콘 눌렀을 때
+  //비밀번호 표시 아이콘 눌렀을 때
   const handlePasswordType = e => {
     setPasswordType(prevState => {
       return {
