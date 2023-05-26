@@ -37,14 +37,14 @@ public class ServerService {
         for(Server server : servers) {
             serverList.add(
                     ServerListResponse.builder()
-                            .serverId(server.getId())
+                            .id(server.getId())
                             .name(server.getName())
                             .ipv4(server.getIpv4())
+                            .hostname(server.getServerUsername())
                             .build()
             );
         }
 
-        System.out.println(serverList);
         return serverList;
     }
 
