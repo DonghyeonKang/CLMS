@@ -3,20 +3,20 @@ import ubuntu from '../../../img/ubuntu.png'
 
 const MachineImageSection = ({setData, data}) => {
     const setUbuntu = () => {
-      setData({...data, machineImage: 'ubuntu:latest'});
+      setData({...data, os: 'ubuntu:latest'});
     };
     return (
         <Content>
             <Title>운영체제 종류</Title>
             <OSTabs>
-              {data.machineImage === 'ubuntu:latest' ? 
+              {data.os === 'ubuntu:latest' ? 
               (<OSTabSelected>
                 <div>ubuntu:latest</div>
-                <OSImg src={ubuntu} onClick={setUbuntu}/>
+                <OSImg src={ubuntu} onClick={()=>setUbuntu()}/>
               </OSTabSelected>) : 
               (<OSTab>
                 <div>ubuntu:latest</div>
-                <OSImg src={ubuntu} onClick={setUbuntu}/>
+                <OSImg src={ubuntu} onClick={()=>setUbuntu()}/>
               </OSTab>)}
             </OSTabs>
         </Content>

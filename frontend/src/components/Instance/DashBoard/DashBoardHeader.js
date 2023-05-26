@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const DashBoardHeader = () => {
+const DashBoardHeader = ({userId, address}) => {
     const navigate = useNavigate();
     return(
         <ContentHeader>
             <Title>인스턴스</Title>
-            <InstanceCreate onClick={() => navigate('createInstance')}>인스턴스 생성</InstanceCreate>
+            <InstanceCreate onClick={() => navigate('createInstance',{state: {userId, address}})}>인스턴스 생성</InstanceCreate>
           </ContentHeader>
     );
 };
