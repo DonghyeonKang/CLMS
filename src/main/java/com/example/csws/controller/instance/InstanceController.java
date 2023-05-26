@@ -114,9 +114,10 @@ public class InstanceController {
 
     // 키페어 생성
     @PostMapping("/keypair")
-    public String createKeypair(@RequestBody Map<String, String> testName) {
+    public String createKeypair(@RequestBody CreateKeyPairRequest request) {
 
-        instanceService.createKeyPair(testName.get("hostName"), testName.get("keyName"));
+        instanceService.createKeyPair(request.getHostname(), request.getName());
+        System.out.println(request.getName() + ", " + request.getHostname());
 
         // 키페어 생성 후 메인 페이지 복귀
         return "성공";
