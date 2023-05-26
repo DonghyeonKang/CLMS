@@ -4,7 +4,7 @@ import KeyPairModal from "./KeyPairModal";
 import { TextField } from "@mui/material";
 
 
-const KeyPairSection = ({setData, data, validate, setValidate}) => {
+const KeyPairSection = ({setData, data, validate, setValidate, hostname}) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [keyPairName, setKeyPairName] = useState('');
   const validation = (str) => {
@@ -39,7 +39,7 @@ const KeyPairSection = ({setData, data, validate, setValidate}) => {
               <CreateKeyPair onClick={()=>setModalOpen(true)}>새 키 페어 생성</CreateKeyPair>
             </div>
         </KeyPair>
-        {modalOpen ? <KeyPairModal setModalOpen={setModalOpen} data={data} setData={setData} setKeyPairName={setKeyPairName} setKeyPairValidate={setValidate}/> : <></>}
+        {modalOpen ? <KeyPairModal setModalOpen={setModalOpen} data={data} setData={setData} setKeyPairName={setKeyPairName} setKeyPairValidate={setValidate} hostname={hostname}/> : <></>}
       </Content> 
     );
 };
