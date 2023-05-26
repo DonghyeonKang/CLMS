@@ -19,6 +19,7 @@ const CreateInstance = () => {
   });
   const [nameValidate,setNameValidate] = useState(false);
   const [keyPairValidate,setKeyPairValidate] = useState(false);
+  const [hostname,setHostname] = useState('');
     return (
       <>
         <Header/>
@@ -27,8 +28,8 @@ const CreateInstance = () => {
           <Box>
             <InstanceNameSection setData={setData} data={data} validate={nameValidate} setValidate={setNameValidate}/>
             <StorageSection setData={setData} data={data}/>
-            <SelectServer setData={setData} data={data}/>
-            <KeyPairSection setData={setData} data={data} validate={keyPairValidate} setValidate={setKeyPairValidate}/>
+            <SelectServer setData={setData} data={data} setHostname={setHostname}/>
+            <KeyPairSection setData={setData} data={data} validate={keyPairValidate} setValidate={setKeyPairValidate} hostname={hostname}/>
             <MachineImageSection setData={setData} data={data}/>
             <CreateInstanceButtons data={data} validate={nameValidate&&keyPairValidate}/>
           </Box>

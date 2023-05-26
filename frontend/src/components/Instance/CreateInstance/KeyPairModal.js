@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { baseUrl } from "../../../Atoms";
 
 //키페어 생성 요청 보내고 나서 수행할 기능 만들기
-const KeyPairModal = ({setModalOpen}) => {
+const KeyPairModal = ({setModalOpen, data, setData, setKeyPairName,setKeyPairValidate, hostname}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
     const [keyPairData, setKeyPairData] = useState({});
     const [, setKeyPairType] = useState('RSA');
@@ -16,16 +16,18 @@ const KeyPairModal = ({setModalOpen}) => {
       const reg = /[a-zA-Zㄱ-ㅎ가-힣0-9]+/gim;
       return reg.test(str);
     }
+    //instanceId를 서버 선택한거에서 받은 hostname으로 대체
     const keyPairNameHandler = (e) => {
-        const value = e.target.value
+        const value = e.target.value;
         setKeyPairData({
-            'instanceId': 1,
+            'hostname': hostname,
             'name': value
         });
         if(value.length >= 1 && value.length <= 250){
             for(let i=0;i<value.length;i++){
               if(validation(value[i])){
                 setValidate(true);
+                setKeyPairValidate(true);
               }else {
                 setValidate(false);
                 break;
@@ -35,7 +37,7 @@ const KeyPairModal = ({setModalOpen}) => {
             setValidate(false);
           }
     }
-    //키 페어 생성
+    //키 페어 생성 (키 페어 이름 값 전달하는거 요청 성공했을 때로 조건 추가해야함)
     const createKeyPair = () => {
         if(validate){
             try{
@@ -43,6 +45,9 @@ const KeyPairModal = ({setModalOpen}) => {
               } catch (error) {
                 console.error(error);
               };
+              setKeyPairName(keyPairData?.name);
+              setData({...data, keyPair: keyPairData?.name});
+              setModalOpen(false);
         } else {
             alert('올바른 키 페어 이름을 입력해 주세요.');
         }
@@ -103,7 +108,7 @@ const ModalContent = styled.div`
     position: absolute;
     width: 35%;
     min-width: 350px;
-    top: 50%;
+    top: 350px;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 5;
@@ -166,16 +171,18 @@ const Create = styled.div`
   cursor: pointer;
   margin-left: 20px;
   padding: 4px 15px;
-  background-color: #ec7211;
+  background-color: #3eb5c4;
+  border-radius: 20px;
   color: white;
   &:hover{
-    background-color: #eb5f07;
+    background-color: #2da4b3;
   }
 `;
 
 const Cancel = styled.div`
   cursor: pointer;
   padding: 4px 15px;
+  border-radius: 20px;
   &:hover{
     background-color: #fafafa;
     color: black;

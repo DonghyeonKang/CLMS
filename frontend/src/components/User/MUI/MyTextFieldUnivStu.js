@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, MenuItem } from '@mui/material';
 import axios from 'axios';
-import {baseUrl} from "../../../Atoms"
+import { baseUrl } from "../../../Atoms";
 import { useRecoilState } from "recoil";
 
-const MyTextFieldUnivStu = (props) => {
+const MyTextFieldUnivStu = ({ setUnivStu, ...props }) => {
   const [BASEURL,] = useRecoilState(baseUrl);
   const [universities, setUniversities] = useState([]);
-
+  
   useEffect(() => {
-    axios.get(BASEURL+ '/register/universities')
+    axios.get(BASEURL + '/register/universities')
       .then(response => {
         setUniversities(response.data.universities);
       })
@@ -18,6 +18,10 @@ const MyTextFieldUnivStu = (props) => {
       });
   }, [BASEURL]);
 
+  const handleUniversityChange = (event) => {
+    setUnivStu(event.target.value);
+};
+
   return (
     <TextField
       required
@@ -25,6 +29,7 @@ const MyTextFieldUnivStu = (props) => {
       fullWidth
       {...props}
       margin="normal"
+      onChange={handleUniversityChange} 
     >
       {universities.map((university) => (
         <MenuItem key={university.id} value={university.name}>
