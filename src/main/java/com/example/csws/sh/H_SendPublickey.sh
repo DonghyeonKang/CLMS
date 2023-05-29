@@ -1,3 +1,10 @@
+<<<<<<< Updated upstream
+=======
+#!/user/bin/bash
+
+. ~/sh/Exception.sh
+
+>>>>>>> Stashed changes
 H_SendPublickey()
 {
     local keyName=$1
@@ -10,4 +17,4 @@ H_SendPublickey()
     docker exec $conName bash -c "echo csws | sudo -S service ssh restart"
 }
 
-H_SendPublickey $1 $2
+H_SendPublickey $1 $2 && HostSuccess H_SendPublickey || HostFailure H_SendPublickey
