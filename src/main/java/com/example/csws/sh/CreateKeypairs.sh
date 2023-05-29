@@ -1,4 +1,7 @@
 #!/usr/bin/bash
+
+. ~/sh/Exception.sh
+
 CreateKeypairs()
 {
     local hostName=$1
@@ -14,5 +17,5 @@ CreateKeypairs()
     # openssl rsa -in ~/Keys/pika/su1 -outform PEM -out ~/Keys/pika/su1.pem
     rm ~/Keys/$hostName/$keyName
 }
-
-CreateKeypairs $1 $2
+Start CreateKeypairs
+CreateKeypairs $1 $2&& CSWSSuccess CreateKeypairs || CSWSFailure CreateKeypairs

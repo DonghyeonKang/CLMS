@@ -1,10 +1,7 @@
-<<<<<<< Updated upstream
-=======
 #!/user/bin/bash
 
 . ~/sh/Exception.sh
 
->>>>>>> Stashed changes
 H_SendPublickey()
 {
     local keyName=$1
