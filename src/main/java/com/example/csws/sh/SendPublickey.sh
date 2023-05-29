@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+. ~/sh/Exception.sh
+
 # 컨테이너 생성할 때 이것도 csws에서 실행되어야 한다.
 SendPublickey()
 {
@@ -12,5 +14,5 @@ SendPublickey()
     scp ~/Keys/$hostName/$keyName.pub $hostName@$hostIp:~/Keys/ 
     ssh $hostName@$hostIp "sh H_SendPublickey.sh $keyName $conName"
 }
-
-SendPublickey $1 $2 $3 $4 $5
+Start SendPublickey
+SendPublickey $1 $2 $3 $4 && CSWSSuccess SendPublickey || CSWSFailure SendPublickey

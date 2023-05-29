@@ -1,18 +1,15 @@
 #!/usr/bin/bash
 
+. ~/sh/Exception.sh
+
 DeleteNginx()
 {
-    local serviceName=$1
+    local hostName=$1
+    local hostIp=$2 
+    
+    local serviceName=$3
 
-    ## 삭제하려고 하는 서비스가 없습니다.
-
-    if [ ! -f /etc/nginx/conf.d/$serviceName.conf ]; then
-        echo "삭제하려고 하는 서비스가 없습니다." 
-        exit 1
-    fi
-
-    sudo rm /etc/nginx/conf.d/$1.conf
-    nginx -s reload
+    ssh $hostName@$hostIp "sh sh/H_DeleteNginx.sh $serviceName"    
 }
-
-DeleteNginx $1
+Start DeleteNginx
+DeleteNginx $1 $2 $3 && CSWSSuccess DeleteNginx || CSWSFailure DeleteNginx
