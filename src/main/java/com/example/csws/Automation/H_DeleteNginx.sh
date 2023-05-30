@@ -1,7 +1,6 @@
 #!/usr/bin/bash
 
-. ~/sh/Exception.sh
-
+. ~/sh/HostException.sh
 H_DeleteNginx()
 {
     local serviceName=$1
@@ -17,4 +16,5 @@ H_DeleteNginx()
     nginx -s reload
 }
 
+Start H_DeleteNginx
 H_DeleteNginx $1 && HostSuccess H_DeleteNginx || HostFailure H_DeleteNginx

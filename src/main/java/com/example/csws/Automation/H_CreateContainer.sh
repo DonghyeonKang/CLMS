@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-. ~/sh/Exception.sh
+. ~/sh/HostException.sh
 
 H_CreateContainer(){
     local hPort=$1 # 호스트 포트
@@ -108,5 +108,5 @@ SavePort()
         echo "$hPort:$cPort" >> "$portTxt"
     fi
 }
-
+Start H_CreateContainer
 H_CreateContainer $1 $2 $3 $4 $5 $6 && OpenPort $1 && SavePort $1 $2 $3 $4 && HostSuccess H_CreateContainer || HostFailure H_CreateContainer

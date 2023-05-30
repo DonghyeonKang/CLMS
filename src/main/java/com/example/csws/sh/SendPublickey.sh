@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-. ~/sh/Exception.sh
+. ~/sh/CSWSException.sh
 
 # 컨테이너 생성할 때 이것도 csws에서 실행되어야 한다.
 SendPublickey()

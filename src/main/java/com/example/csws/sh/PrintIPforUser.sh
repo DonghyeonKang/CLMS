@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-. ~/sh/Exception.sh
+. ~/sh/CSWSException.sh
 
 PrintIPforUser()
 {

@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 #bash
 
-. ~/sh/Exception.sh
+. ~/sh/HostException.sh
 
 H_DeleteInbound()
 {
@@ -64,5 +64,5 @@ H_DeleteInbound()
     sudo iptables -D INPUT -p tcp --dport $delHport -j ACCEPT
     sudo netfilter-persistent save
 }
-
+Start H_DeleteInbound
 H_DeleteInbound $1 $2 $3 $4 && HostSuccess H_DeleteInbound || HostFailure H_DeleteInbound

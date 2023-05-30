@@ -1,6 +1,6 @@
 #!/user/bin/bash
 
-. ~/sh/Exception.sh
+. ~/sh/HostException.sh
 
 H_RestartContaienr()
 {
@@ -21,4 +21,6 @@ H_RestartContaienr()
     docker restart ${containerName} 
 
 }
+
+Start H_RestartContaienr
 H_RestartContaienr $1 && HostSuccess H_RestartContaienr || HostFailure H_RestartContaienr
