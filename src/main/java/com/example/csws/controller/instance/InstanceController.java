@@ -1,7 +1,8 @@
 package com.example.csws.controller.instance;
 
 import com.example.csws.config.auth.PrincipalDetails;
-import com.example.csws.entity.boundPolicy.InboundPolicy;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import com.example.csws.entity.boundPolicy.InboundPolicyDto;
 import com.example.csws.entity.domain.Domain;
 import com.example.csws.entity.domain.DomainDto;
@@ -12,10 +13,15 @@ import com.example.csws.service.domain.DomainService;
 import com.example.csws.service.instance.InstanceService;
 import com.example.csws.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -120,13 +126,28 @@ public class InstanceController {
 
     // 키페어 생성
     @PostMapping("/keypair")
-    public String createKeypair(@RequestBody CreateKeyPairRequest request) {
+    public ResponseEntity<Resource> createKeypair(@RequestBody Map<String, String> testName) throws IOException {
+        System.out.println("keypair 생성 진입");
 
-        instanceService.createKeyPair(request.getHostname(), request.getName());
-        System.out.println(request.getName() + ", " + request.getHostname());
+        // 키페어 생성
+        instanceService.createKeyPair(testName.get("hostName"), testName.get("keyName"));
 
-        // 키페어 생성 후 메인 페이지 복귀
-        return "성공";
+
+        // 파일 경로 지정 (여기서는 resources 디렉토리에 있는 "example.txt" 파일 사용)
+        Resource resource = new ClassPathResource("a.pem");
+
+        // 다운로드할 파일의 MIME 타입 설정
+        String mimeType = Files.probeContentType(resource.getFile().toPath());
+
+        // 파일 다운로드를 위한 HttpHeaders 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=a.pem");
+        headers.setContentType(MediaType.parseMediaType(mimeType));
+
+        // 파일을 ResponseEntity에 포함하여 반환
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
     }
 
     // 본인 혹은 타인(관리자 권한)의 인스턴스 목록 조회(userId)

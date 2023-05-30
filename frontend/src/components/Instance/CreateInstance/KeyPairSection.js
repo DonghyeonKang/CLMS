@@ -15,7 +15,7 @@ const KeyPairSection = ({setData, data, validate, setValidate, hostname}) => {
   const keyPairHandler = (event) => {
     const value = event.target.value;
     setKeyPairName(value);
-    setData({...data, keyPair: value});
+    setData({...data, keyName: value});
     if(value.length >= 1 && value.length <= 250){
       for(let i=0;i<value.length;i++){
         if(validation(value[i])){

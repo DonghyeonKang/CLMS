@@ -1,15 +1,13 @@
 #!/usr/bin/bash
-# ps -a로 출력한 모든 컨테이너의 IP
+
+. ~/sh/Exception.sh
 
 PrintIPforManager()
 {
-    local list=`docker ps -qa`
-    if [ -z $list ]; then
-        echo "7" #도커 컨테이너 리스트가 없습니다.
-        exit 1
-    fi
+    local hostName=$1
+    local hostIp=$2 
 
-    docker inspect -f "{{ .NetworkSettings.IPAddress }}" $(docker ps -qa) 
+    ssh $hostName@$hostIp "sh sh/H_PrintIPforManager.sh"    
 }
-
-PrintIPforManager && echo "99"
+Start PrintIPforManager
+PrintIPforManager $1 $2 && CSWSSuccess PrintIPforManager || CSWSFailure PrintIPforManager
