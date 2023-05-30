@@ -83,15 +83,21 @@ public class InstanceController {
     @PostMapping("/creation")
     public String createInstance(@RequestBody CreateInstanceRequest request, Authentication authentication) {
         InstanceDto newDto = new InstanceDto();
+        System.out.println(request.getName());
+        System.out.println(request.getServerId());
+        System.out.println(request.getStorage());
+        System.out.println(request.getOs());
+        System.out.println(request.getKeyName());
+        System.out.println(request.getUserId());
+        System.out.println(request.getAddress());
 
         // request 의 데이터 dto 에 넣기
         newDto.setName(request.getName());
-        newDto.setStorage(Double.parseDouble(request.getStorage().substring(0, request.getStorage().length() - 2)));
+        newDto.setStorage(Double.parseDouble(request.getStorage().substring(0, request.getStorage().length() - 1)));
         newDto.setKeyName(request.getKeyName());
         newDto.setOs(request.getOs());
+        newDto.setServerId(request.getServerId());
         newDto.setAddress(request.getAddress());
-        newDto.setPort(Integer.parseInt(request.getPort()));
-        newDto.setServerId(Integer.parseInt(request.getServerId()));
 
         // dto default 값 추가
         newDto.setCode(1); // 필요없으면 향후 삭제 예정.

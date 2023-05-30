@@ -11,6 +11,8 @@ import com.example.csws.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +25,7 @@ public class InstanceServiceImpl implements InstanceService{
     private final ServerRepository serverRepository;
     private final InstanceRepository instanceRepository;
     private final ShRunner shRunner;
+    private final EntityManager entityManager;
 
     // 컨트롤러에서 이미 인스턴스의 code 필드를 받아왔음을 가정함.
     // DB에서 프로시저를 이용하여 code를 설정할 것이라면 연관된 전체 기능 수정 필요.
@@ -31,11 +34,20 @@ public class InstanceServiceImpl implements InstanceService{
     // 3) 유저 이름 : 유저가 입력한 이름(instance.getName())
     // 4) 유저 코드 : instanceId로 대체.
     // 5) 용량. 6) 이미지 이름
+    @Transactional
     @Override
     public String createInstance(InstanceDto instanceDto) {
+        // port null 로 저장
         User newUser = userRepository.getReferenceById((long)instanceDto.getUserId());
         Server baseServer = serverRepository.findById(instanceDto.getServerId()).get();
         Instance entity = instanceRepository.save(instanceDto.toEntity(newUser, baseServer));
+
+        // ssh port 값 생성
+        int instanceId = entity.getId();
+        int port = 2000 + instanceId;
+
+        // ssh port 값 저장
+        entity.updateInstancePort(port);
 
         try {
             shRunner.execCommand("CreateContainer.sh", Integer.toString(entity.getPort()), "22",
