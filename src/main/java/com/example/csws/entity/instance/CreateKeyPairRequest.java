@@ -7,12 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateInstanceRequest {
+public class CreateKeyPairRequest {
+    private String hostname;
     private String name;
-    private String storage;
-    private String keyName;
-    private String address;
-    private String os;
-    private int serverId;
-    private Long userId;
 }

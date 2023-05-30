@@ -51,4 +51,7 @@ public class Instance {
                 .build();
     }
 
+    public void updateInstancePort(int port) {
+        this.port = port;
+    }
 }
