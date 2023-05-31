@@ -15,7 +15,8 @@ const CreateInstanceButtons = ({data, validate}) => {
         axios.post(BASEURL + '/instances/creation',data).then((response)=>console.log(response));
       } catch (error) {
         console.error(error);
-      }
+      };
+      navigate("/dashboard");
     } else {
       alert('입력이 올바르지 않습니다.');
     }
