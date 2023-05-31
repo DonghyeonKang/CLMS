@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 # ps -a로 출력한 모든 컨테이너의 IP
 
-. ~/sh/Exception.sh
+. ~/sh/HostException.sh
 
 H_PrintIPforManager()
 {
@@ -14,4 +14,5 @@ H_PrintIPforManager()
     docker inspect -f "{{ .NetworkSettings.IPAddress }}" $(docker ps -qa) 
 }
 
+Start H_PrintIPforManager
 H_PrintIPforManager && HostSuccess H_PrintIPforManager || HostFailure H_PrintIPforManager

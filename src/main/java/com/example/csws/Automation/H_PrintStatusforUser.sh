@@ -15,4 +15,5 @@ H_PrintStatusforUser(){
     docker ps -a --format "table {{.Names}}\t{{.Status}}\t" | grep "$userName[0-99999]"
 }
 
+Start H_PrintStatusforUser
 H_PrintStatusforUser $1 && HostSuccess H_PrintStatusforUser || HostFailure H_PrintStatusforUser

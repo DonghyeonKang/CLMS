@@ -1,7 +1,7 @@
 #!/user/bin/bash
 #bash
 
-. ~/sh/Exception.sh
+. ~/sh/HostException.sh
 
 H_RemoveContainer(){
     
@@ -97,5 +97,6 @@ H_RemoveContainer(){
 #     IFS=$IFS_OLD
 # }
 
+Start H_RemoveContainer
 H_RemoveContainer $1 $2 && HostSuccess H_RemoveContainer || HostFailure H_RemoveContainer
 # $5 = 포트 $6 =ip 의 쌍

@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 # ps로 출력한 유저의 모든 컨테이너 IP
 
-. ~/sh/Exception.sh
+. ~/sh/HostException.sh
 
 H_PrintIPforUser(){
 
@@ -22,4 +22,5 @@ H_PrintIPforUser(){
     docker inspect -f "{{ .Name }} -> {{ .NetworkSettings.IPAddress }}" $(docker ps -qa) | grep "$userName[0-99999]" 
 }
 
+Start H_PrintIPforUser
 H_PrintIPforUser $1 && HostSuccess H_PrintIPforUser || HostFailure H_PrintIPforUser

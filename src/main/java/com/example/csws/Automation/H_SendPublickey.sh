@@ -1,6 +1,6 @@
 #!/user/bin/bash
 
-. ~/sh/Exception.sh
+. ~/sh/HostException.sh
 
 H_SendPublickey()
 {
@@ -14,4 +14,5 @@ H_SendPublickey()
     docker exec $conName bash -c "echo csws | sudo -S service ssh restart"
 }
 
+Start H_SendPublickey
 H_SendPublickey $1 $2 && HostSuccess H_SendPublickey || HostFailure H_SendPublickey

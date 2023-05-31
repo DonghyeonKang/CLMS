@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-. ~/sh/Exception.sh
+. ~/sh/CSWSException.sh
 
 DeleteNginx()
 {
@@ -9,7 +9,7 @@ DeleteNginx()
     
     local serviceName=$3
 
-    ssh $hostName@$hostIp "sh sh/H_DeleteNginx.sh $serviceName"    
+    ssh $hostName@$hostIp "bash sh/H_DeleteNginx.sh $serviceName"    
 }
 Start DeleteNginx
 DeleteNginx $1 $2 $3 && CSWSSuccess DeleteNginx || CSWSFailure DeleteNginx

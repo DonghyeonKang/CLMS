@@ -1,5 +1,5 @@
 #!/user/bin/bash
-. ~/sh/Exception.sh
+. ~/sh/HostException.sh
 
 H_StopContainer()
 {
@@ -21,4 +21,5 @@ H_StopContainer()
     docker stop ${containerName}
 }
 
+Start H_StopContainer
 H_StopContainer $1 && HostSuccess H_StopContainer || HostFailure H_StopContainer

@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-. ~/sh/Exception.sh
+. ~/sh/CSWSException.sh
 
 AddInbound()
 {
@@ -12,7 +12,7 @@ AddInbound()
     local storageSize=$5
     local os=$6 #(csws_ubuntu, csws_centos)
 
-    ssh $hostName@$hostIp "sh sh/H_AddInbound.sh $containerName $newPorts $storageSize $os"
+    ssh $hostName@$hostIp "bash sh/H_AddInbound.sh $containerName $newPorts $storageSize $os"
 }
 Start AddInbound
 AddInbound $1 $2 $3 $4 $5 $6 && CSWSSuccess AddInbound || CSWSFailure AddInbound

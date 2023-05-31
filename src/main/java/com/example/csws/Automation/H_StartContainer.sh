@@ -1,5 +1,5 @@
 #!/user/bin/bash
-. ~/sh/Exception.sh
+. ~/sh/HostException.sh
 
 H_StartContainer(){
 
@@ -20,4 +20,5 @@ H_StartContainer(){
     docker start ${containerName} || exit 1
 }
 
+Start H_StartContainer
 H_StartContainer $1 && HostSuccess H_StartContainer || HostFailure H_StartContainer
