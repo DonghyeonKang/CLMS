@@ -32,7 +32,7 @@ const MyTextFieldUnivStu = ({ setUnivStu, ...props }) => {
       onChange={handleUniversityChange} 
     >
       {universities.map((university) => (
-        <MenuItem key={university.id} value={university.name}>
+        <MenuItem key={university.id} value={university.id}>
           {university.name}
         </MenuItem>
       ))}
