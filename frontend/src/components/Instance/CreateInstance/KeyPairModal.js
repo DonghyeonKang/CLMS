@@ -37,17 +37,32 @@ const KeyPairModal = ({setModalOpen, data, setData, setKeyPairName,setKeyPairVal
             setValidate(false);
           }
     }
-    //키 페어 생성 (키 페어 이름 값 전달하는거 요청 성공했을 때로 조건 추가해야함)
+
+    //키 페어 다운로드 시킬 함수
+    const downloadKeyPair = (str) => {
+        const fileName = 'keyPair.txt';
+        const data = str;
+        const element = document.createElement('a');
+        const file = new Blob([data], {
+        type: 'text/plain',
+        });
+        element.href = URL.createObjectURL(file);
+        element.download = fileName;
+        document.body.appendChild(element);
+        element.click();
+        element.remove();
+    }
+
     const createKeyPair = () => {
         if(validate){
             try{
-                axios.post(BASEURL + '/instances/keypair',keyPairData).then((response)=>console.log(response));
+                axios.post(BASEURL + '/instances/keypair',keyPairData).then((response)=>downloadKeyPair(response.data));
               } catch (error) {
                 console.error(error);
               };
-              setKeyPairName(keyPairData?.name);
-              setData({...data, keyPair: keyPairData?.name});
-              setModalOpen(false);
+            setKeyPairName(keyPairData?.name);
+            setData({...data, keyPair: keyPairData?.name});
+            setModalOpen(false);
         } else {
             alert('올바른 키 페어 이름을 입력해 주세요.');
         }
