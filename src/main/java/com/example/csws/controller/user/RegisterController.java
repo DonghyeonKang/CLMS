@@ -1,18 +1,19 @@
 package com.example.csws.controller.user;
 
 import com.example.csws.entity.user.*;
+import com.example.csws.service.department.DepartmentService;
+import com.example.csws.service.university.UniversityService;
 import com.example.csws.service.user.EmailService;
 import com.example.csws.service.user.RegisterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
@@ -24,6 +25,24 @@ public class RegisterController {
     private final RegisterService registerService;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private final UniversityService universityService;
+    private final DepartmentService departmentService;
+
+    // 모든 학교 조회
+    @GetMapping("/universities")
+    public JSONObject getUniversities() {
+        JSONObject obj = new JSONObject();
+        obj.put("universities", universityService.findAllUniversity());
+        return obj;
+    }
+
+    // universityId 로 모든 학과 조회
+    @GetMapping("/departments")
+    public JSONObject getDepartments(HttpServletRequest req) {
+        JSONObject obj = new JSONObject();
+        obj.put("departments", departmentService.findAllDepartment(Integer.parseInt(req.getParameter("universityId"))));
+        return obj;
+    }
 
     // 학생 회원가입
     @PostMapping("/student")

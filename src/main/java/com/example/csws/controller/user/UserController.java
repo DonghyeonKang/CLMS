@@ -23,10 +23,7 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
-    private final UniversityService universityService;
     private final ManagerAuthoritiesService managerAuthoritiesService;
-    private final DepartmentService departmentService;
-
 
     // 회원 탈퇴
     @DeleteMapping()
@@ -77,17 +74,5 @@ public class UserController {
     @GetMapping("/student/list")
     public List<String> getStudentList(HttpServletRequest req) {
         return userService.getStudentList(Integer.parseInt(req.getParameter("serverId")));  // int 로 형변환해서 조회
-    }
-
-    // 모든 학교 조회
-    @GetMapping("/university")
-    public List<UniversityDto> getUniversities() {
-        return universityService.findAllUniversity();
-    }
-
-    // universityId 로 모든 학과 조회
-    @GetMapping("/departments")
-    public List<DepartmentResponse> getDepartments(HttpServletRequest req) {
-        return departmentService.findAllDepartment(Integer.parseInt(req.getParameter("universityId")));
     }
 }
