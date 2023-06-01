@@ -9,7 +9,7 @@ public interface InstanceService {
 
     public String createInstance(InstanceDto instanceDto);
     public Optional<InstanceDto> findById(int instanceId);
-    public List<InstanceDto> findAllByUserId(int userId);
+    public List<InstanceDto> findAllByUserId(Long userId);
     public List<InstanceDto> findAllByServerId(int serverId);
 
     public String startInstance(int instanceId);

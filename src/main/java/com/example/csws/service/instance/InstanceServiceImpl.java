@@ -67,7 +67,7 @@ public class InstanceServiceImpl implements InstanceService{
 
     // userId로 엔티티 리스트를 받아온 뒤, 각 엔티티를 dto로 변환하고 dto 리스트에 추가하여 반환.
     @Override
-    public List<InstanceDto> findAllByUserId(int userId) {
+    public List<InstanceDto> findAllByUserId(Long userId) {
         List<Instance> entityList = instanceRepository.findAllByUserId(userId);
         List<InstanceDto> dtoList = new ArrayList<>();
         for (Instance entity : entityList) {
