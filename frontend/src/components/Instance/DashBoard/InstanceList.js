@@ -5,20 +5,26 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { baseUrl } from "../../../Atoms";
+import { tokenState } from '../../../Atoms';
 
 //관리자일때랑 학생일때 구분해서 API 요청 만들기
 const InstanceList = ({setUserId, setAddress}) => {
   const [BASEURL,] = useRecoilState(baseUrl);
   const navigate = useNavigate();
   const [list,setList] = useState([]);
+  const [token,] = useRecoilState(tokenState);
   //인스턴스 리스트
-  useEffect(()=>{
+  useEffect(() => {
     try {
-      axios.get(BASEURL + '/instances/list/my').then((response)=> setList(response.data.instances));
+      axios.get(BASEURL + '/instances/list/my', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }).then((response) => setList(response.data.instances));
     } catch (error) {
       console.error(error);
     }
-  },[BASEURL]);
+  }, [BASEURL, token]); 
     
   useEffect(()=>{
     if(list.length>=1){
