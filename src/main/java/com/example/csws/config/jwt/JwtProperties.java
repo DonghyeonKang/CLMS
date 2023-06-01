@@ -8,5 +8,5 @@ public interface JwtProperties {
 	String ACCESS_HEADER_PREFIX = "Authorization";
 	String REFRESH_HEADER_PREFIX = "";
 	String ACCESS_TOKEN = "ngofadsgnid";
-	String REFRESH_TOKEN = "refresh";
+	String REFRESH_TOKEN = "refreshToken";
 }
