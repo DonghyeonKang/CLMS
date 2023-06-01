@@ -16,7 +16,7 @@ const InstanceList = ({setUserId, setAddress}) => {
   //인스턴스 리스트
   useEffect(() => {
     try {
-      axios.get(BASEURL + '/instances/list/my', {
+      axios.get(BASEURL + '/instances/list/user', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

@@ -144,6 +144,7 @@ public class JwtService {
         System.out.println(refreshToken);
         System.out.println("--------------");
 
+        // accessToken 과 refreshToken 이 항상 같이 오는 구조 -> 수정 해야함
         if(accessToken == null) {
             throw new CustomJwtException(JwtErrorCode.JWT_ACCESS_NOT_VALID);
         } else if(refreshToken == null) {
