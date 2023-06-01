@@ -23,7 +23,7 @@ const Header = () => {
         <HeaderBtn onClick={() => navigate('/login')}>로그인</HeaderBtn> : 
         <ButtonGroup>
           <HeaderBtn onClick={() => navigate('/dashboard')}>대시보드</HeaderBtn>
-          <HeaderBtn onClick={handleLogout}>로그아웃</HeaderBtn>
+          <HeaderBtn onClick={() => handleLogout()}>로그아웃</HeaderBtn>
         </ButtonGroup>
       }
     </HeaderContent>

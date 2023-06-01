@@ -4,24 +4,16 @@ import styled from "styled-components";
 import InboundRule from "./InboundRule";
 import axios from "axios";
 import { useRecoilState } from "recoil";
-import { baseUrl } from "../../../Atoms";
+import { baseUrl, tokenState } from "../../../Atoms";
 
 //instanceId 별로 인바운드 리스트 조회 API 요청 하도록 구현
 const EditInboundRules = () => {
     const [BASEURL,] = useRecoilState(baseUrl);
+    const [token,] = useRecoilState(tokenState);
     const navigate = useNavigate();
     const {instanceId} = useParams();
-    const [data,setData] = useState([{
-      id:1,
-      port:20,
-      instanceId
-      },
-      {
-      id:2,
-      port:30,
-      instanceId
-      }]);
-
+    const [data,setData] = useState([]);
+    //규칙 추가 함수
     const addData = () => {
         setData((prev) => [...prev,{
         id:-1,
@@ -30,25 +22,33 @@ const EditInboundRules = () => {
         }]);
     };
 
-    //요청 성공하면 페이지 전환
+    //인바운드 규칙 저장
     const saveInboundRules = () => {
       console.log(data);
       try {
-        axios.put(BASEURL + `/instances/inbounds/setting`,data).then((response)=> console.log(response));
+        axios.put(BASEURL + `/instances/inbounds/setting`,{
+          data,
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }).then((response)=> console.log(response));
+        navigate(`/dashboard/${instanceId}`);
       } catch (error) {
         console.error(error);
       }
     };
-
-/* 인바운드 규칙 리스트 
+    //인바운드 규칙 리스트 불러오기
     useEffect(()=>{
       try {
-        axios.get(BASEURL + `/instances/inbounds/list?instanceId=1`).then((response)=> setData(response.data.inbounds));
+        axios.get(BASEURL + `/instances/inbounds/list?instanceId=${instanceId}`,{
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }).then((response)=> setData(response.data.inbounds));
       } catch (error) {
         console.error(error);
       }
-    },[]);
-*/
+    },[BASEURL, token, instanceId]);
 
     return (
         <>
