@@ -41,12 +41,7 @@ const showAlert = () => {
   } else if (textFieldValue.trim() === '') {
     window.alert("인증번호를 입력해주세요!");
   } else {
-    // 이메일 인증 요청 보내기
-    const verificationData = {
-      authNum: textFieldValue
-    };
-
-    axios.post(BASEURL+'/register/verification', verificationData)
+    axios.post(BASEURL+'/register/verification', {authNumber : textFieldValue, email:email})
       .then(response => {
         if (response.data.success) {
           window.alert("인증이 완료되었습니다!");
