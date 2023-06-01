@@ -96,7 +96,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				.sameSite("Lax")	// 다른 사이트로 쿠키를 보낼 수 있는 지 여부. none 이면 보낼 수 있음 그런데 none 이면 secure 속성도 설정해야함 아니면 경고 메시지와 함께 쿠키를 사용하지 않음. secure 속성은 https 에서만 쿠키를 보내겠다는 속성이다. Strict 옵션은 절대로 보내지 않겠다는 옵션, Lax 옵션은 Strict 에 일부 예외를 두어 적용되는 설정
 				.httpOnly(true)	// httponly option. 프론트에서 js로 쿠키를 뜯어볼 수 없음
 				.build();
-
+		System.out.println("-------------------" + refreshCookie.toString());
 		response.setHeader("Authorization", accessToken);
 		response.setHeader("Set-Cookie", refreshCookie.toString());
 

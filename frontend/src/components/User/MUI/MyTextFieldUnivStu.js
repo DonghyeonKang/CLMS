@@ -9,7 +9,7 @@ const MyTextFieldUnivStu = ({ setUnivStu, ...props }) => {
   const [universities, setUniversities] = useState([]);
   
   useEffect(() => {
-    axios.get(BASEURL + '/register/universities')
+    axios.get(BASEURL+'/register/universities')
       .then(response => {
         setUniversities(response.data.universities);
       })
