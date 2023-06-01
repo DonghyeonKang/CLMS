@@ -120,6 +120,12 @@ const SignUpAd = () => {
       } else {
         setShowEmailField(true);
         setSendButtonDisabled(true);
+        axios.get(BASEURL+'/register/verification?email=',{ username: email })
+          .then(response => {
+          })
+          .catch(error => {
+            console.error(error);
+          });
       }
     };
 
@@ -169,7 +175,7 @@ const SignUpAd = () => {
         </div>        
         <MyTextFieldPW2
           value={pw2}
-          onChange={handlePw2}
+          onChange={handlePw2``}
           onKeyPress={onCheckEnter}/>
         <div>
           {

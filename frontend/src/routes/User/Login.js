@@ -6,13 +6,13 @@ import Container from '@mui/material/Container';
 import MyBox from '../../components/User/MUI/MyBox';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useRecoilState } from "recoil";
-import {baseUrl} from "../../Atoms"
+import { baseUrl } from "../../Atoms"
 import { loginState } from "../../Atoms";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import MyButton from "../../components/User/MUI/MyButton";
 import MyTypography from '../../components/User/MUI/MyTypography';
-import MyAvatar from '../../components/User/MUI/MyAvatar'; 
+import MyAvatar from '../../components/User/MUI/MyAvatar';
 import MyTextFieldID from '../../components/User/MUI/MyTextFieldID';
 import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
 import axios from 'axios';
@@ -22,62 +22,52 @@ const Login = () => {
   const [, setToken] = useRecoilState(tokenState);
   const [loginStatus, setLoginStatus] = useRecoilState(loginState);
   const [BASEURL,] = useRecoilState(baseUrl);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
   const [emailValid, setEmailValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
-  const [notAllow,setNotAllow] = useState(true);
+  const [notAllow, setNotAllow] = useState(true);
   const [passwordType, setPasswordType] = useState({
     type: 'password',
-    visible: false})
+    visible: false
+  })
 
-  //
-  useEffect(() =>{
-    if(emailValid && pwValid){
-        setNotAllow(false);
-        return;
-      }
-      setNotAllow(true);
-      },[emailValid,pwValid]);
-
-  //로그인 상태에 따라 토큰을 관리.
   useEffect(() => {
-    if (!loginStatus) {
-      setToken(null);
-      localStorage.removeItem('jwt');
+    if (emailValid && pwValid) {
+      setNotAllow(false);
+    } else {
+      setNotAllow(true);
     }
-  }, [loginStatus, setToken]);
-      
-  //
-  const handleEmail = (e)=> {
+  }, [emailValid, pwValid]);
+
+  const handleEmail = (e) => {
     setEmail(e.target.value);
-    if(e.target.value.length > 0) {
+    if (e.target.value.length > 0) {
       setEmailValid(true);
     } else {
       setEmailValid(false);
     }
   };
 
-  //
-  const handlePw = (e)=> {
+  const handlePw = (e) => {
     setPw(e.target.value);
-    if(e.target.value.length > 0) {
+    if (e.target.value.length > 0) {
       setPwValid(true);
     } else {
       setPwValid(false);
     }
   }
 
-  //로그인 버튼 눌렀을 때
   const onClickConfirmButton = () => {
-    axios.post(BASEURL+'/login', { username: email, password: pw })
+    axios.post(BASEURL + '/login', { username: email, password: pw })
       .then(response => {
         if (response.data.success) {
           alert('로그인 성공!');
+          const { accessToken } = response.data;
           setLoginStatus(true);
-          setToken(response.data.token);
-          localStorage.setItem('jwt', response.data.token); 
+          setToken(accessToken);
+          localStorage.setItem('accessToken', accessToken);
           navigate('/');
         } else {
           alert('이메일 또는 비밀번호가 일치하지 않습니다.');
@@ -88,15 +78,13 @@ const Login = () => {
       });
   };
 
-  //Enter가 버튼 클릭 기능으로 구현되도록 설정
   const onCheckEnter = (e) => {
-    if(e.key === 'Enter' && notAllow===false ) {
-      onClickConfirmButton()
+    if (e.key === 'Enter' && !notAllow) {
+      onClickConfirmButton();
     }
   }
 
-  //비밀번호 표시 아이콘 눌렀을 때
-  const handlePasswordType = e => {
+  const handlePasswordType = () => {
     setPasswordType(prevState => {
       return {
         type: prevState.visible ? "password" : "text",
@@ -105,16 +93,38 @@ const Login = () => {
     });
   };
 
-  const PasswordIcon =  passwordType.visible ? VisibilityIcon : VisibilityOffIcon;
+  const PasswordIcon = passwordType.visible ? VisibilityIcon : VisibilityOffIcon;
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      setToken(accessToken);
+      setLoginStatus(true);
+    }
+  }, [setToken, setLoginStatus]);
+
+  // API 요청 시 Authorization 헤더에 토큰 추가
+  axios.interceptors.request.use(
+    config => {
+      const accessToken = localStorage.getItem('accessToken');
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+  );
 
   return (
     <Container component="main" maxWidth="xs">
       <MyBox>
-        <MyAvatar/>
+        <MyAvatar />
         <MyTypography>
           CSWS
         </MyTypography>
-        <MyTextFieldID value={email} onChange={handleEmail} onKeyPress={onCheckEnter}/>
+        <MyTextFieldID value={email} onChange={handleEmail} onKeyPress={onCheckEnter} />
         <MyTextFieldPW
           type={passwordType.type}
           value={pw}
@@ -123,19 +133,17 @@ const Login = () => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <PasswordIcon
-                onClick={handlePasswordType}
-                />
+                <PasswordIcon onClick={handlePasswordType} />
               </InputAdornment>
             )
-            }}/>
-        <MyButton 
+          }} />
+        <MyButton
           disabled={notAllow}
           onClick={onClickConfirmButton}>
           로그인
         </MyButton>
         <Grid container>
-        <Grid item xs>
+          <Grid item xs>
             <Link sx={{ fontSize: '1rem' }} href="/login/findpw">비밀번호 찾기</Link>
           </Grid>
           <Grid item xs>
