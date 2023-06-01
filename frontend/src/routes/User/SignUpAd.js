@@ -175,7 +175,7 @@ const SignUpAd = () => {
         </div>        
         <MyTextFieldPW2
           value={pw2}
-          onChange={handlePw2``}
+          onChange={handlePw2}
           onKeyPress={onCheckEnter}/>
         <div>
           {

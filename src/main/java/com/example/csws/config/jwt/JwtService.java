@@ -139,6 +139,11 @@ public class JwtService {
                 .replace(JwtProperties.TOKEN_PREFIX, "");
         map.put("accessToken", accessToken);
 
+        System.out.println("--------------");
+        System.out.println(accessToken);
+        System.out.println(refreshToken);
+        System.out.println("--------------");
+
         if(accessToken == null) {
             throw new CustomJwtException(JwtErrorCode.JWT_ACCESS_NOT_VALID);
         } else if(refreshToken == null) {
