@@ -112,7 +112,7 @@
       } else {
         setShowEmailField(true);
         setSendButtonDisabled(true);
-        axios.get(BASEURL+'/register/verification', { username: email })
+        axios.get(BASEURL+'/register/verification?email=',{ username: email })
           .then(response => {
           })
           .catch(error => {
