@@ -24,6 +24,9 @@ Automation(){
     sudo cat ~/id_rsa.pub >> /home/$USER/.ssh/authorized_keys
     sudo systemctl restart sshd
 
+    # 서버 자원 사용량을 알기 위해 설치
+    sudo apt-get install -y sysstat
+
     # 도커 깔기
     sudo apt-get install -y ca-certificates curl gnupg lsb-release
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
