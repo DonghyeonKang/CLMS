@@ -11,22 +11,79 @@ import { baseUrl } from "../../Atoms";
 const CreateServer = () => {
     const [BASEURL,] = useRecoilState(baseUrl);
     const navigate = useNavigate();
-    const [serverData,setServerData] = useState({serverUsername:"pika"});
+    //departmentId 값 받아오면 넣기
+    const [serverData,setServerData] = useState({departmentId: 1});
 
-    const handleServerIP = (e) => {
-        setServerData({...serverData, Ipv4:e.target.value});
+    const [IPValidate,setIPValidate] = useState(false);
+    const IPValidation = (str) => {
+      const reg = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+      return reg.test(str);
+    }
+    const handleServerIP = (event) => {
+        const value = event.target.value;
+        setServerData({...serverData, Ipv4:value});
+        if(IPValidation(value)){
+            setIPValidate(true);
+        }else {
+            setIPValidate(false);
+        }
+    }
+    
+
+    const [serverNameValidate,setServerNameValidate] = useState(false);
+    const serverNameValidation = (str) => {
+      const reg = /[a-zA-Zㄱ-ㅎ가-힣0-9]+/gim;
+      return reg.test(str);
+    }
+    const handleServerName = (event) => {
+        const value = event.target.value;
+        setServerData({...serverData, serverName:value});
+        if(value.length >= 1 && value.length <= 250){
+            for(let i=0;i<value.length;i++){
+              if(serverNameValidation(value[i])){
+                setServerNameValidate(true);
+              }else {
+                setServerNameValidate(false);
+                break;
+              }
+            }
+          } else {
+            setServerNameValidate(false);
+          }
     }
 
-    const handleServerNickName = (e) => {
-        setServerData({...serverData, serverName:e.target.value});
+    const [serverUserNamevalidate,setServerUserNameValidate] = useState(false);
+    const serverUserNamevalidation = (str) => {
+      const reg = /[a-zA-Zㄱ-ㅎ가-힣0-9]+/gim;
+      return reg.test(str);
+    }
+    const handleServerUserName = (event) => {
+        const value = event.target.value;
+        setServerData({...serverData, serverUsername:value});
+        if(value.length >= 1 && value.length <= 250){
+            for(let i=0;i<value.length;i++){
+              if(serverUserNamevalidation(value[i])){
+                setServerUserNameValidate(true);
+              }else {
+                setServerUserNameValidate(false);
+                break;
+              }
+            }
+          } else {
+            setServerUserNameValidate(false);
+          }
     }
     //서버 생성
     const registerServer = () => {
+      if(IPValidate && serverNameValidate && serverUserNamevalidate){
         try{
-            axios.post(BASEURL + '/servers/register/new',serverData).then((response)=>console.log(response));
-          } catch (error) {
-            console.error(error);
-          };
+          axios.post(BASEURL + '/servers/register/new',serverData).then((response)=>console.log(response));
+        } catch (error) {
+          console.error(error);
+        };
+      } else {
+        alert('입력이 올바르지 않습니다.');
+      }
     }
     return (
         <>
@@ -34,15 +91,31 @@ const CreateServer = () => {
             <Content>
                 <ContentBody>
                     <Title>서버 등록</Title>
-                    <ServerIP>
-                        <TextField label="등록할 서버의 고정 IP 주소" onChange={(e)=>handleServerIP(e)} fullWidth variant="standard"/>
-                    </ServerIP>
-                    <ServerNickname>
-                        <TextField label="서버 별명 입력" onChange={(e)=>handleServerNickName(e)} fullWidth variant="standard"/>
-                    </ServerNickname>
-                    <DownloadFile href=" " download>서버화 위한 다운로드 파일</DownloadFile>
+                    <Input>
+                        <TextField 
+                        label="등록할 서버의 고정 IP 주소" 
+                        onChange={(e)=>handleServerIP(e)} 
+                        error={!IPValidate}
+                        helperText='IP주소를 입력해주세요'
+                        fullWidth variant="standard"/>
+                    </Input>
+                    <Input>
+                        <TextField 
+                        label="서버 별명 입력" 
+                        onChange={(e)=>handleServerName(e)} 
+                        error={!serverNameValidate} 
+                        helperText='사용할 서버의 이름을 입력해주세요' 
+                        fullWidth variant="standard"/>
+                    </Input>
+                    <Input>
+                        <TextField 
+                        label="유저 이름 입력" 
+                        onChange={(e)=>handleServerUserName(e)} 
+                        error={!serverUserNamevalidate} 
+                        helperText='리눅스 계정명을 입력해주세요' 
+                        fullWidth variant="standard"/>
+                    </Input>
                     <Button variant="contained" onClick={()=>registerServer()}>서버 등록</Button>
-                    {/*<Button variant="contained" onClick={()=>navigate('/serverResources')}>서버 등록</Button>*/}
                 </ContentBody>
             </Content>
         </>
@@ -66,6 +139,7 @@ const ContentBody = styled.div`
     align-items: center;
     flex-direction: column;
     border: 1px solid black;
+    border-radius: 20px;
     padding: 3%;
     background-color: white;
 `;
@@ -75,19 +149,8 @@ const Title = styled.div`
     font-weight: 600;
 `;
 
-const ServerIP = styled.div`
+const Input = styled.div`
     width: 400px;
     font-size: 28px;
     margin: 30px;
-`;
-
-const ServerNickname = styled.div`
-    width: 400px;
-    font-size: 28px;
-    margin: 30px;
-`;
-
-const DownloadFile = styled.a`
-    margin: 30px;
-    font-size: 24px;
 `;

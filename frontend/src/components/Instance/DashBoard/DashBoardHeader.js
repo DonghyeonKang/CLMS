@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const DashBoardHeader = () => {
+const DashBoardHeader = ({userId, address}) => {
     const navigate = useNavigate();
     return(
         <ContentHeader>
             <Title>인스턴스</Title>
-            <InstanceCreate onClick={() => navigate('createInstance')}>인스턴스 생성</InstanceCreate>
+            <InstanceCreate onClick={() => navigate('createInstance',{state: {userId, address}})}>인스턴스 생성</InstanceCreate>
           </ContentHeader>
     );
 };
@@ -26,12 +26,13 @@ const Title = styled.div`
 
 const InstanceCreate = styled.div`
   cursor: pointer;
-  padding: 4px 15px;
+  padding: 6px 15px;
   height: 25px;
-  background-color: #ec7211;
+  background-color: #3eb5c4;
+  border-radius: 20px;
   color: white;
   font-weight: 600;
   &:hover{
-    background-color: #eb5f07;
+    background-color: #2da4b3;
   }
 `

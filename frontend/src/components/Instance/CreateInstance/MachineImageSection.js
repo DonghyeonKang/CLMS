@@ -3,20 +3,20 @@ import ubuntu from '../../../img/ubuntu.png'
 
 const MachineImageSection = ({setData, data}) => {
     const setUbuntu = () => {
-      setData({...data, machineImage: 'ubuntu:latest'});
+      setData({...data, os: 'ubuntu:latest'});
     };
     return (
         <Content>
             <Title>운영체제 종류</Title>
             <OSTabs>
-              {data.machineImage === 'ubuntu:latest' ? 
+              {data.os === 'ubuntu:latest' ? 
               (<OSTabSelected>
                 <div>ubuntu:latest</div>
-                <OSImg src={ubuntu} onClick={setUbuntu}/>
+                <OSImg src={ubuntu} onClick={()=>setUbuntu()}/>
               </OSTabSelected>) : 
               (<OSTab>
                 <div>ubuntu:latest</div>
-                <OSImg src={ubuntu} onClick={setUbuntu}/>
+                <OSImg src={ubuntu} onClick={()=>setUbuntu()}/>
               </OSTab>)}
             </OSTabs>
         </Content>
@@ -34,7 +34,9 @@ const Content = styled.div`
   padding: 2%;
   margin-bottom: 5%;
   box-shadow: 2px 2px #dbdfe0;
-  background-color: #fafafa;
+  background-color: #ffffff;
+  border: 3px solid #f2f3f3;
+  border-radius: 20px;
 `;
 
 const Title = styled.div`
@@ -60,7 +62,7 @@ const OSTab = styled.div`
 `;
 
 const OSTabSelected = styled(OSTab)`
-  border: 2px solid #0073bb;
+  border: 2px solid #3eb5c4;
   background-color: #f1faff;
 `;
 

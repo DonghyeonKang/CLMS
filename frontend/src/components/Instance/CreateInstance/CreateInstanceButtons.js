@@ -5,16 +5,21 @@ import { useRecoilState } from "recoil";
 import { baseUrl } from "../../../Atoms";
 
 //인스턴스 생성 버튼 누르면 API 요청 하게 함수 수정하기
-const CreateInstanceButtons = ({data}) => {
+const CreateInstanceButtons = ({data, validate}) => {
   const navigate = useNavigate();
   const [BASEURL,] = useRecoilState(baseUrl);
     //인스턴스 생성
   const createInstance = () => {
-    try{
-      axios.post(BASEURL + '/instances/creation',data).then((response)=>console.log(response));
-    } catch (error) {
-      console.error(error);
-    };
+    if(validate){
+      try{
+        axios.post(BASEURL + '/instances/creation',data).then((response)=>console.log(response));
+      } catch (error) {
+        console.error(error);
+      };
+      navigate("/dashboard");
+    } else {
+      alert('입력이 올바르지 않습니다.');
+    }
   }
     return (
     <Btn>
@@ -27,7 +32,7 @@ export default CreateInstanceButtons;
 
 const Btn = styled.div`
   width: 100vw;
-  height: 5vh;
+  height: 25px;
   display: flex;
   justify-content: end;
   align-items: flex-end;
@@ -36,14 +41,16 @@ const Btn = styled.div`
 
 const Create = styled.div`
   cursor: pointer;
-  padding: 4px 15px;
+  padding: 6px 15px;
   height: 25px;
-  background-color: #ec7211;
+  background-color: #3eb5c4;
+  border-radius: 20px;
   margin-left: 20px;
   color: white;
   font-weight: 600;
+  border: none;
   &:hover{
-    background-color: #eb5f07;
+    background-color: #2da4b3;
   }
 `;
 

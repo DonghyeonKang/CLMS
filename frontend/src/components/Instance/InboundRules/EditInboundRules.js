@@ -3,13 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import InboundRule from "./InboundRule";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { baseUrl } from "../../../Atoms";
 
 //instanceId 별로 인바운드 리스트 조회 API 요청 하도록 구현
-//인바운드 규칙 저장 버튼 누르면 PUT 요청 보내게 구현
 const EditInboundRules = () => {
+    const [BASEURL,] = useRecoilState(baseUrl);
     const navigate = useNavigate();
     const {instanceId} = useParams();
-    const [id, setId] = useState(3);
     const [data,setData] = useState([{
       id:1,
       port:20,
@@ -20,27 +21,34 @@ const EditInboundRules = () => {
       port:30,
       instanceId
       }]);
+
     const addData = () => {
         setData((prev) => [...prev,{
-        id:id,
+        id:-1,
         port:'',
         instanceId
         }]);
-        setId((prev)=>prev+1);
     };
 
-/* 인바운드 규칙 리스트
+    //요청 성공하면 페이지 전환
+    const saveInboundRules = () => {
+      console.log(data);
+      try {
+        axios.put(BASEURL + `/instances/inbounds/setting`,data).then((response)=> console.log(response));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+/* 인바운드 규칙 리스트 
     useEffect(()=>{
       try {
-        axios.get(`http://203.255.3.23:5000/instances/inbounds/list`).then((response)=> setData(response.data.inbounds));
+        axios.get(BASEURL + `/instances/inbounds/list?instanceId=1`).then((response)=> setData(response.data.inbounds));
       } catch (error) {
         console.error(error);
       }
     },[]);
-    
-    인바운드 규칙 수정 API 추가해야함
 */
-
 
     return (
         <>
@@ -62,9 +70,9 @@ const EditInboundRules = () => {
             </Container>
             <BtnSection>
             <AddRule onClick={()=>addData()}>규칙 추가</AddRule>
-            <div>
+            <div style={{display: 'flex'}}>
                 <Cancel onClick={() => navigate(`/dashboard/${instanceId}`)}>취소</Cancel>
-                <SaveRules onClick={()=>console.log(data)}>인바운드 규칙 저장</SaveRules>
+                <SaveRules onClick={()=>saveInboundRules()}>인바운드 규칙 저장</SaveRules>
             </div>
           </BtnSection>
         </>
@@ -78,8 +86,9 @@ display: flex;
 width: 100%;
 min-width: 900px;
 margin: 3% 0;
-box-shadow: 2px 2px #dbdfe0;
-background-color: #fafafa;
+border: 1px solid #dbdfe0;
+border-radius: 20px;
+background-color: #ffffff;
 `;
 const Title = styled.div`
   font-size: 20px;
@@ -101,34 +110,40 @@ const BtnSection = styled.div`
   justify-content: space-between;
 `;
 
-const AddRule = styled.span`
+const AddRule = styled.div`
   cursor: pointer;
-  border: 0.5px solid #879596;
+  border: 3px solid #3eb5c4;
   height: 25px;
   padding: 4px 15px;
   background-color: white;
+  border-radius: 20px;
   font-weight: 600;
   &:hover{
     background-color: #fafafa;
+    border-color: #2da4b3;
     color: black;
   }
 `
 
-const SaveRules = styled.span`
+const SaveRules = styled.div`
   cursor: pointer;
   margin-left: 20px;
   padding: 4px 15px;
-  background-color: #ec7211;
+  background-color: #3eb5c4;
+  border-radius: 20px;
   color: white;
   font-weight: 600;
   &:hover{
-    background-color: #eb5f07;
+    background-color: #2da4b3;
   }
 `;
 
-const Cancel = styled.span`
+const Cancel = styled.div`
   cursor: pointer;
   padding: 4px 15px;
+  border: 3px solid #3eb5c4;
+  border-radius: 20px;
+  font-weight: 600;
   &:hover{
     background-color: white;
     color: black;

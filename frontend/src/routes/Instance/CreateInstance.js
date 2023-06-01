@@ -8,27 +8,34 @@ import StorageSection from "../../components/Instance/CreateInstance/StorageSect
 import Navigation from "../../components/Navigation";
 import SelectServer from "../../components/Instance/CreateInstance/SelectServer";
 import CreateInstanceButtons from "../../components/Instance/CreateInstance/CreateInstanceButtons";
+import { useLocation } from "react-router-dom";
 
 const CreateInstance = () => {
+  const {state} = useLocation();
   const [data,setData] = useState({
     name: '',
     storage: '1G',
-    machineImage: '',
-    keyPair: '',
+    os: '',
+    keyName: '',
     serverId: '',
+    userId: state.userId,
+    address: state.address,
   });
+  const [nameValidate,setNameValidate] = useState(false);
+  const [keyPairValidate,setKeyPairValidate] = useState(false);
+  const [hostname,setHostname] = useState('');
     return (
       <>
         <Header/>
         <Content>
           <Navigation/>
           <Box>
-            <InstanceNameSection setData={setData} data={data}/>
+            <InstanceNameSection setData={setData} data={data} validate={nameValidate} setValidate={setNameValidate}/>
             <StorageSection setData={setData} data={data}/>
-            <SelectServer setData={setData} data={data}/>
-            <KeyPairSection setData={setData} data={data}/>
+            <SelectServer setData={setData} data={data} setHostname={setHostname}/>
+            <KeyPairSection setData={setData} data={data} validate={keyPairValidate} setValidate={setKeyPairValidate} hostname={hostname}/>
             <MachineImageSection setData={setData} data={data}/>
-            <CreateInstanceButtons data={data}/>
+            <CreateInstanceButtons data={data} validate={nameValidate&&keyPairValidate}/>
           </Box>
         </Content>  
       </>

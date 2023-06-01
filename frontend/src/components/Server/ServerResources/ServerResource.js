@@ -6,17 +6,18 @@ import axios from "axios";
 import { useRecoilState } from "recoil";
 import { baseUrl } from "../../../Atoms";
 
-//아직 API에 serverId 쿼리 적용 안한거 같음
 const ServerResource = ({server,studentList,serverId}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
     const navigate = useNavigate();
     const [resources,setResources] = useState();
     //서버 리소스
     useEffect(()=>{
-        try {
-          axios.get(BASEURL + `/servers/management/resources?serverId=${serverId}`).then((response)=> setResources(response.data));
-        } catch (error) {
-          console.error(error);
+        if(serverId !== '' && serverId !== undefined){
+            try {
+              axios.get(BASEURL + `/servers/management/resources?serverId=${serverId}`).then((response)=> setResources(response.data));
+            } catch (error) {
+              console.error(error);
+            }
         }
       },[serverId, BASEURL]);
     return (
@@ -36,6 +37,7 @@ const ServerResource = ({server,studentList,serverId}) => {
             </StudentList>
             <ResourceList>
                 <Title>서버 리소스</Title>
+                {/* 램 사용량, 디스크 사용량 나중에 차트로 수정 */}
                 <Resources>
                     <Resource>
                         <GridTitle>서버 램 사용량</GridTitle>
@@ -47,7 +49,7 @@ const ServerResource = ({server,studentList,serverId}) => {
                     </Resource>
                     <Resource>
                         <GridTitle>서버와 CSWS 연결 상태</GridTitle>
-                        <GridContent>O</GridContent>
+                        <GridContent>{resources?.connection}</GridContent>
                      </Resource>
                 </Resources>
             </ResourceList>
@@ -68,6 +70,8 @@ const ServerAddress = styled.div`
     padding: 10px 0;
     background-color: #fafafa;
     border: 1px solid #eaeded;
+    border-radius: 20px;
+    margin: 20px 0;
 `;
 
 const ServerDetail = styled.div`

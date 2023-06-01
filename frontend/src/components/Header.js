@@ -55,13 +55,14 @@ const HeaderBtn = styled.button`
   width: 100px;
   height: 35px;
   font-size: 16px;
+  font-weight: 600;
   color: white;
-  background-color: #ec7211;
-  border: 2px #ec7211 solid;
+  background-color: #3eb5c4;
+  border: 2px #3eb5c4 solid;
   border-radius: 5vh;
   margin-right: 20px;
   &:hover{
-    background-color: #eb5f07;
+    background-color: #2da4b3;
   }
 `;
 

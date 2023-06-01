@@ -8,12 +8,11 @@ import { baseUrl } from "../../../Atoms";
 import { tokenState } from '../../../Atoms';
 
 //관리자일때랑 학생일때 구분해서 API 요청 만들기
-const InstanceList = () => {
+const InstanceList = ({setUserId, setAddress}) => {
   const [BASEURL,] = useRecoilState(baseUrl);
   const navigate = useNavigate();
-  const [list,setList] = useState();
+  const [list,setList] = useState([]);
   const [token,] = useRecoilState(tokenState);
-  
   //인스턴스 리스트
   useEffect(() => {
     try {
@@ -27,6 +26,12 @@ const InstanceList = () => {
     }
   }, [BASEURL, token]); 
     
+  useEffect(()=>{
+    if(list.length>=1){
+      setUserId(list[0]?.userId);
+      setAddress(list[0]?.address);
+    }
+  },[list])
     return (
         <>
             <InstanceTable>
@@ -64,7 +69,7 @@ const InstanceTable = styled.table`
 `;
 
 const InstanceHeader = styled.th`
-  background-color: #fafafa;
+  background-color: #f2f3f3;
   text-align: left;
   padding: 3px 0;
   padding-left: 10px;
@@ -75,7 +80,7 @@ const InstanceBody = styled.td`
   text-align: left;
   padding: 5px 0;
   padding-left: 10px;
-  background-color: white;
+  background-color: #fafafa;
 `;
 
 const InstanceId = styled(InstanceBody)`

@@ -11,18 +11,64 @@ const TabsContent = ({data, domainName}) => {
   const [BASEURL,] = useRecoilState(baseUrl);
   const navigate = useNavigate();
   const [list,setList] = useState('detail');
-  const [inboundRules, setInboundRules] = useState();
+  const [inboundRules, setInboundRules] = useState([]);
   const [newDomain,setNewDomain] = useState('');
   const [owner,setOwner] = useState('');
   const {instanceId} = useParams();
-  //인바운드 리스트 조회 instanceId 별로 조회하게 수정하기
-  //post, delete 요청 기능 구현하기
+  const [domainValidate,setDomainValidate] = useState(false);
+  const [ownerValidate,setOwnerValidate] = useState(false);
+
+  const domainValidation = (str) => {
+    const reg = /([a-z0-9\w]+\.*)+[a-z0-9]{2,4}/gi;
+    return reg.test(str);
+  };
+  const ownerValidation = (str) => {
+    const reg = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+    return reg.test(str);
+  };
+ 
+
+  const domainHandler = (event) => {
+    const value = event.target.value;
+    setNewDomain(value);
+    if(domainValidation(value)){
+      //정규표현식 만족하면
+      setDomainValidate(true);
+      if(value.length <= 8 || value.length >= 250){
+        //글자수 만족 못하면
+        setDomainValidate(false);
+      }
+    }else {
+      setDomainValidate(false);
+    }
+  }
+
+  const ownerHandler = (event) => {
+    const value = event.target.value;
+    setOwner(value);
+    if(ownerValidation(value)){
+      //정규표현식 만족하면
+      setOwnerValidate(true);
+      if(value.length < 8 || value.length > 253){
+        //글자수 만족 못하면
+        setOwnerValidate(false);
+      }
+    }else {
+      setOwnerValidate(false);
+    }
+  }
+
+  //요청 보낸 다음 기능 추가하기
   //도메인 변경
   const saveDomain = () => {
-    try {
-      axios.post(BASEURL + `/instances/domain`,{instanceId, newDomain}).then((response)=> console.log(response));
-    } catch (error) {
-      console.error(error);
+    if(domainValidate){
+      try {
+        axios.post(BASEURL + `/instances/domain`,{instanceId, newDomain}).then((response)=> console.log(response));
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      alert('도메인 주소를 입력해 주세요.')
     }
   };
   //도메인 삭제
@@ -35,16 +81,20 @@ const TabsContent = ({data, domainName}) => {
   };
 //소유자 변경 API
   const changeOwner = () => {
-    try {
-      axios.patch(BASEURL + `/instances/owner`,{owner, instanceId}).then((response)=> console.log(response));
-    } catch (error) {
-      console.error(error);
+    if(ownerValidate){
+      try {
+        axios.patch(BASEURL + `/instances/owner`,{owner, instanceId}).then((response)=> console.log(response));
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      alert('사용자 이름(이메일)을 입력해 주세요.');
     }
   };
-  //인바운드 리스트 불러오기
+  //인바운드 리스트 불러오기 (instanceId 별로 조회하게 수정하기)
   useEffect(()=>{
     try {
-      axios.get(BASEURL + `/instances/inbounds/list`).then((response)=> setInboundRules(response.data.inbounds));
+      axios.get(BASEURL + `/instances/inbounds/list?instanceId=1`).then((response)=> setInboundRules(response.data.inbounds));
     } catch (error) {
       console.error(error);
     }
@@ -82,7 +132,7 @@ const TabsContent = ({data, domainName}) => {
                 </DetailGrid>
                 <DetailGrid>
                   <GridTitle>소유자</GridTitle>
-                  <GridContent>123</GridContent>
+                  <GridContent>{data?.userId}</GridContent>
                 </DetailGrid>
                 </>
                 : (list === 'security') ? 
@@ -129,7 +179,7 @@ const TabsContent = ({data, domainName}) => {
                     <GridContent>{domainName}</GridContent>
                   </DetailGrid>
                   <InputGrid>
-                  <TextField label="도메인 입력" onChange={(i)=>setNewDomain(i.target.value)} size="small" style={{marginRight:'5%'}}/>
+                  <TextField label="도메인 입력" onChange={(i)=>domainHandler(i)} error={!domainValidate} size="small" style={{marginRight:'5%'}}/>
                   <Button onClick={()=>saveDomain()} variant="outlined" style={{marginRight:'2%'}}>도메인 적용</Button>
                   <Button onClick={()=>deleteDomain()} variant="outlined" color="error">도메인 삭제</Button>
                   </InputGrid>
@@ -138,10 +188,10 @@ const TabsContent = ({data, domainName}) => {
                 <>
                   <DetailGrid>
                     <GridTitle>소유자</GridTitle>
-                    <GridContent>123</GridContent>
+                    <GridContent>{data?.userId}</GridContent>
                   </DetailGrid>
                   <InputGrid>
-                    <TextField label="인스턴스 소유자 변경" onChange={(i)=>setOwner(i.target.value)} size="small" style={{marginRight:'5%'}}/>
+                    <TextField label="인스턴스 소유자 변경" onChange={(i)=>ownerHandler(i)} error={!ownerValidate} size="small" style={{marginRight:'5%'}}/>
                     <Button onClick={()=>changeOwner()} variant="outlined">소유자 변경</Button>
                   </InputGrid>
                 </>
@@ -157,33 +207,33 @@ const DetailTab = styled.div`
   cursor: pointer;
   display: inline-block;
   padding: 5px;
-  border: 1px solid #eaeded;
-  background-color: #fafafa;
+  margin-right: 20px;
   &:hover{
-    color: #0073bb;
+    color: #3eb5c4;
+    border-bottom: 2px solid  #3eb5c4;
   }
 `;
 const SelectedTab = styled(DetailTab)`
-  border-bottom: 2px solid  #0073bb;
-  color:  #0073bb;
+  border-bottom: 2px solid  #3eb5c4;
+  color:  #3eb5c4;
 `;
 
 const DetailContent = styled.div`
   display: grid;
   grid-template-columns: repeat(3,33%);
   grid-auto-flow: row;
-  gap: 0.5%;
-  row-gap: 5px;
   width: 100%;
   min-width: 900px;
-  margin-bottom: 5%;
-  background-color: white;
+  padding-left: 1%;
+  margin: 3% 0;
+  background-color: #ffffff;
+  border: 2px solid #f2f3f3;
+  border-radius: 20px;
 `;
 
 const DetailGrid = styled.div`
   width: 100%;
   height: 100px;
-  background-color: white;
 `;
 
 const Box = styled.div`
@@ -191,7 +241,6 @@ const Box = styled.div`
   width: 95%;
   padding: 2%;
   min-width: 1150px;
-  background-color: white;
 `;
 
 const Stripe = styled.div`
@@ -207,9 +256,10 @@ const Title = styled.div`
 
 const EditRules = styled.div`
   cursor: pointer;
-  border: 0.5px solid #879596;
-  padding: 2px 12px;
+  border: 2px solid #3eb5c4;
+  padding: 4px 15px;
   font-weight: 600;
+  border-radius: 20px;
   background-color: white;
   &:hover{
     background-color: #fafafa;

@@ -8,13 +8,14 @@ import { useRecoilState } from "recoil";
 import { baseUrl } from "../../Atoms";
 
 //serverId 별로 학생 리스트 요청하도록 구현하기
+//serverId 변경되면 학생리스트, 리소스 API 요청 하게 수정하기
 const ServerResources = () => {
     const [BASEURL,] = useRecoilState(baseUrl);
     const [data, setData] = useState([]);
     const [serverList,setServerList] = useState([]);
     const [server,setServer] = useState('');
     const [studentList,setStudentList] = useState([]);
-    const [serverId,setServerId] = useState(1);
+    const [serverId,setServerId] = useState('');
     //서버 리스트
     const loadServerList = () => {
         try {
@@ -33,7 +34,6 @@ const ServerResources = () => {
     }
     useEffect(()=>{
         loadServerList();
-        loadStudentList();
       },[]);
 
     useEffect(()=>{
@@ -44,6 +44,9 @@ const ServerResources = () => {
     useEffect(()=>{
         const switchServer = data?.filter((i)=>i?.name===server);
         setServerId(switchServer[0]?.id);
+        if(switchServer[0]?.id !== undefined){
+            loadStudentList();
+        }
     },[data,server]);
     return (
         <>

@@ -5,15 +5,18 @@ import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { baseUrl } from "../../../Atoms";
 
-const SelectServer = ({data, setData}) => {
+const SelectServer = ({data, setData, setHostname}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
     const [serverList,setServerList] = useState([]);
     const serverIdHandler = (event) => {
-      setData({...data, serverId: event.target.value});
+      const value = event.target.value;
+      setData({...data, serverId: value});
+      const hostname = serverList?.filter((i)=>i?.id === value)[0]?.hostname;
+      setHostname(hostname);
       };
     const loadServerList = () => {
         try {
-            axios.get(BASEURL + `/servers/management/list?departmentId=0`).then((response)=> setServerList(response.data.servers));
+            axios.get(BASEURL + `/servers/management/list?departmentId=1`).then((response)=> setServerList(response.data.servers));
           } catch (error) {
             console.error(error);
           }
@@ -21,12 +24,12 @@ const SelectServer = ({data, setData}) => {
 
     useEffect(()=>{
         loadServerList();
-    },[data, BASEURL]);
+    },[BASEURL]);
 
     return (
     <Content>
         <Title>서버 선택</Title>
-        <Select label="server" onChange={serverIdHandler} value={data.serverId ?? ''} size='small'>
+        <Select labelId="server" onChange={serverIdHandler} value={data.serverId ?? ''} size='small'>
             {serverList.map((i)=><MenuItem value={i?.id} key={i?.id}>{i?.name}</MenuItem>)}
         </Select>
     </Content>);
@@ -43,7 +46,9 @@ const Content = styled.div`
   padding: 2%;
   margin-bottom: 5%;
   box-shadow: 2px 2px #dbdfe0;
-  background-color: #fafafa;
+  background-color: #ffffff;
+  border: 3px solid #f2f3f3;
+  border-radius: 20px;
 `;
 
 const Title = styled.div`
