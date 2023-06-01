@@ -5,11 +5,12 @@ import Header from "../../components/Header";
 import axios from "axios";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
-import { baseUrl } from "../../Atoms";
+import { baseUrl, tokenState } from "../../Atoms";
 
 //post 요청 구현하고 페이지 전환 기능 추가하기
 const CreateServer = () => {
     const [BASEURL,] = useRecoilState(baseUrl);
+    const [token,] = useRecoilState(tokenState); 
     const navigate = useNavigate();
     //departmentId 값 받아오면 넣기
     const [serverData,setServerData] = useState({departmentId: 1});
@@ -77,7 +78,13 @@ const CreateServer = () => {
     const registerServer = () => {
       if(IPValidate && serverNameValidate && serverUserNamevalidate){
         try{
-          axios.post(BASEURL + '/servers/register/new',serverData).then((response)=>console.log(response));
+          axios.post(BASEURL + '/servers/register/new',{
+            data: serverData,
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }).then((response)=>console.log(response));
+          navigate('/serverResources');
         } catch (error) {
           console.error(error);
         };

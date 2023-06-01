@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { baseUrl } from "../../../Atoms";
+import { baseUrl, tokenState } from "../../../Atoms";
 
 //post랑 delete 기능 구현하기
 const TabsContent = ({data, domainName}) => {
   const [BASEURL,] = useRecoilState(baseUrl);
+  const [token,] = useRecoilState(tokenState);
   const navigate = useNavigate();
   const [list,setList] = useState('detail');
   const [inboundRules, setInboundRules] = useState([]);
@@ -63,7 +64,12 @@ const TabsContent = ({data, domainName}) => {
   const saveDomain = () => {
     if(domainValidate){
       try {
-        axios.post(BASEURL + `/instances/domain`,{instanceId, newDomain}).then((response)=> console.log(response));
+        axios.post(BASEURL + `/instances/domain`,{
+          data : {instanceId, domainName: newDomain},
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }).then((response)=> console.log(response));
       } catch (error) {
         console.error(error);
       }
@@ -74,7 +80,12 @@ const TabsContent = ({data, domainName}) => {
   //도메인 삭제
   const deleteDomain = () => {
     try {
-      axios.delete(BASEURL + `/instances/domain`,{instanceId}).then((response)=> console.log(response));
+      axios.delete(BASEURL + `/instances/domain`,{
+        data: {instanceId},
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }).then((response)=> console.log(response));
     } catch (error) {
       console.error(error);
     }
@@ -83,7 +94,12 @@ const TabsContent = ({data, domainName}) => {
   const changeOwner = () => {
     if(ownerValidate){
       try {
-        axios.patch(BASEURL + `/instances/owner`,{owner, instanceId}).then((response)=> console.log(response));
+        axios.patch(BASEURL + `/instances/owner`,{
+          data: {username: owner, instanceId},
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }).then((response)=> console.log(response));
       } catch (error) {
         console.error(error);
       }
@@ -91,14 +107,18 @@ const TabsContent = ({data, domainName}) => {
       alert('사용자 이름(이메일)을 입력해 주세요.');
     }
   };
-  //인바운드 리스트 불러오기 (instanceId 별로 조회하게 수정하기)
+  //인바운드 규칙 리스트 불러오기
   useEffect(()=>{
     try {
-      axios.get(BASEURL + `/instances/inbounds/list?instanceId=1`).then((response)=> setInboundRules(response.data.inbounds));
+      axios.get(BASEURL + `/instances/inbounds/list?instanceId=${instanceId}`,{
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }).then((response)=> setInboundRules(response.data.inbounds));
     } catch (error) {
       console.error(error);
     }
-  },[BASEURL]);
+  },[BASEURL, token, instanceId]);
 
     return (
         <>

@@ -3,10 +3,11 @@ import { MenuItem, Select } from "@mui/material";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { baseUrl } from "../../../Atoms";
+import { baseUrl, tokenState } from "../../../Atoms";
 
 const SelectServer = ({data, setData, setHostname}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
+    const [token,] = useRecoilState(tokenState);
     const [serverList,setServerList] = useState([]);
     const serverIdHandler = (event) => {
       const value = event.target.value;
@@ -14,9 +15,14 @@ const SelectServer = ({data, setData, setHostname}) => {
       const hostname = serverList?.filter((i)=>i?.id === value)[0]?.hostname;
       setHostname(hostname);
       };
+    //학과 ID값 받게 해야 함
     const loadServerList = () => {
         try {
-            axios.get(BASEURL + `/servers/management/list?departmentId=1`).then((response)=> setServerList(response.data.servers));
+            axios.get(BASEURL + `/servers/management/list?departmentId=1`,{
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            }).then((response)=> setServerList(response.data.servers));
           } catch (error) {
             console.error(error);
           }
@@ -24,7 +30,7 @@ const SelectServer = ({data, setData, setHostname}) => {
 
     useEffect(()=>{
         loadServerList();
-    },[BASEURL]);
+    },[BASEURL,token]);
 
     return (
     <Content>
