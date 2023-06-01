@@ -8,7 +8,7 @@ H_DeleteNginx()
     # Nginx conf 파일을 삭제합니다.
 
     if [ ! -f /etc/nginx/conf.d/$serviceName.conf ]; then
-        echo "host - H_DeleteNginx >>>>>> 인수가 부족합니다." 
+        echo "host - H_DeleteNginx >>>>>> 파일이 존재하지 않습니다." 
         exit 1
     fi
 

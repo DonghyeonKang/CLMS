@@ -6,7 +6,7 @@ IsConnected()
     local hostName=$1
     local hostIp=$2 
 
-    ssh $hostName@$hostIp "cat logo.txt"
+    ssh $hostName@$hostIp "cat ~/etc/logo.txt"
 }
 
 Start IsConnected
