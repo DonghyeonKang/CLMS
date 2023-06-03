@@ -18,29 +18,33 @@ const InstanceDetail = () => {
   const {instanceId} = useParams();
   //인스턴스 상세
   useEffect(()=>{
-    try {
-      axios.get(BASEURL + `/instances/detail?instanceId=${instanceId}`,{
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }).then((response)=> setInstanceDetail(response.data));
-    } catch (error) {
-      console.error(error);
+    if(token){
+      try {
+        axios.get(BASEURL + `/instances/detail?instanceId=${instanceId}`,{
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }).then((response)=> setInstanceDetail(response.data));
+      } catch (error) {
+        console.error(error);
+      }
     }
   },[instanceId, BASEURL, token]);
   //인스턴스 도메인
   useEffect(()=>{
-    try {
-      axios.get(BASEURL + `/instances/domain?instanceId=${instanceId}`,{
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }).then((response)=> setDomainName(response.data.domainName));
-    } catch (error) {
-      console.error(error);
+    if(token){
+      try {
+        axios.get(BASEURL + `/instances/domain?instanceId=${instanceId}`,{
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }).then((response)=> setDomainName(response.data.domainName));
+      } catch (error) {
+        console.error(error);
+      }
     }
   },[instanceId, BASEURL, token]);
-  console.log(instanceId);
+
     return (
       <>
         <Header/>
