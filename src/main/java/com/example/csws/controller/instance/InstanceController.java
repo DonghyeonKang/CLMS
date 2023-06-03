@@ -53,36 +53,40 @@ public class InstanceController {
     
     // 인스턴스 시작
     @PostMapping("/start")
-    public String startInstance(@ModelAttribute StartInstanceRequest request) {
+    public String startInstance(Model model, @ModelAttribute StartInstanceRequest request) {
         String result = instanceService.startInstance(Integer.parseInt(request.getInstanceId()));
-        return result;
+        model.addAttribute("result", result);
+        return "redirect:/instances/listUserid";
     }
 
     // 인스턴스 재시작
     @PostMapping("/restart")
-    public String restartInstance(@ModelAttribute StartInstanceRequest request) {
+    public String restartInstance(Model model, @ModelAttribute StartInstanceRequest request) {
         String result = instanceService.restartInstance(Integer.parseInt(request.getInstanceId()));
-        return result;
+        model.addAttribute("result", result);
+        return "redirect:/instances/listUserid";
     }
 
     // 인스턴스 정지
     @PostMapping("/stop")
-    public String stopInstance(@ModelAttribute StartInstanceRequest request) {
+    public String stopInstance(Model model, @ModelAttribute StartInstanceRequest request) {
         String result = instanceService.stopInstance(Integer.parseInt(request.getInstanceId()));
-        return result;
+        model.addAttribute("result", result);
+        return "redirect:/instances/listUserid";
     }
 
     // 인스턴스 삭제
     @PostMapping("/delete")
-    public String deleteInstance(@ModelAttribute StartInstanceRequest request) {
+    public String deleteInstance(Model model, @ModelAttribute StartInstanceRequest request) {
         String result = instanceService.deleteInstance(Integer.parseInt(request.getInstanceId()));
-        return result;
+        model.addAttribute("result", result);
+        return "redirect:/instances/listUserid";
     }
 
     // 인스턴스 생성 페이지 이동.
     @GetMapping("/creation")
     public String createForm() {
-        return VIEWPATH + "생성 페이지 패키지 경로";
+        return "";
     }
 
     // 인스턴스 생성 후 인스턴스 목록으로 이동. 실패(오류 발생) 시 생성 페이지로 돌아가기.
@@ -152,16 +156,23 @@ public class InstanceController {
 
     // 본인 혹은 타인(관리자 권한)의 인스턴스 목록 조회(userId)
     @GetMapping("/listUserId")  // 본인의 목록을 조회하면 userId가 null로 넘어온다. null을 허용하기 위한 어노테이션.
-    public String listByUserId(@RequestParam(value = "userId", required = false) Integer userId, Model model) {
+    public String listByUserId(@RequestParam(value = "userId", required = false) Integer userId,
+                               Authentication authentication, Model model) {
 
         // 반환할 리스트
         List<InstanceDto> newList = new ArrayList<>();
 
         // 프론트에서 userId가 넘어오면 관리자가 타 학생의 userId로 조회한다는 의미.
-        if (userId == null) { // 프론트에서 안 넘어오면 Authentication에서 학생 본인 userId 받아오기.
-
-            userId = null;
-            // 로그인 세션이 없는 경우(비정상적인 접근)에 대한 예외 처리 추가 필요.
+        // 프론트에서 안 넘어오면 Authentication에서 학생 본인 userId 받아오기.
+        if (userId == null) {
+            // 로그인 세션이 없는 경우(비정상적인 접근)에 대한 예외 처리.
+            try {
+                PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+                userId = Math.toIntExact(principalDetails.getId());
+            } catch (Exception e) {
+                model.addAttribute("error", "no login session");
+                return "redirect:/login";
+            }
         }
 
         // userId로 인스턴스 리스트 받아오기.
