@@ -19,20 +19,23 @@ const ServerResources = () => {
     const [serverId,setServerId] = useState('');
     //서버 리스트 (학과 ID값 받아와야 함)
     const loadServerList = () => {
-        try {
-            axios.get(BASEURL + `/servers/management/list?departmentId=0`,{
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                  }
-            }).then((response)=> setData(response.data.servers));
-          } catch (error) {
-            console.error(error);
-          }
+        if(token){
+            try {
+                axios.get(BASEURL + `/servers/management/list?departmentId=0`,{
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                      }
+                }).then((response)=> setData(response.data.servers));
+              } catch (error) {
+                console.error(error);
+              }
+        }
     }
     //학생 리스트 (serverId 쿼리로)
     const loadStudentList = () => {
-        try {
-            axios.get(BASEURL + `/user/student/list`,{
+        if(token){
+            try {
+                axios.get(BASEURL + `/user/student/list`,{
                 headers: {
                     'Authorization': `Bearer ${token}`
                   }
@@ -40,6 +43,7 @@ const ServerResources = () => {
           } catch (error) {
             console.error(error);
           }
+        }
     }
     useEffect(()=>{
         loadServerList();

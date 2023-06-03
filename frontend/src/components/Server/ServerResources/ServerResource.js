@@ -13,7 +13,7 @@ const ServerResource = ({server,studentList,serverId}) => {
     const [resources,setResources] = useState();
     //서버 리소스
     useEffect(()=>{
-        if(serverId !== '' && serverId !== undefined){
+        if(serverId !== '' && serverId !== undefined && token){
             try {
               axios.get(BASEURL + `/servers/management/resources?serverId=${serverId}`,{
                 headers: {

@@ -17,15 +17,17 @@ const SelectServer = ({data, setData, setHostname}) => {
       };
     //학과 ID값 받게 해야 함
     const loadServerList = () => {
+      if(token){
         try {
-            axios.get(BASEURL + `/servers/management/list?departmentId=1`,{
-              headers: {
-                'Authorization': `Bearer ${token}`
-              }
-            }).then((response)=> setServerList(response.data.servers));
-          } catch (error) {
-            console.error(error);
-          }
+          axios.get(BASEURL + `/servers/management/list?departmentId=1`,{
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }).then((response)=> setServerList(response.data.servers));
+        } catch (error) {
+          console.error(error);
+        }
+      }
     }
 
     useEffect(()=>{
