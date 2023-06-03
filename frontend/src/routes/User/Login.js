@@ -61,15 +61,13 @@ const Login = () => {
   }
 
   const onClickConfirmButton = () => {
-    axios.post(BASEURL + '/login', { username: email, password: pw })
+    axios.post(BASEURL + '/login', { username: email, password: pw }, {withCredentials: true})
       .then(response => {
         if (response.data.success) {
           // 데이터 받아오기
           const accessToken = response.headers.get("Authorization");
-          const { refreshToken } = response.data;
 
-          // refreshToken 은 쿠키에 저장, accessToken 은 localStorage 에 저장
-          Cookies.set('refreshToken', refreshToken, {expires: 30, path: '/'})
+          // accessToken 은 localStorage 에 저장
           localStorage.setItem('accessToken', accessToken);
 
           setLoginStatus(true);
