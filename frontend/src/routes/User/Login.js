@@ -18,7 +18,6 @@ import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
 import axios from 'axios';
 import { tokenState } from '../../Atoms';
 import Cookies from 'js-cookie';
-import Cookie, { getCookieToken } from '../Cookie';
 
 const Login = () => {
   const [, setToken] = useRecoilState(tokenState);
@@ -65,17 +64,17 @@ const Login = () => {
     axios.post(BASEURL + '/login', { username: email, password: pw })
       .then(response => {
         if (response.data.success) {
-          alert('로그인 성공!');
+          // 데이터 받아오기
           const accessToken = response.headers.get("Authorization");
-          const refreshToken = Cookies.get("refreshToken");
-          console.log(accessToken);
-          console.log(Cookies.get("refreshToken"));
-          
+          const { refreshToken } = response.data;
+
+          // refreshToken 은 쿠키에 저장, accessToken 은 localStorage 에 저장
+          Cookies.set('refreshToken', refreshToken, {expires: 30, path: '/'})
+          localStorage.setItem('accessToken', accessToken);
+
           setLoginStatus(true);
           setToken(accessToken);
-          Cookies.set('refreshToken', refreshToken);
-          localStorage.setItem('accessToken', accessToken);
-          //navigate('/');
+          navigate('/');
         } else {
           alert('이메일 또는 비밀번호가 일치하지 않습니다.');
         }
