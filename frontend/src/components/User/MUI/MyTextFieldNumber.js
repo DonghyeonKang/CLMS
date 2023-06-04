@@ -3,13 +3,13 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import MyButton from "./MyButton";
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
 import Timer from '../VerifyEmail/Timer';
 import { useRecoilState } from "recoil";
 import {baseUrl} from "../../../Atoms"
 import axios from 'axios';
 
-const MyTextFieldNumber = ({ onNumberValidChange, email }) => {
+const MyTextFieldNumber = ({ email, onNumberValidChange }) => {
   const [BASEURL,] = useRecoilState(baseUrl);
   const [showEmailField, setShowEmailField] = useState(false);
   const [resetKey, setResetKey] = useState(0);
@@ -25,14 +25,12 @@ const MyTextFieldNumber = ({ onNumberValidChange, email }) => {
       setResetKey(resetKey + 1);
       setTimerExpired(false);
       window.alert("메일을 다시 전송하였습니다!");
-      axios.get(BASEURL+'/register/verification',
-        { params: { email: email } },
-        { withCredentials: true })
-          .then(response => {
-          })
-          .catch(error => {
-          console.error(error);
-          });
+      axios.get(BASEURL+'/register/verification', { params: { email: email } })
+      .then(response => {
+      })
+      .catch(error => {
+        console.error(error);
+      });
     }
   };
 
@@ -43,15 +41,9 @@ const showAlert = () => {
   } else if (textFieldValue.trim() === '') {
     window.alert("인증번호를 입력해주세요!");
   } else {
-    // 이메일 인증 요청 보내기
-    const verificationData = {
-      authNumber: textFieldValue,
-      email: email
-    };
-
-    axios.post(BASEURL+'/register/verification', verificationData)
+    axios.post(BASEURL+'/register/verification', {authNumber : textFieldValue, email:email})
       .then(response => {
-        if (response.data) {
+        if (response.data.success) {
           window.alert("인증이 완료되었습니다!");
           setShowEmailField(true);
           setNumberValid(true);
@@ -99,9 +91,9 @@ const showAlert = () => {
       </Grid>
       <Grid container>
         <Grid item xs>
-          <Button  onClick={handleResetTimer} disabled={numberValid} >
+          <Link onClick={handleResetTimer}>
             인증번호 재전송
-          </Button >
+          </Link>
         </Grid>
         <Grid item>
           {timerExpired ? '00:00' : (
