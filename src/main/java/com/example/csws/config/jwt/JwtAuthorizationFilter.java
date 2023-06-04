@@ -48,7 +48,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 		// 헤더에 access token 과 refresh token 이 모두 있는지 확인
 		Map<String, Object> map = jwtService.checkHeaderValid(request);
 		String accessToken = map.get("accessToken").toString();
-		String refreshToken = map.get("refreshToken").toString();
+
 
 		// token 검증. ----------------> 로직 개선 필요.
 		DecodedJWT decodedJWT = jwtService.checkTokenValid(accessToken);
@@ -63,35 +63,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 			// response: Authorization 토큰
 			response.setHeader("Authorization", newAccessToken);
 
-		} else if (jwtService.checkTokenValid(refreshToken) != null) {
-			// 새 refresh token 생성 후 업데이트
-			System.out.println(refreshToken);
-			User user = jwtService.getUserByRefreshToken(refreshToken);	// user 를 가져옴
-			String newRefresh = jwtService.createRefreshToken();	// 새로운 토큰 생성
-			jwtService.setRefreshToken(refreshToken, user);	// 새로운 토큰 저장
-
-			// 새 access token 생성
-			String newAccessToken = jwtService.createAccessToken(Long.valueOf(user.getId()), user.getUsername());
-			username = user.getUsername();
-
-			// response: 쿠키에 refresh 토큰
-			ResponseCookie refreshCookie = ResponseCookie.from(JwtProperties.REFRESH_TOKEN, newRefresh)
-					.maxAge(7 * 24 * 60 * 60) // 7일
-					.path("/")	// 다른 엔드포인트로 가도 쿠키를 가져다닐 수 있도록
-					.sameSite("Lax")	// 다른 사이트로 쿠키를 보낼 수 있는 지 여부. none 이면 보낼 수 있음 그런데 none 이면 secure 속성도 설정해야함 아니면 경고 메시지와 함께 쿠키를 사용하지 않음. secure 속성은 https 에서만 쿠키를 보내겠다는 속성이다. Strict 옵션은 절대로 보내지 않겠다는 옵션, Lax 옵션은 Strict 에 일부 예외를 두어 적용되는 설정
-					.httpOnly(true)	// httponly option. 프론트에서 js로 쿠키를 뜯어볼 수 없음
-					.build();
-			response.setHeader("Set-Cookie", refreshCookie.toString());
-
-			// response: Authorization 토큰
-			response.setHeader("Authorization", newAccessToken);
-
-		} else {
-			System.out.println("refresh 만료됨!");
-			throw new CustomJwtException(JwtErrorCode.JWT_REFRESH_NOT_VALID);
 		}
-
-
 
 		// 토큰 검증 (이게 인증이기 때문에 AuthenticationManager 도 필요 없음). 토큰이 유효하면, 회원을 조회한다.
 		// 인증은 토큰 검증시 끝. 인증을 하기 위해서가 아닌 스프링 시큐리티가 수행해주는 권한 처리를 위해
