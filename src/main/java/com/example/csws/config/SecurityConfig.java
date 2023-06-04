@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 @EnableWebSecurity // 시큐리티 활성화 -> 기본 스프링 필터체인에 등록
@@ -36,6 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository, jwtService))	// request 가 controller 에 접근하기 전에 해당 필터를 수행함
 				// 권한 관리
 				.authorizeRequests() // security 처리에 HttpServletRequest 를 이용한다.
+				.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()	// cors preflight 요청은 인증 처리를 하지 않음
 				.antMatchers("/", "/**") // 경로 지정
 					.permitAll() // 모든 사용자 접근 허용
 				.antMatchers("/user/university")

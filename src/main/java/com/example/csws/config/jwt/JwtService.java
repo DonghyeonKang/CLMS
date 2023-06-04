@@ -107,14 +107,6 @@ public class JwtService {
         try {
             // header 에 access, refresh token 이 있는지 확인
             checkHeaderValid(req);
-
-            // req 에서 token 값만 가져오기
-            String refreshToken = req
-                    .getHeader(JwtProperties.REFRESH_HEADER_PREFIX)
-                    .replace(JwtProperties.TOKEN_PREFIX, "");
-
-            // refresh token 제거
-            removeRefreshToken(refreshToken);
         } catch (Exception e) {
             throw new CustomJwtException(JwtErrorCode.JWT_REFRESH_NOT_VALID);
         }
@@ -122,38 +114,16 @@ public class JwtService {
 
     // header 에 access, refresh token 있는지 검증
     public Map checkHeaderValid(HttpServletRequest req) {
-        Cookie[] cookieList = req.getCookies();
-        System.out.println("cookie List");
-        System.out.println(cookieList);
-        String refreshToken = null;
-
         Map<String, Object> map = new HashMap<String,Object>();
-
-        if(cookieList != null) {
-            for(Cookie cookie : cookieList) {
-                if(cookie.getName().equals(JwtProperties.REFRESH_TOKEN)) {
-                    refreshToken = cookie.getValue();
-                    map.put("refreshToken", refreshToken);
-                }
-            }
-        }
 
         String accessToken = req.getHeader(JwtProperties.ACCESS_HEADER_PREFIX)
                 .replace(JwtProperties.TOKEN_PREFIX, "");
         map.put("accessToken", accessToken);
 
-        System.out.println("--------------");
-        System.out.println(accessToken);
-        System.out.println(refreshToken);
-        System.out.println("--------------");
-
         // accessToken 과 refreshToken 이 항상 같이 오는 구조 -> 수정 해야함
         if(accessToken == null) {
             throw new CustomJwtException(JwtErrorCode.JWT_ACCESS_NOT_EXIST);
-        } else if(refreshToken == null) {
-            throw new CustomJwtException(JwtErrorCode.JWT_REFRESH_NOT_EXIST);
         }
-
         return map;
     }
 
