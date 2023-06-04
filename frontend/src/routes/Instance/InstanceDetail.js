@@ -60,4 +60,6 @@ const InstanceDetail = () => {
 export default InstanceDetail;
 const Content = styled.div`
   padding: 0 5%;
+  min-height: 80vh;
+  margin-bottom: 120px;
 `;

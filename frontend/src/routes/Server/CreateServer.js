@@ -134,6 +134,8 @@ export default CreateServer;
 const Content = styled.div`
   padding: 0 5%;
   width: 90%;
+  min-height: 80vh;
+  margin-bottom: 120px;
   margin-top: 50px;
   display: flex;
   justify-content: center;

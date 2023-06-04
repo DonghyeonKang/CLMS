@@ -78,4 +78,6 @@ const Content = styled.div`
     padding-left: 5%;
     padding-top: 50px;
     width: 95%;
+    min-height: 80vh;
+    margin-bottom: 120px;
 `;
