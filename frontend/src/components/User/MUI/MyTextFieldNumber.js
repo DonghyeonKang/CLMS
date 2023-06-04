@@ -38,12 +38,13 @@
     } else {
       // 이메일 인증 요청 보내기
       const verificationData = {
-        authNum: parseInt(textFieldValue)
+        authNumber: textFieldValue,
+        email: "donghyeon009@gmail.com"
       };
 
       axios.post(BASEURL+'/register/verification', verificationData)
         .then(response => {
-          if (response.data.success) {
+          if (response.data) {
             window.alert("인증이 완료되었습니다!");
             setShowEmailField(true);
             setNumberValid(true);

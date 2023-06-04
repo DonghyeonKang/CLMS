@@ -1,12 +1,12 @@
 package com.example.csws.entity.user;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegisterStudentRequest {
     private String username;
     private String password;

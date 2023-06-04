@@ -53,36 +53,40 @@ public class InstanceController {
     
     // 인스턴스 시작
     @PostMapping("/start")
-    public String startInstance(@ModelAttribute StartInstanceRequest request) {
+    public String startInstance(Model model, @ModelAttribute StartInstanceRequest request) {
         String result = instanceService.startInstance(Integer.parseInt(request.getInstanceId()));
-        return result;
+        model.addAttribute("result", result);
+        return "redirect:/instances/listUserid";
     }
 
     // 인스턴스 재시작
     @PostMapping("/restart")
-    public String restartInstance(@ModelAttribute StartInstanceRequest request) {
+    public String restartInstance(Model model, @ModelAttribute StartInstanceRequest request) {
         String result = instanceService.restartInstance(Integer.parseInt(request.getInstanceId()));
-        return result;
+        model.addAttribute("result", result);
+        return "redirect:/instances/listUserid";
     }
 
     // 인스턴스 정지
     @PostMapping("/stop")
-    public String stopInstance(@ModelAttribute StartInstanceRequest request) {
+    public String stopInstance(Model model, @ModelAttribute StartInstanceRequest request) {
         String result = instanceService.stopInstance(Integer.parseInt(request.getInstanceId()));
-        return result;
+        model.addAttribute("result", result);
+        return "redirect:/instances/listUserid";
     }
 
     // 인스턴스 삭제
     @PostMapping("/delete")
-    public String deleteInstance(@ModelAttribute StartInstanceRequest request) {
+    public String deleteInstance(Model model, @ModelAttribute StartInstanceRequest request) {
         String result = instanceService.deleteInstance(Integer.parseInt(request.getInstanceId()));
-        return result;
+        model.addAttribute("result", result);
+        return "redirect:/instances/listUserid";
     }
 
     // 인스턴스 생성 페이지 이동.
     @GetMapping("/creation")
     public String createForm() {
-        return VIEWPATH + "생성 페이지 패키지 경로";
+        return "";
     }
 
     // 인스턴스 생성 후 인스턴스 목록으로 이동. 실패(오류 발생) 시 생성 페이지로 돌아가기.

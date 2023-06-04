@@ -10,7 +10,7 @@ SendPublickey()
     local conName=$3
     local keyName=$4
 
-    ssh -o StrictHostKeyChecking=no $hostName@$hostIp "mkdir Keys"
+    ssh $hostName@$hostIp "mkdir Keys"
     scp ~/Keys/$hostName/$keyName.pub $hostName@$hostIp:~/Keys/ 
     ssh $hostName@$hostIp "sh H_SendPublickey.sh $keyName $conName"
 }

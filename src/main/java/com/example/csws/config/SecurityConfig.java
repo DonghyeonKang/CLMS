@@ -26,7 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http
 				.addFilter(corsConfig.corsFilter())
 				.csrf().disable()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 				.formLogin().disable()
 				.httpBasic().disable()

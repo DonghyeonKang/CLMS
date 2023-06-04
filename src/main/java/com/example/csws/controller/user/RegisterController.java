@@ -46,7 +46,7 @@ public class RegisterController {
 
     // 학생 회원가입
     @PostMapping("/student")
-    public Object registerStudent(@ModelAttribute RegisterStudentRequest model) {
+    public Object registerStudent(@RequestBody RegisterStudentRequest model) {
         try {
             model.setPassword(passwordEncoder.encode(model.getPassword()));  // password encoding
             // request -> userDto
@@ -85,16 +85,19 @@ public class RegisterController {
     // 회원가입 메일 인증번호 요청
     @GetMapping("/verification")
     public void getVerificationNumber(HttpServletRequest req) throws MessagingException, UnsupportedEncodingException {
+        // 인증번호 생성 및 전송
         String authNum = emailService.sendEmail(req.getParameter("email"));
-        HttpSession session = req.getSession();
-        session.setAttribute("authNum" + req.getParameter("email"), authNum);
-        session.setMaxInactiveInterval(1800);   // session timeout 30분
+
+        // 인증번호 저장 - 따닥 방지 필요
+        emailService.saveAuthNum(req.getParameter("email"), authNum);
     }
 
     // 회원가입 인증번호 확인
     @PostMapping("/verification")
-    public boolean checkVerificationNumber(@RequestBody VerificationRequest model, HttpServletRequest req) {
-        HttpSession session = req.getSession();
-        return registerService.checkVerificationNumber(session.getAttribute("authNum" + model.getEmail()).toString(), model.getAuthNumber());
+    public boolean checkVerificationNumber(@RequestBody VerificationRequest model) {
+        System.out.println("RegisterController 진입");
+        System.out.println(model.getAuthNumber());
+        System.out.println(model.getEmail());
+        return emailService.checkAuthNum(model.getEmail(), model.getAuthNumber());
     }
 }
