@@ -17,8 +17,6 @@ import MyTextFieldID from '../../components/User/MUI/MyTextFieldID';
 import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
 import axios from 'axios';
 import { tokenState } from '../../Atoms';
-import Cookies from 'js-cookie';
-import Header from '../../components/Header';
 
 const Login = () => {
   const [, setToken] = useRecoilState(tokenState);
@@ -62,17 +60,14 @@ const Login = () => {
   }
 
   const onClickConfirmButton = () => {
-    axios.post(BASEURL + '/login', { username: email, password: pw }, {withCredentials: true})
+    axios.post(BASEURL + '/login', { username: email, password: pw })
       .then(response => {
         if (response.data.success) {
-          // 데이터 받아오기
-          const accessToken = response.headers.get("Authorization");
-
-          // accessToken 은 localStorage 에 저장
-          localStorage.setItem('accessToken', accessToken);
-
+          alert('로그인 성공!');
+          const { accessToken } = response.data;
           setLoginStatus(true);
           setToken(accessToken);
+          localStorage.setItem('accessToken', accessToken);
           navigate('/');
         } else {
           alert('이메일 또는 비밀번호가 일치하지 않습니다.');
@@ -101,9 +96,8 @@ const Login = () => {
   const PasswordIcon = passwordType.visible ? VisibilityIcon : VisibilityOffIcon;
 
   useEffect(() => {
-    const refreshToken = Cookies.get('refreshToken');
     const accessToken = localStorage.getItem('accessToken');
-    if (refreshToken && accessToken) {
+    if (accessToken) {
       setToken(accessToken);
       setLoginStatus(true);
     }
@@ -124,7 +118,6 @@ const Login = () => {
   );
 
   return (
-    <><Header/>
     <Container component="main" maxWidth="xs">
       <MyBox>
         <MyAvatar />
@@ -161,7 +154,7 @@ const Login = () => {
           </Grid>
         </Grid>
       </MyBox>
-    </Container></>
+    </Container>
   );
 }
 
