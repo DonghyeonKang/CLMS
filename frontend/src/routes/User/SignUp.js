@@ -106,21 +106,22 @@ const SignUp = () => {
     }
   }, [NumberValid, pwValid, pw2Valid, UnivStu , DeptStu]);
 
-  const handleButtonClick = () => {
-    if (email === User.email) {
-      alert('존재하는 메일입니다.');
-    } else {
-      setShowEmailField(true);
-      setSendButtonDisabled(true);
-      axios.get(BASEURL+'/register/verification', { params: { email: email } })
-        .then(response => {
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
-  };
-  
+    const handleButtonClick = () => {
+      if (email === User.email) {
+        alert('존재하는 메일입니다.');
+      } else {
+        setShowEmailField(true);
+        setSendButtonDisabled(true);
+        axios.get(BASEURL+'/register/verification',
+          { params: { email: email } },
+          { withCredentials: true })
+          .then(response => {
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+    };
   
   return (
     <Container component="main" maxWidth="xs">
