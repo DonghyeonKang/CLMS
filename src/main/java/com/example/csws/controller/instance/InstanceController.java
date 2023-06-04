@@ -155,53 +155,21 @@ public class InstanceController {
     }
 
     // 본인 혹은 타인(관리자 권한)의 인스턴스 목록 조회(userId)
-    @GetMapping("/listUserId")  // 본인의 목록을 조회하면 userId가 null로 넘어온다. null을 허용하기 위한 어노테이션.
-    public String listByUserId(@RequestParam(value = "userId", required = false) Integer userId,
-                               Authentication authentication, Model model) {
-
-        // 반환할 리스트
-        List<InstanceDto> newList = new ArrayList<>();
-
-        // 프론트에서 userId가 넘어오면 관리자가 타 학생의 userId로 조회한다는 의미.
-        // 프론트에서 안 넘어오면 Authentication에서 학생 본인 userId 받아오기.
-        if (userId == null) {
-            // 로그인 세션이 없는 경우(비정상적인 접근)에 대한 예외 처리.
-            try {
-                PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-                userId = Math.toIntExact(principalDetails.getId());
-            } catch (Exception e) {
-                model.addAttribute("error", "no login session");
-                return "redirect:/login";
-            }
-        }
+    @GetMapping("/list/user")  // 본인의 목록을 조회하면 userId가 null로 넘어온다. null을 허용하기 위한 어노테이션.
+    public List<InstanceDto> listByUserId(Authentication authentication) {
+        // 로그인된 사용자 객체
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
         // userId로 인스턴스 리스트 받아오기.
-        List<InstanceDto> list = instanceService.findAllByUserId(userId); // 중복 코드는 따로 메서드로 만들어도 좋음.
-        for (InstanceDto dto : list) {      // 조회 페이지에 띄울 내용만 새 dto 리스트에 담기
-            InstanceDto newDto = new InstanceDto();
-            newDto.setId(dto.getId());
-            newDto.setName(dto.getName());
-            newDto.setState(dto.getState());
-            newDto.setAddress(dto.getAddress());
-            newDto.setPort(dto.getPort());
-            newDto.setOs(dto.getOs());
-            newList.add(newDto);
-        }
-        model.addAttribute("instanceList", newList);   // 모델에 올려 뷰로 넘기기.
-
-        return VIEWPATH + "리스트 조회 페이지 경로";  // 뷰 페이지로 넘어가기.
+        List<InstanceDto> list = instanceService.findAllByUserId(principalDetails.getId()); // 중복 코드는 따로 메서드로 만들어도 좋음.
+        return list;
     }
 
     // 특정 서버 소속의 인스턴스 목록 조회(serverId)
-    @GetMapping("/listServerId")
-    public String listByServerId(@RequestParam(value = "serverId", required = false) Integer serverId, Model model) {
+    @GetMapping("/list/server")
+    public List<InstanceDto> listByServerId(@RequestParam(value = "serverId", required = false) Integer serverId) {
 
         List<InstanceDto> newList = new ArrayList<>(); // 반환할 리스트
-
-        // 서버 id를 안 넘겨줬을 경우 실패 에러 띄우기
-        if (serverId == null) {
-            return "/";
-        }
 
         List<InstanceDto> list = instanceService.findAllByServerId(serverId);
         for (InstanceDto dto : list) {      // 조회 페이지에 띄울 내용만 새 dto 리스트에 담기
@@ -214,9 +182,8 @@ public class InstanceController {
             newDto.setOs(dto.getOs());
             newList.add(newDto);
         }
-        model.addAttribute("instanceList", newList);
 
-        return VIEWPATH + "리스트 조회 페이지 경로";
+        return list;
     }
 
     // 소유자 변경 페이지 이동.
