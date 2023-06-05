@@ -53,8 +53,6 @@ const DetailHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #f2f3f3;
-  border: 1px solid #eaeded;
   border-radius: 20px;
   width: 100%;
   min-width: 900px;
