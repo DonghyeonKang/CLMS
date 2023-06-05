@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import MyTextFieldUnivStu from '../../components/User/MUI/MyTextFieldUnivStu';
 import MyTextFieldDeptStu from '../../components/User/MUI/MyTextFieldDeptStu';
-import Header from '../../components/Header';
+import Header from'../../components/Header';
 
 const StyledText = styled.div`
 color:red;
@@ -121,9 +121,7 @@ const SignUpAd = () => {
       } else {
         setShowEmailField(true);
         setSendButtonDisabled(true);
-        axios.get(BASEURL+'/register/verification',
-                    { params: { email: email } },
-                    { withCredentials: true })
+        axios.get(BASEURL+'/register/verification', { params: { email: email } })
           .then(response => {
           })
           .catch(error => {

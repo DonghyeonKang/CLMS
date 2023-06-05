@@ -18,7 +18,7 @@ import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
 import axios from 'axios';
 import { tokenState } from '../../Atoms';
 import Cookies from 'js-cookie';
-import Header from '../../components/Header';
+import Header from'../../components/Header';
 
 const Login = () => {
   const [, setToken] = useRecoilState(tokenState);
@@ -70,7 +70,7 @@ const Login = () => {
 
           // accessToken 은 localStorage 에 저장
           localStorage.setItem('accessToken', accessToken);
-          console.log(accessToken)
+
           setLoginStatus(true);
           setToken(accessToken);
           navigate('/');

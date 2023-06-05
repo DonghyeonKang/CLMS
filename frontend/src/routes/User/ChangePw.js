@@ -8,7 +8,7 @@ import MyTypography from '../../components/User/MUI/MyTypography';
 import MyBox from '../../components/User/MUI/MyBox';
 import MyAvatar from '../../components/User/MUI/MyAvatar'; 
 import styled from 'styled-components'
-import Header from '../../components/Header';
+import Header from'../../components/Header';
 
 
 // 비밀번호 양식 표시 TEXT스타일

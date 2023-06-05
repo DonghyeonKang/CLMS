@@ -10,7 +10,7 @@ import { useRecoilState } from "recoil";
 import { loginState } from "../../Atoms";
 import Grid from '@mui/material/Grid';
 import MyTextFieldNumber from '../../components/User/MUI/MyTextFieldNumber';
-import Header from '../../components/Header';
+import Header from'../../components/Header';
 
 // 더미데이터
 const User = {
@@ -97,6 +97,8 @@ const FindPw = () => {
         </MyButton>
       </MyBox>
     </Container></>
+
+    
   );
 };
 
