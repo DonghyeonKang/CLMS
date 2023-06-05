@@ -49,6 +49,7 @@ const showAlert = () => {
       email: email
     };
 
+    console.log(BASEURL+'/register/verification', verificationData)
     axios.post(BASEURL+'/register/verification', verificationData)
       .then(response => {
         if (response.data) {

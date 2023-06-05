@@ -70,7 +70,7 @@ const Login = () => {
 
           // accessToken 은 localStorage 에 저장
           localStorage.setItem('accessToken', accessToken);
-
+          console.log(accessToken)
           setLoginStatus(true);
           setToken(accessToken);
           navigate('/');
