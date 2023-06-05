@@ -16,7 +16,7 @@ import MyTextFieldDeptStu from '../../components/User/MUI/MyTextFieldDeptStu';
 import { useRecoilState } from "recoil";
 import {baseUrl} from "../../Atoms"
 import axios from 'axios';
-import Header from'../../components/Header';
+import Header from '../../components/Header';
 
 
 const StyledText = styled.div`
@@ -114,8 +114,8 @@ const SignUp = () => {
       setShowEmailField(true);
       setSendButtonDisabled(true);
       axios.get(BASEURL+'/register/verification',
-        { params: { email: email } },
-        { withCredentials: true })
+                  { params: { email: email } },
+                  { withCredentials: true })
         .then(response => {
         })
         .catch(error => {

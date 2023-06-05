@@ -10,7 +10,10 @@ import { useRecoilState } from "recoil";
 import { loginState } from "../../Atoms";
 import Grid from '@mui/material/Grid';
 import MyTextFieldNumber from '../../components/User/MUI/MyTextFieldNumber';
+<<<<<<< HEAD
 import Header from'../../components/Header';
+=======
+>>>>>>> parent of 1e11e7d (Revert "Revert "UPDATE Header"")
 
 // 더미데이터
 const User = {
@@ -73,7 +76,6 @@ const FindPw = () => {
 
   //페이지 UI 설정
   return (
-    <><Header/>
     <Container component="main" maxWidth="xs">
       <MyBox>
         <MyAvatar />
@@ -96,7 +98,11 @@ const FindPw = () => {
           비밀번호 변경
         </MyButton>
       </MyBox>
+<<<<<<< HEAD
     </Container></>
+=======
+    </Container>
+>>>>>>> parent of 1e11e7d (Revert "Revert "UPDATE Header"")
 
     
   );
