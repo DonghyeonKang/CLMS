@@ -17,6 +17,11 @@ import MyTextFieldID from '../../components/User/MUI/MyTextFieldID';
 import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
 import axios from 'axios';
 import { tokenState } from '../../Atoms';
+<<<<<<< HEAD
+import Cookies from 'js-cookie';
+import Header from'../../components/Header';
+=======
+>>>>>>> parent of 1e11e7d (Revert "Revert "UPDATE Header"")
 
 const Login = () => {
   const [, setToken] = useRecoilState(tokenState);
