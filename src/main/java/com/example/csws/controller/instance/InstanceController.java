@@ -144,7 +144,7 @@ public class InstanceController {
 
         for (InstanceDto dto : list) {      // 조회 페이지에 띄울 내용만 새 dto 리스트에 담기
             InstanceDto newDto = new InstanceDto();
-            newDto.setId(dto.getId());
+            newDto.setInstanceId(dto.getInstanceId());
             newDto.setName(dto.getName());
             newDto.setState(dto.getState());
             newDto.setAddress(dto.getAddress());
@@ -167,7 +167,7 @@ public class InstanceController {
         List<InstanceDto> list = instanceService.findAllByServerId(serverId);
         for (InstanceDto dto : list) {      // 조회 페이지에 띄울 내용만 새 dto 리스트에 담기
             InstanceDto newDto = new InstanceDto();
-            newDto.setId(dto.getId());
+            newDto.setInstanceId(dto.getInstanceId());
             newDto.setName(dto.getName());
             newDto.setState(dto.getState());
             newDto.setAddress(dto.getAddress());

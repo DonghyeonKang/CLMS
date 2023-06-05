@@ -36,7 +36,7 @@ public class Instance {
 
     public InstanceDto toDto() {
         return InstanceDto.builder()
-                .id(id)
+                .instanceId(id)
                 .name(name)
                 .code(code)
                 .state(state)
