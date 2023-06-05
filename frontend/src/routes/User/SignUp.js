@@ -16,7 +16,6 @@ import MyTextFieldDeptStu from '../../components/User/MUI/MyTextFieldDeptStu';
 import { useRecoilState } from "recoil";
 import {baseUrl} from "../../Atoms"
 import axios from 'axios';
-import Header from '../../components/Header';
 
 
 const StyledText = styled.div`
@@ -107,25 +106,24 @@ const SignUp = () => {
     }
   }, [NumberValid, pwValid, pw2Valid, UnivStu , DeptStu]);
 
-  const handleButtonClick = () => {
-    if (email === User.email) {
-      alert('존재하는 메일입니다.');
-    } else {
-      setShowEmailField(true);
-      setSendButtonDisabled(true);
-      axios.get(BASEURL+'/register/verification',
-        { params: { email: email } },
-        { withCredentials: true })
-        .then(response => {
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
-  };
+    const handleButtonClick = () => {
+      if (email === User.email) {
+        alert('존재하는 메일입니다.');
+      } else {
+        setShowEmailField(true);
+        setSendButtonDisabled(true);
+        axios.get(BASEURL+'/register/verification',
+                    { params: { email: email } },
+                    { withCredentials: true })
+          .then(response => {
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
+    };
   
   return (
-    <><Header/>
     <Container component="main" maxWidth="xs">
       <MyBox>
         <MyAvatar/>
@@ -186,7 +184,7 @@ const SignUp = () => {
           가입하기
         </MyButton>
       </MyBox>
-    </Container></>
+    </Container>
   );
 };
 
