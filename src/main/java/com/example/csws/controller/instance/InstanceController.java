@@ -1,6 +1,7 @@
 package com.example.csws.controller.instance;
 
 import com.example.csws.config.auth.PrincipalDetails;
+import org.json.simple.JSONObject;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import com.example.csws.entity.boundPolicy.InboundPolicyDto;
@@ -33,20 +34,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/instances")
 public class InstanceController {
-
-    // 사용자 id 받아오기
-    // 컨트롤러 인수로 Authentication authentication 받기
-//    PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-//    principalDetails.getId();
-
-    // 웹 뷰 파일들의 최상위 경로
-    private static final String VIEWPATH = "/~~~/";
-
     private final UserService userService;
     private final InstanceService instanceService;
     private final DomainService domainService;
-//    private final ServerService serverService;
-    private final InboundPolicyService inboundPolicyService;
+     private final InboundPolicyService inboundPolicyService;
 
     // return VIEWPATH + "웹 페이지 경로" : 이동할 웹 페이지 경로를 반환(사용자에게 경로 숨김).
     // return "redirect:매핑 이름" : 해당 매핑으로 리다이렉트
@@ -56,7 +47,7 @@ public class InstanceController {
     public String startInstance(Model model, @ModelAttribute StartInstanceRequest request) {
         String result = instanceService.startInstance(Integer.parseInt(request.getInstanceId()));
         model.addAttribute("result", result);
-        return "redirect:/instances/listUserid";
+        return "redirect:/dashboard";
     }
 
     // 인스턴스 재시작
@@ -64,7 +55,7 @@ public class InstanceController {
     public String restartInstance(Model model, @ModelAttribute StartInstanceRequest request) {
         String result = instanceService.restartInstance(Integer.parseInt(request.getInstanceId()));
         model.addAttribute("result", result);
-        return "redirect:/instances/listUserid";
+        return "redirect:/dashboard";
     }
 
     // 인스턴스 정지
@@ -72,7 +63,7 @@ public class InstanceController {
     public String stopInstance(Model model, @ModelAttribute StartInstanceRequest request) {
         String result = instanceService.stopInstance(Integer.parseInt(request.getInstanceId()));
         model.addAttribute("result", result);
-        return "redirect:/instances/listUserid";
+        return "redirect:/dashboard";
     }
 
     // 인스턴스 삭제
@@ -83,23 +74,14 @@ public class InstanceController {
         return "redirect:/instances/listUserid";
     }
 
-    // 인스턴스 생성 페이지 이동.
-    @GetMapping("/creation")
-    public String createForm() {
-        return "";
-    }
-
     // 인스턴스 생성 후 인스턴스 목록으로 이동. 실패(오류 발생) 시 생성 페이지로 돌아가기.
     @PostMapping("/creation")
     public String createInstance(@RequestBody CreateInstanceRequest request, Authentication authentication) {
+        // 로그인된 사용자의 userId 추가
         InstanceDto newDto = new InstanceDto();
-        System.out.println(request.getName());
-        System.out.println(request.getServerId());
-        System.out.println(request.getStorage());
-        System.out.println(request.getOs());
-        System.out.println(request.getKeyName());
-        System.out.println(request.getUserId());
-        System.out.println(request.getAddress());
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        newDto.setUserId(principalDetails.getId());
+        System.out.println(principalDetails.getId());
 
         // request 의 데이터 dto 에 넣기
         newDto.setName(request.getName());
@@ -115,14 +97,10 @@ public class InstanceController {
         Timestamp curTimestamp = Timestamp.valueOf(LocalDateTime.now()); // 현재 시간 저장(LocalDateTime을 mySQL에서 호환되도록 Timestamp로 형변환)
         newDto.setCreated(curTimestamp);
 
-        // 로그인된 사용자의 userId 추가
-        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        newDto.setUserId(principalDetails.getId());
-
         // 요청에 따라 쉘 스크립트 실행
         String result = instanceService.createInstance(newDto);
         if (result.equals("success")) { // 성공적으로 db에 insert 및 쉘 스크립트 실행
-            return "redirect:/instances/listUserid";
+            return "redirect:/instances/list/user";
         } else {
             return "redirect:/instances/creation";
         }
@@ -156,25 +134,17 @@ public class InstanceController {
 
     // 본인 혹은 타인(관리자 권한)의 인스턴스 목록 조회(userId)
     @GetMapping("/list/user")  // 본인의 목록을 조회하면 userId가 null로 넘어온다. null을 허용하기 위한 어노테이션.
-    public List<InstanceDto> listByUserId(Authentication authentication) {
+    public JSONObject listByUserId(Authentication authentication) {
         // 로그인된 사용자 객체
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
         // userId로 인스턴스 리스트 받아오기.
         List<InstanceDto> list = instanceService.findAllByUserId(principalDetails.getId()); // 중복 코드는 따로 메서드로 만들어도 좋음.
-        return list;
-    }
-
-    // 특정 서버 소속의 인스턴스 목록 조회(serverId)
-    @GetMapping("/list/server")
-    public List<InstanceDto> listByServerId(@RequestParam(value = "serverId", required = false) Integer serverId) {
-
         List<InstanceDto> newList = new ArrayList<>(); // 반환할 리스트
 
-        List<InstanceDto> list = instanceService.findAllByServerId(serverId);
         for (InstanceDto dto : list) {      // 조회 페이지에 띄울 내용만 새 dto 리스트에 담기
             InstanceDto newDto = new InstanceDto();
-            newDto.setId(dto.getId());
+            newDto.setInstanceId(dto.getInstanceId());
             newDto.setName(dto.getName());
             newDto.setState(dto.getState());
             newDto.setAddress(dto.getAddress());
@@ -183,7 +153,32 @@ public class InstanceController {
             newList.add(newDto);
         }
 
-        return list;
+        JSONObject obj = new JSONObject();
+        obj.put("instances", newList);
+        return obj;
+    }
+
+    // 특정 서버 소속의 인스턴스 목록 조회(serverId)
+    @GetMapping("/list/server")
+    public JSONObject listByServerId(@RequestParam(value = "serverId", required = false) Integer serverId) {
+
+        List<InstanceDto> newList = new ArrayList<>(); // 반환할 리스트
+
+        List<InstanceDto> list = instanceService.findAllByServerId(serverId);
+        for (InstanceDto dto : list) {      // 조회 페이지에 띄울 내용만 새 dto 리스트에 담기
+            InstanceDto newDto = new InstanceDto();
+            newDto.setInstanceId(dto.getInstanceId());
+            newDto.setName(dto.getName());
+            newDto.setState(dto.getState());
+            newDto.setAddress(dto.getAddress());
+            newDto.setPort(dto.getPort());
+            newDto.setOs(dto.getOs());
+            newList.add(newDto);
+        }
+
+        JSONObject obj = new JSONObject();
+        obj.put("instances", newList);
+        return obj;
     }
 
     // 소유자 변경 페이지 이동.
@@ -205,7 +200,7 @@ public class InstanceController {
 
         model.addAttribute("instance", dto.get());
 
-        return VIEWPATH + "소유자 변경을 위한 페이지 경로";
+        return "소유자 변경을 위한 페이지 경로";
     }
 
     // 소유자 변경 로직.
@@ -238,7 +233,7 @@ public class InstanceController {
         InstanceDto dto = instanceService.findById(instanceId).get();
         model.addAttribute("instance", dto);
 
-        return VIEWPATH + "세부사항 페이지 경로";
+        return "세부사항 페이지 경로";
     }
 
     // 특정 인스턴스의 도메인 조회(instanceId)
@@ -248,7 +243,7 @@ public class InstanceController {
         Domain domain = domainService.findByInstanceId(String.valueOf(instanceId));
         model.addAttribute("domain", domain);
 
-        return VIEWPATH + "도메인 페이지 경로";
+        return "도메인 페이지 경로";
     }
 
     // 특정 인스턴스의 도메인 저장(추가)
@@ -260,7 +255,7 @@ public class InstanceController {
         domainService.createDomain(newDto);
         model.addAttribute("domain", newDto);
 
-        return VIEWPATH + "도메인 페이지 경로";
+        return "도메인 페이지 경로";
     }
 
     // 특정 인스턴스의 도메인 삭제
@@ -271,7 +266,7 @@ public class InstanceController {
 
         domainService.deleteDomain(newDto);
 
-        return VIEWPATH + "도메인 페이지 경로";
+        return "도메인 페이지 경로";
     }
 
     // 특정 인스턴스의 인바운드 리스트 조회
@@ -285,7 +280,7 @@ public class InstanceController {
         List<InboundPolicyDto> dtoList = inboundPolicyService.findAllByInstanceId(instanceId);
         model.addAttribute("inbounds", dtoList);
 
-        return VIEWPATH + "인바운드 리스트 페이지 경로";
+        return "인바운드 리스트 페이지 경로";
     }
 
     @PutMapping("/inbounds/setting")
@@ -302,7 +297,7 @@ public class InstanceController {
         List<InboundPolicyDto> savedList = inboundPolicyService.saveAll(inbounds);
         model.addAttribute("inbounds", savedList);
 
-        return VIEWPATH + "인바운드 리스트 페이지 경로";
+        return "인바운드 리스트 페이지 경로";
     }
 
 }

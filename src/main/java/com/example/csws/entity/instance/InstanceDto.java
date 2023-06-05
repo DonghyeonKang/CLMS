@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class InstanceDto {
 
-    private int id;
+    private int instanceId;
     private String name;
     private int code;
     private String state;
@@ -28,7 +28,7 @@ public class InstanceDto {
 
     public Instance toEntity(User user, Server server) {
         return Instance.builder()
-                .id(id)
+                .id(instanceId)
                 .name(name)
                 .code(code)
                 .state(state)

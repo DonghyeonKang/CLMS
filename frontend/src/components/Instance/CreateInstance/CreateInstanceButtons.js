@@ -12,9 +12,9 @@ const CreateInstanceButtons = ({data, validate}) => {
     //인스턴스 생성
   const createInstance = () => {
     if(validate){
+      console.log(data);
       try{
-        axios.post(BASEURL + '/instances/creation',{
-          data,
+        axios.post(BASEURL + '/instances/creation', data, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
