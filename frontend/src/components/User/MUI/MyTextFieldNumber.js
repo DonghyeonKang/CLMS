@@ -3,11 +3,12 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import MyButton from "./MyButton";
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
+import Button from '@mui/material/Button';
 import Timer from '../VerifyEmail/Timer';
 import { useRecoilState } from "recoil";
 import {baseUrl} from "../../../Atoms"
 import axios from 'axios';
+
 
 const MyTextFieldNumber = ({ email, onNumberValidChange }) => {
   const [BASEURL,] = useRecoilState(baseUrl);
@@ -91,9 +92,9 @@ const showAlert = () => {
       </Grid>
       <Grid container>
         <Grid item xs>
-          <Link onClick={handleResetTimer}>
+          <Button disabled={numberValid} onClick={handleResetTimer} > 
             인증번호 재전송
-          </Link>
+          </Button>
         </Grid>
         <Grid item>
           {timerExpired ? '00:00' : (
