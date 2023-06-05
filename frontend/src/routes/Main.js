@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Image1 from "../img/IMAGE1.png";
 import Image2 from "../img/IMAGE2.png";
 import Image3 from "../img/IMAGE3.png";
+import Footer from "../components/Footer";
 
 const Main = () => {
   const settings = {
@@ -45,6 +46,7 @@ const Main = () => {
 
         
       </Content>
+      <Footer/>
     </>
   );
 };
@@ -52,7 +54,8 @@ const Main = () => {
 const Content = styled.div`
   padding-top: 55px;
   width: 97%;
-  height: 200vh;
+  min-height: 80vh;
+  margin-bottom: 120px;
 `;
 const SlideImage = styled.img`
   width: 100%;
@@ -61,4 +64,5 @@ const SlideImage = styled.img`
 const SliderWrapper = styled.div`
   margin-left: 50px;
 `;
+
 export default Main;

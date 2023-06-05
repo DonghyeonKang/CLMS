@@ -15,8 +15,9 @@ const InstanceList = ({setUserId, setAddress}) => {
   const [token,] = useRecoilState(tokenState);
   //인스턴스 리스트
   useEffect(() => {
-    try {
-      axios.get(BASEURL + '/instances/list/user', {
+    if(token){
+      try {
+        axios.get(BASEURL + '/instances/list/user', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -24,6 +25,7 @@ const InstanceList = ({setUserId, setAddress}) => {
     } catch (error) {
       console.error(error);
     }
+  }
   }, [BASEURL, token]); 
     
   useEffect(()=>{
