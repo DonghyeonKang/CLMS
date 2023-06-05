@@ -6,8 +6,6 @@ import "slick-carousel/slick/slick-theme.css";
 import Image1 from "../img/IMAGE1.png";
 import Image2 from "../img/IMAGE2.png";
 import Image3 from "../img/IMAGE3.png";
-import Image4 from "../img/IMAGE4.png";
-import Image5 from "../img/IMAGE5.png";
 import Footer from "../components/Footer";
 
 const Main = () => {
@@ -43,16 +41,6 @@ const Main = () => {
             <SlideImage 
               src={Image3}
               alt="광고3"
-            /></div>
-            <div>
-            <SlideImage 
-              src={Image4}
-              alt="광고4"
-            /></div>
-            <div>
-            <SlideImage 
-              src={Image5}
-              alt="광고5"
             /></div>
         </Slider>
         </SliderWrapper>
