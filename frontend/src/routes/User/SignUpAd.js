@@ -17,10 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import MyTextFieldUnivStu from '../../components/User/MUI/MyTextFieldUnivStu';
 import MyTextFieldDeptStu from '../../components/User/MUI/MyTextFieldDeptStu';
-<<<<<<< HEAD
 import Header from'../../components/Header';
-=======
->>>>>>> parent of 1e11e7d (Revert "Revert "UPDATE Header"")
 
 const StyledText = styled.div`
 color:red;
@@ -144,6 +141,7 @@ const SignUpAd = () => {
 
       
     return (
+    <><Header/>
     <Container component="main" maxWidth="xs">
         <MyBox>
             <MyAvatar/>
@@ -192,7 +190,7 @@ const SignUpAd = () => {
             <MyTextFieldTel  onChange={handleTel}/>
             <MyButton disabled={notAllow} OnClick={onClickConfirmButton}/>
         </MyBox>
-    </Container>
+    </Container></>
     );
 }
 

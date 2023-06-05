@@ -8,10 +8,7 @@ import MyTypography from '../../components/User/MUI/MyTypography';
 import MyBox from '../../components/User/MUI/MyBox';
 import MyAvatar from '../../components/User/MUI/MyAvatar'; 
 import styled from 'styled-components'
-<<<<<<< HEAD
 import Header from'../../components/Header';
-=======
->>>>>>> parent of 1e11e7d (Revert "Revert "UPDATE Header"")
 
 
 // 비밀번호 양식 표시 TEXT스타일
@@ -81,6 +78,7 @@ const ChangePw = () => {
     
     //페이지 UI 설정
     return (
+      <><Header/>
       <Container component="main" maxWidth="xs">
       <MyBox>
         <MyAvatar/>
@@ -113,7 +111,7 @@ const ChangePw = () => {
           비밀번호 변경
         </MyButton>
       </MyBox>
-    </Container>
+    </Container></>
     );
     
 };
