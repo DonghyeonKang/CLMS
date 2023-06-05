@@ -21,7 +21,7 @@ Automation(){
     sudo sed -ri 's/^#?PasswordAuthentication\s+.*/PasswordAuthentication no/' /etc/ssh/sshd_config
     sudo sed -ri "s/^#?AuthorizedKeysFile\s+.*/AuthorizedKeysFile      \/home\/$USER\/.ssh\/authorized_keys/" /etc/ssh/sshd_config
     sudo sed -ri "s/^#?Port\s+.*/Port 22/" /etc/ssh/sshd_config
-    sudo cat ~/id_rsa.pub >> /home/$USER/.ssh/authorized_keys
+    sudo cat ~/etc/id_rsa.pub >> /home/$USER/.ssh/authorized_keys
     sudo systemctl restart sshd
 
     # 서버 자원 사용량을 알기 위해 설치
