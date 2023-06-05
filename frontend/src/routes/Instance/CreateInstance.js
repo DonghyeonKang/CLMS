@@ -9,6 +9,7 @@ import Navigation from "../../components/Navigation";
 import SelectServer from "../../components/Instance/CreateInstance/SelectServer";
 import CreateInstanceButtons from "../../components/Instance/CreateInstance/CreateInstanceButtons";
 import { useLocation } from "react-router-dom";
+import Footer from '../../components/Footer';
 
 const CreateInstance = () => {
   const {state} = useLocation();
@@ -38,6 +39,7 @@ const CreateInstance = () => {
             <CreateInstanceButtons data={data} validate={nameValidate&&keyPairValidate}/>
           </Box>
         </Content>  
+        <Footer/>
       </>
     );
 };

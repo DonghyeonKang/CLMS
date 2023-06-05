@@ -6,6 +6,7 @@ import ServerResource from "../../components/Server/ServerResources/ServerResour
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { baseUrl, tokenState } from "../../Atoms";
+import Footer from "../../components/Footer";
 
 //serverId 별로 학생 리스트 요청하도록 구현하기
 //serverId 변경되면 학생리스트, 리소스 API 요청 하게 수정하기
@@ -68,6 +69,7 @@ const ServerResources = () => {
                 <ServerTabs serverList={serverList} server={server} setServer={setServer}/>
                 <ServerResource server={server} studentList={studentList} serverId={serverId}/>
             </Content>
+            <Footer/>
         </>
     );
 };

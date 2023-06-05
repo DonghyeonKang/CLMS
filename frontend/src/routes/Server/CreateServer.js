@@ -6,6 +6,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 import { baseUrl, tokenState } from "../../Atoms";
+import Footer from "../../components/Footer";
 
 //post 요청 구현하고 페이지 전환 기능 추가하기
 const CreateServer = () => {
@@ -125,6 +126,7 @@ const CreateServer = () => {
                     <Button variant="contained" onClick={()=>registerServer()}>서버 등록</Button>
                 </ContentBody>
             </Content>
+            <Footer/>
         </>
     );
 };
