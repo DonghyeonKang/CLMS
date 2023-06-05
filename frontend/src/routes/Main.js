@@ -17,7 +17,8 @@ const Main = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    initialSlide: 2
+    initialSlide: 2,
+    arrows: false,
   };
 
   return (
@@ -53,7 +54,7 @@ const Main = () => {
 
 const Content = styled.div`
   padding-top: 55px;
-  width: 97%;
+  width: 100%;
   min-height: 80vh;
   margin-bottom: 120px;
 `;
@@ -62,7 +63,7 @@ const SlideImage = styled.img`
   height: auto;
 `;
 const SliderWrapper = styled.div`
-  margin-left: 50px;
+  width: 100%;
 `;
 
 export default Main;
