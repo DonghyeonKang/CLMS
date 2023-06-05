@@ -120,7 +120,7 @@ const SignUpAd = () => {
       } else {
         setShowEmailField(true);
         setSendButtonDisabled(true);
-        axios.get(BASEURL+'/register/verification?email=',{ username: email })
+        axios.get(BASEURL+'/register/verification', { params: { email: email } })
           .then(response => {
           })
           .catch(error => {
@@ -162,7 +162,7 @@ const SignUpAd = () => {
             전송
           </MyButton>
           </Grid></Grid>
-          {showEmailField && <MyTextFieldNumber onNumberValidChange={setNumberValid}/>}
+          {showEmailField && <MyTextFieldNumber email={email} onNumberValidChange={setNumberValid}/>}
         <MyTextFieldPW
           value={pw}
           onChange={handlePw}

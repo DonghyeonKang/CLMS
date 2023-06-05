@@ -32,7 +32,7 @@ const Header = () => {
 
 export default Header;
 
-const HeaderContent = styled.div`
+const HeaderContent = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;

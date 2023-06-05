@@ -11,8 +11,7 @@ const CreateInstanceButtons = ({data, validate}) => {
   const [token,] = useRecoilState(tokenState);
     //인스턴스 생성
   const createInstance = () => {
-    if(validate){
-      console.log(data);
+    if(validate && token){
       try{
         axios.post(BASEURL + '/instances/creation', data, {
           headers: {

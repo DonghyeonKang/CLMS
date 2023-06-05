@@ -55,7 +55,7 @@ const KeyPairModal = ({setModalOpen, data, setData, setKeyPairName,setKeyPairVal
     }
 
     const createKeyPair = () => {
-        if(validate){
+        if(validate && token){
             try{
                 axios.post(BASEURL + '/instances/keypair',{
                     data: keyPairData,
