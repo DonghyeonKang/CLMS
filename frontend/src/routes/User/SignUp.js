@@ -113,8 +113,8 @@ const SignUp = () => {
         setShowEmailField(true);
         setSendButtonDisabled(true);
         axios.get(BASEURL+'/register/verification',
-                    { params: { email: email } },
-                    { withCredentials: true })
+          { params: { email: email } },
+          { withCredentials: true })
           .then(response => {
           })
           .catch(error => {
