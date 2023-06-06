@@ -5,12 +5,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { baseUrl, tokenState } from "../../../Atoms";
+import RamChart from "./RamChart";
+import DiskChart from "./DiskChart";
 
 const ServerResource = ({server,studentList,serverId}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
     const [token,] = useRecoilState(tokenState);
     const navigate = useNavigate();
-    const [resources,setResources] = useState();
+    const [resources,setResources] = useState({});
+
     //서버 리소스
     useEffect(()=>{
         if(serverId !== '' && serverId !== undefined && token){
@@ -42,20 +45,14 @@ const ServerResource = ({server,studentList,serverId}) => {
             </StudentList>
             <ResourceList>
                 <Title>서버 리소스</Title>
-                {/* 램 사용량, 디스크 사용량 나중에 차트로 수정 */}
                 <Resources>
-                    <Resource>
-                        <GridTitle>서버 램 사용량</GridTitle>
-                        <GridContent>{resources?.ram}</GridContent>
-                    </Resource>
-                    <Resource>
-                        <GridTitle>서버 디스크 사용량</GridTitle>
-                        <GridContent>{resources?.disk}</GridContent>
-                    </Resource>
-                    <Resource>
-                        <GridTitle>서버와 CSWS 연결 상태</GridTitle>
-                        <GridContent>{resources?.connection}</GridContent>
-                     </Resource>
+                    if(resources.ram){
+                        <RamChart dataAvg={resources.ram} dataLabel={'램 사용량'}/>
+                    }
+                    if(resources.disk){
+                        <DiskChart dataAvg={resources.disk} dataLabel={'디스크 사용량'}/>
+                    }
+                    <Resource>서버 연결 상태 {resources?.connection === 'connected' ? '✅' : '❌'}</Resource>
                 </Resources>
             </ResourceList>
         </ServerDetail>
@@ -108,15 +105,14 @@ const Resources = styled.div`
 `;
 
 const Resource = styled.div`
-    width: 40%;
-    min-width: 250px;
-    padding: 5px 12px;
+    width: 50%;
+    min-width: 150px;
     margin: 30px 0;
     height: 80px;
-    border: 1px solid #eaeded;
     display: flex;
     flex-direction: column;
-    background-color: white;
+    align-items: center;
+    position: absolute;
 `;
 
 const Title = styled.div`
@@ -126,16 +122,4 @@ const Title = styled.div`
     padding: 10px 0;
     background-color: #fafafa;
     text-align: center;
-`;
-
-
-const GridTitle = styled.div`
-  margin: 3%;
-  font-size: 16px;
-  font-weight: 100;
-`;
-
-const GridContent = styled.div`
-  margin-left: 5%;
-  font-size: 20px;
 `;
