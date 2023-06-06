@@ -9,7 +9,6 @@ import { useState } from "react";
 import { useParams } from "react-router";
 import { useRecoilState } from "recoil";
 import { baseUrl, tokenState } from "../../Atoms";
-import Footer from "../../components/Footer";
 
 const InstanceDetail = () => {
   const [BASEURL,] = useRecoilState(baseUrl);
@@ -54,7 +53,6 @@ const InstanceDetail = () => {
           <InstanceDescription data={instanceDetail} domainName={domainName}/>
           <TabsContent data={instanceDetail} domainName={domainName}/>
         </Content>
-        <Footer/>
       </>
     );
 };
