@@ -11,9 +11,9 @@ const CreateInstanceButtons = ({data, validate}) => {
   const [token,] = useRecoilState(tokenState);
     //인스턴스 생성
   const createInstance = () => {
-    if(validate){
-      console.log(data);
-      try{
+    if(token){
+      if(validate){
+        try{
         axios.post(BASEURL + '/instances/creation', data, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -26,6 +26,7 @@ const CreateInstanceButtons = ({data, validate}) => {
     } else {
       alert('입력이 올바르지 않습니다.');
     }
+  }
   }
     return (
     <Btn>

@@ -19,7 +19,7 @@ const CreateServer = () => {
     const IPValidation = (str) => {
       const reg = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
       return reg.test(str);
-    }
+    };
     const handleServerIP = (event) => {
         const value = event.target.value;
         setServerData({...serverData, Ipv4:value});
@@ -28,14 +28,13 @@ const CreateServer = () => {
         }else {
             setIPValidate(false);
         }
-    }
+    };
     
-
     const [serverNameValidate,setServerNameValidate] = useState(false);
     const serverNameValidation = (str) => {
       const reg = /[a-zA-Zㄱ-ㅎ가-힣0-9]+/gim;
       return reg.test(str);
-    }
+    };
     const handleServerName = (event) => {
         const value = event.target.value;
         setServerData({...serverData, serverName:value});
@@ -51,13 +50,14 @@ const CreateServer = () => {
           } else {
             setServerNameValidate(false);
           }
-    }
+    };
 
     const [serverUserNamevalidate,setServerUserNameValidate] = useState(false);
     const serverUserNamevalidation = (str) => {
       const reg = /[a-zA-Zㄱ-ㅎ가-힣0-9]+/gim;
       return reg.test(str);
-    }
+    };
+  
     const handleServerUserName = (event) => {
         const value = event.target.value;
         setServerData({...serverData, serverUsername:value});
@@ -73,11 +73,12 @@ const CreateServer = () => {
           } else {
             setServerUserNameValidate(false);
           }
-    }
+    };
     //서버 생성
     const registerServer = () => {
-      if(IPValidate && serverNameValidate && serverUserNamevalidate){
-        try{
+      if(token){
+        if(IPValidate && serverNameValidate && serverUserNamevalidate){
+          try{
           axios.post(BASEURL + '/servers/register/new',{
             data: serverData,
             headers: {
@@ -91,6 +92,7 @@ const CreateServer = () => {
       } else {
         alert('입력이 올바르지 않습니다.');
       }
+    }
     }
     return (
         <>
@@ -134,6 +136,8 @@ export default CreateServer;
 const Content = styled.div`
   padding: 0 5%;
   width: 90%;
+  min-height: 80vh;
+  margin-bottom: 120px;
   margin-top: 50px;
   display: flex;
   justify-content: center;

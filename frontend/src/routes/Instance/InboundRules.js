@@ -20,4 +20,6 @@ export default InboundRules;
 const Content = styled.div`
   padding: 0 5%;
   width: 90%;
+  min-height: 80vh;
+  margin-bottom: 120px;
 `;

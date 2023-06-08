@@ -29,6 +29,20 @@ const TabsContent = ({data, domainName}) => {
   };
  
 
+  const loadInboundRules = () => {
+    if(token){
+      try {
+        axios.get(BASEURL + `/instances/inbounds/list?instanceId=${instanceId}`,{
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }).then((response)=> setInboundRules(response.data.inbounds));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  }
+
   const domainHandler = (event) => {
     const value = event.target.value;
     setNewDomain(value);
@@ -62,8 +76,9 @@ const TabsContent = ({data, domainName}) => {
   //요청 보낸 다음 기능 추가하기
   //도메인 변경
   const saveDomain = () => {
-    if(domainValidate){
-      try {
+    if(token){
+      if(domainValidate){
+        try {
         axios.post(BASEURL + `/instances/domain`,{
           data : {instanceId, domainName: newDomain},
           headers: {
@@ -76,11 +91,13 @@ const TabsContent = ({data, domainName}) => {
     } else {
       alert('도메인 주소를 입력해 주세요.')
     }
+  }
   };
   //도메인 삭제
   const deleteDomain = () => {
-    try {
-      axios.delete(BASEURL + `/instances/domain`,{
+    if(token){
+      try {
+        axios.delete(BASEURL + `/instances/domain`,{
         data: {instanceId},
         headers: {
           'Authorization': `Bearer ${token}`
@@ -89,11 +106,13 @@ const TabsContent = ({data, domainName}) => {
     } catch (error) {
       console.error(error);
     }
+  }
   };
 //소유자 변경 API
   const changeOwner = () => {
-    if(ownerValidate){
-      try {
+    if(token){
+      if(ownerValidate){
+        try {
         axios.patch(BASEURL + `/instances/owner`,{
           data: {username: owner, instanceId},
           headers: {
@@ -106,18 +125,11 @@ const TabsContent = ({data, domainName}) => {
     } else {
       alert('사용자 이름(이메일)을 입력해 주세요.');
     }
+  }
   };
   //인바운드 규칙 리스트 불러오기
   useEffect(()=>{
-    try {
-      axios.get(BASEURL + `/instances/inbounds/list?instanceId=${instanceId}`,{
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }).then((response)=> setInboundRules(response.data.inbounds));
-    } catch (error) {
-      console.error(error);
-    }
+    loadInboundRules();
   },[BASEURL, token, instanceId]);
 
     return (

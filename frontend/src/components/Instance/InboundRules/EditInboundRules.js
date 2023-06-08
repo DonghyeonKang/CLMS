@@ -24,9 +24,9 @@ const EditInboundRules = () => {
 
     //인바운드 규칙 저장
     const saveInboundRules = () => {
-      console.log(data);
-      try {
-        axios.put(BASEURL + `/instances/inbounds/setting`,{
+      if(token){
+        try {
+          axios.put(BASEURL + `/instances/inbounds/setting`,{
           data,
           headers: {
             'Authorization': `Bearer ${token}`
@@ -36,18 +36,24 @@ const EditInboundRules = () => {
       } catch (error) {
         console.error(error);
       }
+    }
     };
     //인바운드 규칙 리스트 불러오기
-    useEffect(()=>{
-      try {
-        axios.get(BASEURL + `/instances/inbounds/list?instanceId=${instanceId}`,{
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }).then((response)=> setData(response.data.inbounds));
-      } catch (error) {
-        console.error(error);
+    const loadInboundRules = () => {
+      if(token){
+        try {
+          axios.get(BASEURL + `/instances/inbounds/list?instanceId=${instanceId}`,{
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }).then((response)=> setData(response.data.inbounds));
+        } catch (error) {
+          console.error(error);
+        }
       }
+    }
+    useEffect(()=>{
+      loadInboundRules();
     },[BASEURL, token, instanceId]);
 
     return (

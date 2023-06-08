@@ -19,6 +19,7 @@ const Header = () => {
   return (
     <HeaderContent>
       <HeaderLogo src={mainlogo} onClick={() => navigate('/')}/>
+      <div style={{marginRight:'50px'}}>
       {isLoggedIn === 0 ? 
         <HeaderBtn onClick={() => navigate('/login')}>로그인</HeaderBtn> : 
         <ButtonGroup>
@@ -26,20 +27,21 @@ const Header = () => {
           <HeaderBtn onClick={() => handleLogout()}>로그아웃</HeaderBtn>
         </ButtonGroup>
       }
+      </div>
     </HeaderContent>
   );
 };
 
 export default Header;
 
-const HeaderContent = styled.div`
+const HeaderContent = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 96%;
+  width: 100%;
   min-width: 900px;
   height: 40px;
-  padding: 1% 2%;
+  padding: 2%;
   background-color: #232f3e;
   color: white;
 `;

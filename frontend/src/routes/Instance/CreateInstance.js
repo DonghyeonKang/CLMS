@@ -46,6 +46,8 @@ export default CreateInstance;
 const Content = styled.div`
   padding: 0 5%;
   width: 90%;
+  min-height: 80vh;
+  margin-bottom: 120px;
 `;
 const Box = styled.div`
   width: 100%;
