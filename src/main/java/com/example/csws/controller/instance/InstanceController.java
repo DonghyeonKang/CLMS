@@ -185,24 +185,20 @@ public class InstanceController {
 
     // 소유자 변경 페이지 이동.
     @GetMapping("/owner")
-    public String owner(@RequestParam(value = "instanceId", required = false) Integer instanceId, Model model) {  // 변경하려는 인스턴스 상세 정보 반환하기.
+    public void owner(@RequestParam(value = "instanceId", required = false) Integer instanceId, Model model) {  // 변경하려는 인스턴스 상세 정보 반환하기.
 
-        // 조회할 인스턴스 id가 프론트에서 넘어오지 않았을 경우 에러 띄우기
+        // 조회할 인스턴스 id가 프론트에서 넘어오지 않았을 경우 에러
         if (instanceId == null) {
             System.out.println("null owner");
-            return "/";
         }
         System.out.println(instanceId + " owner");
 
         Optional<InstanceDto> dto = instanceService.findById(instanceId);
 
-        if (dto.isEmpty()) {    // DB 조회 객체가 null일 경우, db에 인스턴스 정보 없음 에러 띄우기
-            return "/";
+        if (dto.isEmpty()) {    // DB 조회 객체가 null일 경우, db에 인스턴스 정보 없음 에러
         }
 
         model.addAttribute("instance", dto.get());
-
-        return "소유자 변경을 위한 페이지 경로";
     }
 
     // 소유자 변경 로직.
