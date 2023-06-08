@@ -48,7 +48,7 @@ const InstanceList = ({setUserId, setAddress}) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {list?.map((i)=>{return (
+                  {list?.map((i)=>{ console.log(i.status); return (
                   <tr key={i.instanceId}>
                     <InstanceBody>{i.name}</InstanceBody>
                     <InstanceId onClick={() => navigate(`${i.instanceId}`)}>{i.instanceId}</InstanceId>
