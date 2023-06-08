@@ -48,6 +48,8 @@ public class InstanceServiceImpl implements InstanceService{
         // ssh port 값 저장
         entity.updateInstancePort(port);
 
+        // 1 서버에서 사용하는 계정명(serverUsername), 2 서버 ip 주소, 3 호스트 포트, 4 컨테이너 포트(항상 22),
+        // 5 인스턴스 name, 6 인스턴스 id, 7 용량, 8 OS
         try {
             shRunner.execCommand("CreateContainer.sh", baseServer.getServerUsername(), baseServer.getIpv4(),
                     Integer.toString(entity.getPort()), "22",
@@ -94,8 +96,8 @@ public class InstanceServiceImpl implements InstanceService{
         // instanceId를 이용해서 인스턴스와 서버 정보 가져옴
         Instance entity = instanceRepository.findById(instanceId).get();
         Server baseServer = serverRepository.findById(instanceId).get();
-        // 원격 쉘 실행시 서버의 계정명(ex. pika 서버 : pika1 계정명), 서버 ip 주소,
-        // 컨테이너 이름(인스턴스 이름 + 인스턴스 id)를 인수로 넘겨준다.
+        // 1 서버에서 사용하는 계정명(serverUsername), 2 서버 ip 주소,
+        // 3 컨테이너_이름(인스턴스 name + 인스턴스 id)을 인수로 넘겨준다.
         try {
             shRunner.execCommand("StartContainer.sh", baseServer.getServerUsername(),
                     baseServer.getIpv4(), entity.getName() + entity.getId());
@@ -144,6 +146,7 @@ public class InstanceServiceImpl implements InstanceService{
         }
     }
 
+    // csws에 파일이 생성되는 경로 : ~/keys/서버_계정명/사용자_입력_키_이름.pem, pub
     @Override
     public String createKeyPair(String hostName, String keyName) {
         try {
