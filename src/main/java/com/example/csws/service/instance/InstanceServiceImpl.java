@@ -25,7 +25,6 @@ public class InstanceServiceImpl implements InstanceService{
     private final ServerRepository serverRepository;
     private final InstanceRepository instanceRepository;
     private final ShRunner shRunner;
-    private final EntityManager entityManager;
 
     // 컨트롤러에서 이미 인스턴스의 code 필드를 받아왔음을 가정함.
     // DB에서 프로시저를 이용하여 code를 설정할 것이라면 연관된 전체 기능 수정 필요.
@@ -38,7 +37,7 @@ public class InstanceServiceImpl implements InstanceService{
     @Override
     public String createInstance(InstanceDto instanceDto) {
         // port null 로 저장
-        User newUser = userRepository.getReferenceById((long)instanceDto.getUserId());
+        User newUser = userRepository.getReferenceById(instanceDto.getUserId());
         Server baseServer = serverRepository.findById(instanceDto.getServerId()).get();
         Instance entity = instanceRepository.save(instanceDto.toEntity(newUser, baseServer));
 
@@ -50,7 +49,8 @@ public class InstanceServiceImpl implements InstanceService{
         entity.updateInstancePort(port);
 
         try {
-            shRunner.execCommand("CreateContainer.sh", Integer.toString(entity.getPort()), "22",
+            shRunner.execCommand("CreateContainer.sh", baseServer.getServerUsername(), baseServer.getIpv4(),
+                    Integer.toString(entity.getPort()), "22",
                     entity.getName(), Integer.toString(entity.getId()),
                     Double.toString(entity.getStorage()), entity.getOs());
             return "success";
@@ -88,11 +88,17 @@ public class InstanceServiceImpl implements InstanceService{
     }
 
     // 실행할 스크립트 파일 이름과 필요 인수를 넘겨주고 실행. 실패 시 예외 문구가 뜬다.
-    // 컨테이너 이름 : instance 테이블의 name + code
+    // 쉘에서 인수로 받는 컨테이너 이름 : instance 테이블의 name + instanceId
     @Override
     public String startInstance(int instanceId) {
+        // instanceId를 이용해서 인스턴스와 서버 정보 가져옴
+        Instance entity = instanceRepository.findById(instanceId).get();
+        Server baseServer = serverRepository.findById(instanceId).get();
+        // 원격 쉘 실행시 서버의 계정명(ex. pika 서버 : pika1 계정명), 서버 ip 주소,
+        // 컨테이너 이름(인스턴스 이름 + 인스턴스 id)를 인수로 넘겨준다.
         try {
-            shRunner.execCommand("StartContainer.sh", Integer.toString(instanceId));
+            shRunner.execCommand("StartContainer.sh", baseServer.getServerUsername(),
+                    baseServer.getIpv4(), entity.getName() + entity.getId());
             return "success";
         } catch (Exception e) {
             return e.toString();
@@ -101,8 +107,11 @@ public class InstanceServiceImpl implements InstanceService{
 
     @Override
     public String stopInstance(int instanceId) {
+        Instance entity = instanceRepository.findById(instanceId).get();
+        Server baseServer = serverRepository.findById(instanceId).get();
         try {
-            shRunner.execCommand("StopContainer.sh", Integer.toString(instanceId));
+            shRunner.execCommand("StopContainer.sh", baseServer.getServerUsername(),
+                    baseServer.getIpv4(), entity.getName() + entity.getId());
             return "success";
         } catch (Exception e) {
             return e.toString();
@@ -111,8 +120,11 @@ public class InstanceServiceImpl implements InstanceService{
 
     @Override
     public String restartInstance(int instanceId) {
+        Instance entity = instanceRepository.findById(instanceId).get();
+        Server baseServer = serverRepository.findById(instanceId).get();
         try {
-            shRunner.execCommand("RestartContainer.sh", Integer.toString(instanceId));
+            shRunner.execCommand("RestartContainer.sh", baseServer.getServerUsername(),
+                    baseServer.getIpv4(), entity.getName() + entity.getId());
             return "success";
         } catch (Exception e) {
             return e.toString();
@@ -121,8 +133,11 @@ public class InstanceServiceImpl implements InstanceService{
 
     @Override
     public String deleteInstance(int instanceId) {
+        Instance entity = instanceRepository.findById(instanceId).get();
+        Server baseServer = serverRepository.findById(instanceId).get();
         try {
-            shRunner.execCommand("RemoveContainer.sh", Integer.toString(instanceId));
+            shRunner.execCommand("RemoveContainer.sh", baseServer.getServerUsername(),
+                    baseServer.getIpv4(), entity.getName() + entity.getId());
             return "success";
         } catch (Exception e) {
             return e.toString();
@@ -130,10 +145,13 @@ public class InstanceServiceImpl implements InstanceService{
     }
 
     @Override
-    public void createKeyPair(String hostName, String keyName) {
-    // 1. 사용자가 키페어 이름 입력 후 다운로드 클릭
-    // 2. 키페어 생성 - 전송 - 개인키 삭제
-    // 3. 컨테이너 생성 - createContainer.sh - sendPublickey.sh
+    public String createKeyPair(String hostName, String keyName) {
+        try {
+            shRunner.execCommand("CreateKeypairs.sh", hostName, keyName);
+            return "success";
+        } catch (Exception e) {
+            return e.toString();
+        }
     }
 
     // userId가 수정되어있는 dto를 컨트롤러에서 받은 뒤 엔티티로 변환해 save(update).
