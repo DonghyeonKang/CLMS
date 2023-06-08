@@ -105,7 +105,7 @@ const Resources = styled.div`
 `;
 
 const Resource = styled.div`
-    width: 50%;
+    width: 52%;
     min-width: 150px;
     margin: 30px 0;
     height: 80px;
