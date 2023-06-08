@@ -31,7 +31,7 @@ const InstanceDescription = ({data, domainName}) => {
                 </DescriptionGrid>
                 <DescriptionGrid>
                   <GridTitle>인스턴스 상태</GridTitle>
-                  <GridContent>{data?.status}</GridContent>
+                  <GridContent>{data?.state}</GridContent>
                 </DescriptionGrid>
                 <DescriptionGrid>
                   <GridTitle>퍼블릭 IPv4 DNS</GridTitle>

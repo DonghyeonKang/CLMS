@@ -76,8 +76,9 @@ const TabsContent = ({data, domainName}) => {
   //요청 보낸 다음 기능 추가하기
   //도메인 변경
   const saveDomain = () => {
-    if(domainValidate && token){
-      try {
+    if(token){
+      if(domainValidate){
+        try {
         axios.post(BASEURL + `/instances/domain`,{
           data : {instanceId, domainName: newDomain},
           headers: {
@@ -90,6 +91,7 @@ const TabsContent = ({data, domainName}) => {
     } else {
       alert('도메인 주소를 입력해 주세요.')
     }
+  }
   };
   //도메인 삭제
   const deleteDomain = () => {
@@ -108,8 +110,9 @@ const TabsContent = ({data, domainName}) => {
   };
 //소유자 변경 API
   const changeOwner = () => {
-    if(ownerValidate && token){
-      try {
+    if(token){
+      if(ownerValidate){
+        try {
         axios.patch(BASEURL + `/instances/owner`,{
           data: {username: owner, instanceId},
           headers: {
@@ -122,6 +125,7 @@ const TabsContent = ({data, domainName}) => {
     } else {
       alert('사용자 이름(이메일)을 입력해 주세요.');
     }
+  }
   };
   //인바운드 규칙 리스트 불러오기
   useEffect(()=>{

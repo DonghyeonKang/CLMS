@@ -52,7 +52,7 @@ const InstanceList = ({setUserId, setAddress}) => {
                   <tr key={i.instanceId}>
                     <InstanceBody>{i.name}</InstanceBody>
                     <InstanceId onClick={() => navigate(`${i.instanceId}`)}>{i.instanceId}</InstanceId>
-                    <InstanceBody>{i.status}</InstanceBody>
+                    <InstanceBody>{i.state}</InstanceBody>
                     <InstanceBody>{i.storage}</InstanceBody>
                     <InstanceBody>{i.port}</InstanceBody>
                     <InstanceBody>{i.keyName}</InstanceBody>
