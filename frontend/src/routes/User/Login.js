@@ -16,12 +16,9 @@ import MyAvatar from '../../components/User/MUI/MyAvatar';
 import MyTextFieldID from '../../components/User/MUI/MyTextFieldID';
 import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
 import axios from 'axios';
-import { tokenState } from '../../Atoms';
-import Cookies from 'js-cookie';
 import Header from'../../components/Header';
 
 const Login = () => {
-  const [, setToken] = useRecoilState(tokenState);
   const [loginStatus, setLoginStatus] = useRecoilState(loginState);
   const [BASEURL,] = useRecoilState(baseUrl);
   const navigate = useNavigate();
@@ -64,24 +61,19 @@ const Login = () => {
   const onClickConfirmButton = () => {
     axios.post(BASEURL + '/login', { username: email, password: pw }, {withCredentials: true})
       .then(response => {
-        if (response.data.success) {
-          // 데이터 받아오기
-          const accessToken = response.headers.get("Authorization");
-
-          // accessToken 은 localStorage 에 저장
-          localStorage.setItem('accessToken', accessToken);
-
-          setLoginStatus(true);
-          setToken(accessToken);
-          navigate('/');
-        } else {
-          alert('이메일 또는 비밀번호가 일치하지 않습니다.');
-        }
+        const { accessToken } = response.data;
+        // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
+        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+        // 토큰을 로컬 스토리지에 저장
+        localStorage.setItem('jwt', accessToken);
+        setLoginStatus(true);
+        navigate('/');
       })
       .catch(error => {
         alert('로그인 실패: ' + error.message);
       });
   };
+  
 
   const onCheckEnter = (e) => {
     if (e.key === 'Enter' && !notAllow) {
@@ -99,29 +91,6 @@ const Login = () => {
   };
 
   const PasswordIcon = passwordType.visible ? VisibilityIcon : VisibilityOffIcon;
-
-  useEffect(() => {
-    const refreshToken = Cookies.get('refreshToken');
-    const accessToken = localStorage.getItem('accessToken');
-    if (refreshToken && accessToken) {
-      setToken(accessToken);
-      setLoginStatus(true);
-    }
-  }, [setToken, setLoginStatus]);
-
-  // API 요청 시 Authorization 헤더에 토큰 추가
-  axios.interceptors.request.use(
-    config => {
-      const accessToken = localStorage.getItem('accessToken');
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-      }
-      return config;
-    },
-    error => {
-      return Promise.reject(error);
-    }
-  );
 
   return (
     <><Header/>
