@@ -31,7 +31,7 @@ const InstanceDescription = ({data, domainName}) => {
                 </DescriptionGrid>
                 <DescriptionGrid>
                   <GridTitle>인스턴스 상태</GridTitle>
-                  <GridContent>{data?.status}</GridContent>
+                  <GridContent>{data?.state}</GridContent>
                 </DescriptionGrid>
                 <DescriptionGrid>
                   <GridTitle>퍼블릭 IPv4 DNS</GridTitle>
@@ -53,8 +53,6 @@ const DetailHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #f2f3f3;
-  border: 1px solid #eaeded;
   border-radius: 20px;
   width: 100%;
   min-width: 900px;

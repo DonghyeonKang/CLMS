@@ -76,8 +76,9 @@ const CreateServer = () => {
     };
     //서버 생성
     const registerServer = () => {
-      if(IPValidate && serverNameValidate && serverUserNamevalidate && token){
-        try{
+      if(token){
+        if(IPValidate && serverNameValidate && serverUserNamevalidate){
+          try{
           axios.post(BASEURL + '/servers/register/new',{
             data: serverData,
             headers: {
@@ -91,6 +92,7 @@ const CreateServer = () => {
       } else {
         alert('입력이 올바르지 않습니다.');
       }
+    }
     }
     return (
         <>

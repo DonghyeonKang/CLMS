@@ -55,8 +55,9 @@ const KeyPairModal = ({setModalOpen, data, setData, setKeyPairName,setKeyPairVal
     }
 
     const createKeyPair = () => {
-        if(validate && token){
-            try{
+        if(token){
+            if(validate){
+                try{
                 axios.post(BASEURL + '/instances/keypair',{
                     data: keyPairData,
                     headers: {
@@ -72,6 +73,7 @@ const KeyPairModal = ({setModalOpen, data, setData, setKeyPairName,setKeyPairVal
         } else {
             alert('올바른 키 페어 이름을 입력해 주세요.');
         }
+    }
     }
     return (
         <CreateKeyPair>
