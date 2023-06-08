@@ -13,7 +13,11 @@ const MyTable = ({ onRowSelectionModelChange }) => {
     axios
       .get(BASEURL+"/user/manager/verification")
       .then((response) => {
-        setRows(response.data.requests);
+        if(response.data && response.data.requests) {
+          setRows(response.data.requests);
+        } else {
+          setRows([]);
+        }
       });
   }, []);
 
