@@ -59,9 +59,35 @@
     }
   };
 
+<<<<<<< Updated upstream
     const handleTextFieldChange = (event) => {
       setTextFieldValue(event.target.value);
     };
+=======
+// 이메일 인증 버튼 눌렀을 시
+const showAlert = () => {
+  if (timerExpired) {
+    window.alert("인증 시간 초과!");
+  } else if (textFieldValue.trim() === '') {
+    window.alert("인증번호를 입력해주세요!");
+  } else {
+    axios.post(BASEURL+'/register/verification', {authNumber : textFieldValue, email:email})
+      .then(response => {
+        if (response.data) {
+          window.alert("인증이 완료되었습니다!");
+          setShowEmailField(true);
+          setNumberValid(true);
+          setTimerRunning(false); // 타이머 중지
+        } else {
+          window.alert("인증번호가 잘못되었습니다!");
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+};
+>>>>>>> Stashed changes
 
 
     useEffect(() => {

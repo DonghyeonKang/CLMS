@@ -150,6 +150,8 @@ public class InstanceController {
             newDto.setAddress(dto.getAddress());
             newDto.setPort(dto.getPort());
             newDto.setOs(dto.getOs());
+            newDto.setKeyName(dto.getKeyName());
+            newDto.setStorage(dto.getStorage());
             newList.add(newDto);
         }
 
