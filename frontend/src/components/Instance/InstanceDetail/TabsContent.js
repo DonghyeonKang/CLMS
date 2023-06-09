@@ -191,7 +191,7 @@ const TabsContent = ({data, domainName}) => {
                       <InputGrid>
                         <TextField label="도메인 입력" onChange={(i)=>domainHandler(i)} error={!domainValidate} size="small" style={{marginRight:'5%'}}/>
                         <Button onClick={()=>saveDomain()} variant="outlined" style={{marginRight:'2%'}}>도메인 적용</Button>
-                        <Button onClick={()=>deleteDomain()} variant="outlined" color="error">도메인 삭제</Button>
+                        <Button onClick={()=>deleteDomain()} variant="outlined" disabled color="error">도메인 삭제</Button>
                     </InputGrid>
                     ) : (
                     <InputGrid>
