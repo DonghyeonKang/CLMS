@@ -14,7 +14,7 @@ function App() {
   const [BASEURL,] = useRecoilState(baseUrl);
 
   useEffect(() => {
-    const jwtToken = localStorage.getItem('jwt');
+    const jwtToken = localStorage.getItem('accessToken');
     if (jwtToken) {
       setToken(jwtToken);
       setLoginStatus(true);
