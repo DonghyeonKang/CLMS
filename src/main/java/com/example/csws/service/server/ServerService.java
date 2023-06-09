@@ -37,7 +37,7 @@ public class ServerService {
         for(Server server : servers) {
             serverList.add(
                     ServerListResponse.builder()
-                            .id(server.getId())
+                            .serverId(server.getId())
                             .name(server.getName())
                             .ipv4(server.getIpv4())
                             .hostname(server.getServerUsername())
