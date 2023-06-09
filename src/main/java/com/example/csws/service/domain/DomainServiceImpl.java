@@ -8,6 +8,8 @@ import com.example.csws.repository.instance.InstanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
+
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Component
@@ -42,7 +44,9 @@ public class DomainServiceImpl implements DomainService {
                 .name(domain.getName())
                 .build();
     }
+
+    @Transactional
     public void deleteDomain(DomainDto domainDto) {
-        domainRepository.deleteById(domainDto.getInstanceId());
+        domainRepository.deleteByInstanceId(domainDto.getInstanceId());
     }
 }

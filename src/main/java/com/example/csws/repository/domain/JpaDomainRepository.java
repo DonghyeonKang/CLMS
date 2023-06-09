@@ -16,5 +16,5 @@ public interface JpaDomainRepository extends JpaRepository<Domain, Integer>, Dom
     public Domain save(Domain domain);
 
     // 도메인 삭제
-    public void deleteById(int instanceId);
+    public void delete(Domain domain);
 }

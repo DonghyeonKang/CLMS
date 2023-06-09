@@ -13,5 +13,5 @@ public interface DomainRepository {
     public Domain save(Domain domain);
 
     // domain 삭제
-    public void deleteById(int instanceId);
+    public void deleteByInstanceId(Integer instanceId);
 }

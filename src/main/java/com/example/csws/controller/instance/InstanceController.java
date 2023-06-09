@@ -259,8 +259,8 @@ public class InstanceController {
     }
 
     // 특정 인스턴스의 도메인 삭제
-    @DeleteMapping("/domain")
-    public JSONObject domainDelete(@RequestBody DomainInstanceRequest domainInstanceRequest) {
+    @PostMapping("/domain/remove")
+    public JSONObject domainDelete(@RequestBody(required = false) DomainInstanceRequest domainInstanceRequest) {
         System.out.println(domainInstanceRequest.getInstanceId());
         domainService.deleteDomain(
                 DomainDto.builder()
