@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface JpaDomainRepository extends JpaRepository<Domain, Long>, DomainRepository {
+import java.util.Optional;
+
+public interface JpaDomainRepository extends JpaRepository<Domain, Integer>, DomainRepository {
     // instanceId 로 domain 조회
-    public Domain findByInstanceId(String instanceId);
+    public Optional<Domain> findByInstanceId(String instanceId);
 
     // 도메인 저장
     public Domain save(Domain domain);

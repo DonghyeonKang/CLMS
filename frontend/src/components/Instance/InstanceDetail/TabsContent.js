@@ -70,9 +70,8 @@ const TabsContent = ({data, domainName}) => {
   const saveDomain = () => {
       if(domainValidate){
         try {
-        axios.post(BASEURL + `/instances/domain`,{
-          data : {instanceId, domainName: newDomain}
-        }).then((response)=> console.log(response));
+        axios.post(BASEURL + `/instances/domain`,{instanceId, domainName: newDomain})
+        .then((response)=> console.log(response));
       } catch (error) {
         console.error(error);
       }
@@ -83,9 +82,7 @@ const TabsContent = ({data, domainName}) => {
   //도메인 삭제
   const deleteDomain = () => {
       try {
-        axios.delete(BASEURL + `/instances/domain`,{
-        data: {instanceId}
-      }).then((response)=> console.log(response));
+        axios.delete(BASEURL + `/instances/domain`,{instanceId}).then((response)=> console.log(response));
     } catch (error) {
       console.error(error);
     }
@@ -187,7 +184,7 @@ const TabsContent = ({data, domainName}) => {
                     <GridTitle>도메인</GridTitle>
                     <GridContent>{domainName}</GridContent>
                   </DetailGrid>
-                    {(domainName === '' || domainName === undefined) ? (
+                    {(domainName === '' || domainName === undefined || domainName === null) ? (
                       <InputGrid>
                         <TextField label="도메인 입력" onChange={(i)=>domainHandler(i)} error={!domainValidate} size="small" style={{marginRight:'5%'}}/>
                         <Button onClick={()=>saveDomain()} variant="outlined" style={{marginRight:'2%'}}>도메인 적용</Button>
