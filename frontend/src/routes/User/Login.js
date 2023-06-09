@@ -60,14 +60,13 @@ const Login = () => {
       setPwValid(false);
     }
   }
-
+  
   const onClickConfirmButton = () => {
     axios.post(BASEURL + '/login', { username: email, password: pw }, {withCredentials: true})
       .then(response => {
         if (response.data.success) {
-          const accessToken = response.data.accessToken;
+          const accessToken = response.headers.authorization;
           localStorage.setItem('accessToken', accessToken);
-
           setLoginStatus(true);
           setToken(accessToken);
           navigate('/');
