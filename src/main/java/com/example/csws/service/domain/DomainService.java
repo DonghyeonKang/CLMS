@@ -2,11 +2,11 @@ package com.example.csws.service.domain;
 
 import com.example.csws.entity.domain.Domain;
 import com.example.csws.entity.domain.DomainDto;
+import org.json.simple.JSONObject;
 
-import java.util.List;
 
 public interface DomainService {
-    public Domain findByInstanceId(String instanceId);
-    public Domain createDomain(DomainDto domainDto);
+    public JSONObject findByInstanceId(Integer instanceId);
+    public DomainDto createDomain(DomainDto domainDto);
     public void deleteDomain(DomainDto domainDto);
 }

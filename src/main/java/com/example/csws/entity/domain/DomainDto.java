@@ -1,5 +1,6 @@
 package com.example.csws.entity.domain;
 
+import com.example.csws.entity.instance.Instance;
 import lombok.*;
 
 @Builder
@@ -9,12 +10,12 @@ import lombok.*;
 @AllArgsConstructor
 public class DomainDto {
     private String name;
-    private int instanceId;
+    private Integer instanceId;
 
-    public Domain toEntity() {
+    public Domain toEntity(Instance instance) {
         return Domain.builder()
                 .name(name)
-                .instanceId(instanceId)
+                .instance(instance)
                 .build();
     }
 }
