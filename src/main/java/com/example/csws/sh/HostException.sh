@@ -6,14 +6,14 @@ Start()
     echo "start shell - $sh.sh >>>>>> Start" 
 }
 
-CSWSFailure()
+HostFailure()
 {
     local sh=$1
-    echo "csws - $sh.sh >>>>>> Failure" 
+    echo "host - $sh.sh >>>>>> Failure" 
 }
 
-CSWSSuccess()
+HostSuccess()
 {
     local sh=$1
-    echo "csws - $sh.sh >>>>>> Success" 
+    echo "host - $sh.sh >>>>>> Success" 
 }
