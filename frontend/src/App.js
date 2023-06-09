@@ -13,7 +13,7 @@ function App() {
   const [BASEURL,] = useRecoilState(baseUrl);
 
   useEffect(() => {
-    const jwtToken = localStorage.getItem('jwt');
+    const jwtToken = localStorage.getItem('accessToken');
     if (jwtToken) {
       setLoginStatus(true);
       axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
