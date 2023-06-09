@@ -12,7 +12,7 @@ const SelectServer = ({data, setData, setHostname}) => {
     const serverIdHandler = (event) => {
       const value = event.target.value;
       setData({...data, serverId: value});
-      const hostname = serverList?.filter((i)=>i?.id === value)[0]?.hostname;
+      const hostname = serverList?.filter((i)=>i?.serverId === value)[0]?.hostname;
       setHostname(hostname);
       };
     //학과 ID값 받게 해야 함
@@ -38,7 +38,7 @@ const SelectServer = ({data, setData, setHostname}) => {
     <Content>
         <Title>서버 선택</Title>
         <Select labelId="server" onChange={serverIdHandler} value={data.serverId ?? ''} size='small'>
-            {serverList.map((i)=><MenuItem value={i?.id} key={i?.id}>{i?.name}</MenuItem>)}
+            {serverList.map((i)=><MenuItem value={i?.serverId} key={i?.serverId}>{i?.name}</MenuItem>)}
         </Select>
     </Content>);
 }
