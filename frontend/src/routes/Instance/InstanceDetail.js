@@ -24,7 +24,7 @@ const InstanceDetail = () => {
           headers: {
             'Authorization': `Bearer ${token}`
           }
-        }).then((response)=> setInstanceDetail(response.data));
+        }).then((response)=> setInstanceDetail(response.data.instances[0]));
       } catch (error) {
         console.error(error);
       }

@@ -42,7 +42,7 @@ const TabsContent = ({data, domainName}) => {
     }
   }
   }
-
+  
   const domainHandler = (event) => {
     const value = event.target.value;
     setNewDomain(value);
@@ -143,7 +143,7 @@ const TabsContent = ({data, domainName}) => {
           {list === 'domain' ? 
           <SelectedTab onClick={()=>setList('domain')}>도메인 적용</SelectedTab> : 
           <DetailTab onClick={()=>setList('domain')}>도메인 적용</DetailTab>}
-          {list === 'owner' ? 
+          {list === 'owner' ? /* 관리자 아니면 안보이게 */
           <SelectedTab onClick={()=>setList('owner')}>인스턴스 소유자 변경</SelectedTab> : 
           <DetailTab onClick={()=>setList('owner')}>인스턴스 소유자 변경</DetailTab>}
 
@@ -210,11 +210,19 @@ const TabsContent = ({data, domainName}) => {
                     <GridTitle>도메인</GridTitle>
                     <GridContent>{domainName}</GridContent>
                   </DetailGrid>
-                  <InputGrid>
-                  <TextField label="도메인 입력" onChange={(i)=>domainHandler(i)} error={!domainValidate} size="small" style={{marginRight:'5%'}}/>
-                  <Button onClick={()=>saveDomain()} variant="outlined" style={{marginRight:'2%'}}>도메인 적용</Button>
-                  <Button onClick={()=>deleteDomain()} variant="outlined" color="error">도메인 삭제</Button>
-                  </InputGrid>
+                    {(domainName === '' || domainName === undefined) ? (
+                      <InputGrid>
+                        <TextField label="도메인 입력" onChange={(i)=>domainHandler(i)} error={!domainValidate} size="small" style={{marginRight:'5%'}}/>
+                        <Button onClick={()=>saveDomain()} variant="outlined" style={{marginRight:'2%'}}>도메인 적용</Button>
+                        <Button onClick={()=>deleteDomain()} variant="outlined" color="error">도메인 삭제</Button>
+                    </InputGrid>
+                    ) : (
+                    <InputGrid>
+                      <TextField label="도메인 입력" onChange={(i)=>domainHandler(i)} error={!domainValidate} disabled size="small" style={{marginRight:'5%'}}/>
+                      <Button onClick={()=>saveDomain()} variant="outlined" disabled style={{marginRight:'2%'}}>도메인 적용</Button>
+                      <Button onClick={()=>deleteDomain()} variant="outlined" color="error">도메인 삭제</Button>
+                    </InputGrid>
+                      ) }
                 </>
                 :
                 <>
