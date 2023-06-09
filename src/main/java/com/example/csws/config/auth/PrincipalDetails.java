@@ -1,5 +1,6 @@
 package com.example.csws.config.auth;
 
+import com.example.csws.entity.department.Department;
 import com.example.csws.entity.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,11 @@ public class PrincipalDetails implements UserDetails {
 
     public Long getId() {
         return user.getId();
+    }
+    public String getRole() { return user.getRoles(); }
+    public int getDepartmentId() {
+        Department department = user.getDepartment();
+        return department.getId();
     }
 
     @Override
