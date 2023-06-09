@@ -35,7 +35,7 @@ const KeyPairSection = ({setData, data, validate, setValidate, hostname}) => {
         <KeyPair>
             <Title>키 페어</Title>
             <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-              <TextField label='키 페어' onChange={keyPairHandler} value={keyPairName} error={!validate} helperText='키 페어 이름을 입력해주세요' style={{width:'60%'}} size="small"/>
+              <TextField disabled label='키 페어' onChange={keyPairHandler} value={keyPairName} error={!validate} helperText='키 페어 이름을 입력해주세요' style={{width:'60%'}} size="small"/>
               <CreateKeyPair onClick={()=>setModalOpen(true)}>새 키 페어 생성</CreateKeyPair>
             </div>
         </KeyPair>
