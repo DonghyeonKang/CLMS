@@ -3,12 +3,11 @@ import axios from "axios";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { baseUrl, tokenState } from "../../../Atoms";
+import { baseUrl } from "../../../Atoms";
 
 //키페어 생성 요청 보내고 나서 수행할 기능 만들기
 const KeyPairModal = ({setModalOpen, data, setData, setKeyPairName,setKeyPairValidate, hostname}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
-    const [token,] = useRecoilState(tokenState);
     const [keyPairData, setKeyPairData] = useState({});
     const [, setKeyPairType] = useState('RSA');
     const [, setPrivateKeyFileFormat] = useState('.pem');
@@ -55,14 +54,10 @@ const KeyPairModal = ({setModalOpen, data, setData, setKeyPairName,setKeyPairVal
     }
 
     const createKeyPair = () => {
-        if(token){
             if(validate){
                 try{
                 axios.post(BASEURL + '/instances/keypair',{
-                    data: keyPairData,
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                      }
+                    data: keyPairData
                 }).then((response)=>downloadKeyPair(response.data));
               } catch (error) {
                 console.error(error);
@@ -73,7 +68,6 @@ const KeyPairModal = ({setModalOpen, data, setData, setKeyPairName,setKeyPairVal
         } else {
             alert('올바른 키 페어 이름을 입력해 주세요.');
         }
-    }
     }
     return (
         <CreateKeyPair>

@@ -8,42 +8,29 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router";
 import { useRecoilState } from "recoil";
-import { baseUrl, tokenState } from "../../Atoms";
+import { baseUrl } from "../../Atoms";
 
 const InstanceDetail = () => {
   const [BASEURL,] = useRecoilState(baseUrl);
-  const [token,] = useRecoilState(tokenState);
   const [instanceDetail,setInstanceDetail] = useState();
   const [domainName,setDomainName] = useState('');
   const {instanceId} = useParams();
   //인스턴스 상세
   useEffect(()=>{
-    if(token){
       try {
-        axios.get(BASEURL + `/instances/detail?instanceId=${instanceId}`,{
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }).then((response)=> setInstanceDetail(response.data.instances[0]));
+        axios.get(BASEURL + `/instances/detail?instanceId=${instanceId}`).then((response)=> setInstanceDetail(response.data.instances[0]));
       } catch (error) {
         console.error(error);
       }
-    }
-  },[instanceId, BASEURL, token]);
+  },[instanceId, BASEURL]);
   //인스턴스 도메인
   useEffect(()=>{
-    if(token){
       try {
-        axios.get(BASEURL + `/instances/domain?instanceId=${instanceId}`,{
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }).then((response)=> setDomainName(response.data.domainName));
+        axios.get(BASEURL + `/instances/domain?instanceId=${instanceId}`).then((response)=> setDomainName(response.data.domainName));
       } catch (error) {
         console.error(error);
       }
-    }
-  },[instanceId, BASEURL, token]);
+  },[instanceId, BASEURL]);
 
     return (
       <>
