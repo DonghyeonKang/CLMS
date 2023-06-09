@@ -82,7 +82,9 @@ const TabsContent = ({data, domainName}) => {
   //도메인 삭제
   const deleteDomain = () => {
       try {
-        axios.delete(BASEURL + `/instances/domain`,{instanceId}).then((response)=> console.log(response));
+        console.log(instanceId)
+        axios.post(BASEURL + `/instances/domain/remove`,{instanceId, domainName: newDomain})
+        .then((response)=> console.log(response));
     } catch (error) {
       console.error(error);
     }
