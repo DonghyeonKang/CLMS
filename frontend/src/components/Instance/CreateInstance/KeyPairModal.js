@@ -20,8 +20,8 @@ const KeyPairModal = ({setModalOpen, data, setData, setKeyPairName,setKeyPairVal
     const keyPairNameHandler = (e) => {
         const value = e.target.value;
         setKeyPairData({
-            'hostname': hostname,
-            'name': value
+            hostname: hostname,
+            name: value
         });
         if(value.length >= 1 && value.length <= 250){
             for(let i=0;i<value.length;i++){
