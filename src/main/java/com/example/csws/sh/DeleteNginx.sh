@@ -9,7 +9,7 @@ DeleteNginx()
     
     local serviceName=$3
 
-    ssh $hostName@$hostIp "bash sh/H_DeleteNginx.sh $serviceName"    
+    ssh $hostName@$hostIp "bash ~/sh/H_DeleteNginx.sh $serviceName"    
 }
 Start DeleteNginx
 DeleteNginx $1 $2 $3 && CSWSSuccess DeleteNginx || CSWSFailure DeleteNginx

@@ -7,7 +7,7 @@ CreateKeypairs()
     local hostName=$1
     local keyName=$2
 
-    # Users µğ·ºÅä¸®°¡ Á¸ÀçÇÏÁö ¾ÊÀ¸¸é »ı¼º
+    # Users ë””ë ‰í† ë¦¬ê°€ ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ ìƒì„±
     if [ ! -d ~/Keys/$hostName ]; then
         mkdir -p ~/Keys/$hostName
     fi

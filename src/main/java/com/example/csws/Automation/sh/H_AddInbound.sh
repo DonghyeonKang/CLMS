@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-
+###bash
 . ~/sh/HostException.sh
 
 H_AddInbound()
@@ -45,8 +45,8 @@ H_AddInbound()
     local newHport=$newh
     IFS=$IFS_OLD
 
-    sudo iptables -A INPUT -p tcp --dport $newHport -j ACCEPT
-    sudo netfilter-persistent save
+    echo `cat ~/etc/pw.txt` | sudo -S iptables -A INPUT -p tcp --dport $newHport -j ACCEPT
+    echo `cat ~/etc/pw.txt` | sudo -S netfilter-persistent save
 
 }
 Start H_AddInbound

@@ -20,13 +20,13 @@ H_AddNginx()
         exit 1
     fi
 
-    sudo cp ~/etc/nginxTemplet /etc/nginx/conf.d/$serviceName.conf
+    echo `cat ~/etc/pw.txt` | sudo -S cp ~/etc/nginxTemplet /etc/nginx/conf.d/$serviceName.conf
 
   
-    sudo sed -ri "s/.*server_name/\tserver_name $domainName www.$domainName;/g" /etc/nginx/conf.d/$serviceName.conf
-    sudo sed -ri "s/.*proxy_pass/\tproxy_pass http:\/\/$ip:$port;/g" /etc/nginx/conf.d/$serviceName.conf
+    echo `cat ~/etc/pw.txt` | sudo -S sed -ri "s/.*server_name/\tserver_name $domainName www.$domainName;/g" /etc/nginx/conf.d/$serviceName.conf
+    echo `cat ~/etc/pw.txt` | sudo -S sed -ri "s/.*proxy_pass/\tproxy_pass http:\/\/$ip:$port;/g" /etc/nginx/conf.d/$serviceName.conf
 
-    sudo nginx -s reload
+    echo `cat ~/etc/pw.txt` | sudo -S nginx -s reload
 }
 Start H_AddNginx
 H_AddNginx $1 $2 $3 $4 && HostSuccess H_AddNginx || HostFailure H_AddNginx

@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 # ps로 출력한 유저의 모든 컨테이너 상태
 
-. ~/sh/Exception.sh
+. ~/sh/HostException.sh
 
 H_PrintStatusforUser(){
 

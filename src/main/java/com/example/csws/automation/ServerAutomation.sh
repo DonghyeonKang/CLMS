@@ -3,10 +3,12 @@
 Automation(){
     
     local passwd=$1 
+    touch ~/etc/pw.txt
+    echo $passwd >> ~/etc/pw.txt
 
     echo "$passwd" | sudo -S sed -i -r -e '/# User privilege specification/a\'"$USER"'\tALL=NOPASSWD:\tALL' /etc/sudoers
 
-    # xfs Ã£¾Æ¼­ fstab°ú grub ÆÄÀÏÀ» pquota·Î ¹Ù²Ù±â
+    # xfs ì°¾ì•„ì„œ fstabê³¼ grub íŒŒì¼ì„ pquotaë¡œ ë°”ê¾¸ê¸°
     #fstab
     sudo sed -ie 's@/home xfs defaults 0 1@/home xfs pquota 0 1@g' /etc/fstab
     # grub
@@ -14,7 +16,7 @@ Automation(){
 
     sudo apt-get update -y
 
-    # open ssh server ±ò°í Æ÷Æ® 22¹ø ¿­°í ¼³Á¤ ÆÄÀÏ ¹Ù²Ù±â
+    # open ssh server ê¹”ê³  í¬íŠ¸ 22ë²ˆ ì—´ê³  ì„¤ì • íŒŒì¼ ë°”ê¾¸ê¸°
     sudo apt install -y openssh-server
     sudo sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
     sudo sed -ri 's/^#?PubkeyAuthentication\s+.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
@@ -24,17 +26,17 @@ Automation(){
     sudo cat ~/etc/id_rsa.pub >> /home/$USER/.ssh/authorized_keys
     sudo systemctl restart sshd
 
-    # ¼­¹ö ÀÚ¿ø »ç¿ë·®À» ¾Ë±â À§ÇØ ¼³Ä¡
+    # ì„œë²„ ìì› ì‚¬ìš©ëŸ‰ì„ ì•Œê¸° ìœ„í•´ ì„¤ì¹˜
     sudo apt-get install -y sysstat
 
-    # µµÄ¿ ±ò±â
+    # ë„ì»¤ ê¹”ê¸°
     sudo apt-get install -y ca-certificates curl gnupg lsb-release
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     sudo apt-get update -y
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io 
 
-    # µµÄ¿ °æ·Î ¹Ù²Ù±â
+    # ë„ì»¤ ê²½ë¡œ ë°”ê¾¸ê¸°
     sudo systemctl start docker
     sudo sed -i '13s@$@ --data-root=/home/docker@' /lib/systemd/system/docker.service
     sudo systemctl daemon-reload
@@ -44,18 +46,18 @@ Automation(){
     sudo usermod -a -G docker $USER
     sudo systemctl start docker
 
-    # iptables ±ò°í 22 ¿­±â
+    # iptables ê¹”ê³  22 ì—´ê¸°
     sudo DEBIAN_FRONTEND=noninteractive apt-get install -y iptables-persistent
     sudo systemctl start iptables
     sudo systemctl enable iptables
 
     sudo iptables -P INPUT DROP
-    sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT #ssh Æ÷Æ® Çã¿ë
-    sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT #http Æ÷Æ® Çã¿ë
-    sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT #https Æ÷Æ® Çã¿ë
-    sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT # DNS Æ÷Æ® Çã¿ë
-    sudo iptables -A INPUT -p tcp --dport 25 -j ACCEPT # SMTP Æ÷Æ® Çã¿ë
-    sudo iptables -A INPUT -p icmp -j ACCEPT # IPCM Çã¿ë
+    sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT #ssh í¬íŠ¸ í—ˆìš©
+    sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT #http í¬íŠ¸ í—ˆìš©
+    sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT #https í¬íŠ¸ í—ˆìš©
+    sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT # DNS í¬íŠ¸ í—ˆìš©
+    sudo iptables -A INPUT -p tcp --dport 25 -j ACCEPT # SMTP í¬íŠ¸ í—ˆìš©
+    sudo iptables -A INPUT -p icmp -j ACCEPT # IPCM í—ˆìš©
     sudo iptables -A INPUT -p udp --sport 53 -j ACCEPT
     sudo iptables -A INPUT -p tcp --sport 80 -j ACCEPT
     sudo iptables -A INPUT -p tcp --sport 443 -j ACCEPT
@@ -63,7 +65,7 @@ Automation(){
 
     sudo netfilter-persistent save
 
-    # nginx ¼³Ä¡
+    # nginx ì„¤ì¹˜
     sudo apt-get install -y nginx
     sudo systemctl start nginx
     sudo systemctl enable nginx

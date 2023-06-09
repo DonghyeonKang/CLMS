@@ -14,7 +14,7 @@ CreateContainer()
     local storageSize=$7
     local imageName=$8 # 실행시킬 컨테이너의 이미지
 
-    ssh $hostName@$hostIp "bash sh/H_CreateContainer.sh $hPort $cPort $userName $userCode $storageSize $imageName"    
+    ssh -t $hostName@$hostIp "echo '{user} ALL = (root) NOPASSWD:ALL' | bash sh/H_CreateContainer.sh $hPort $cPort $userName $userCode $storageSize $imageName"    
 }
 Start CreateContainer
 CreateContainer $1 $2 $3 $4 $5 $6 $7 $8 && CSWSSuccess CreateContainer || CSWSFailure CreateContainer

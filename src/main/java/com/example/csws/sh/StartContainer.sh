@@ -7,10 +7,10 @@ StartContainer()
     local hostName=$1
     local hostIp=$2 
     
-    # ½ÇÇàÀ» ½ÃÀÛÇÒ µµÄ¿ ÄÁÅ×ÀÌ³Ê ÀÌ¸§
+    # ì‹¤í–‰ì„ ì‹œì‘í•  ë„ì»¤ ì»¨í…Œì´ë„ˆ ì´ë¦„
     local containerName=$3
 
-    ssh $hostName@$hostIp "sh sh/H_StartContainer.sh $containerName"    
+    ssh $hostName@$hostIp "sh ~/sh/H_StartContainer.sh $containerName"    
 }
 Start StartContainer
 StartContainer $1 $2 $3 && CSWSSuccess StartContainer || CSWSFailure StartContainer

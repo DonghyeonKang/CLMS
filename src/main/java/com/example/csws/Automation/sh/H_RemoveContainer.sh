@@ -50,11 +50,11 @@ H_RemoveContainer(){
     IFS=$'\n'
     for port in $PORTS
     do 
-        sudo iptables -D INPUT -p tcp --dport $port -j ACCEPT
+        echo `cat ~/etc/pw.txt` | sudo -S iptables -D INPUT -p tcp --dport $port -j ACCEPT
         echo "$port 삭제"
     done
 
-    sudo netfilter-persistent save
+    echo `cat ~/etc/pw.txt` | sudo -S netfilter-persistent save
 
 
     # # 개인키 존재 확인 후 삭제 csws에서 할 것

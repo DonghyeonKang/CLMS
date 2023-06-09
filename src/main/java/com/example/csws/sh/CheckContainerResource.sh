@@ -17,7 +17,7 @@ CheckContainerResource()
     ssh $hostName@$hostIp "docker stats $container --no-stream --format 'table {{.CPUPerc}}' >> ~/etc/info/con/$container.txt"
 
 
-    # info µğ·ºÅä¸®°¡ Á¸ÀçÇÏÁö ¾ÊÀ¸¸é »ı¼º
+    # info ë””ë ‰í† ë¦¬ê°€ ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ ìƒì„±
     if [ ! -d ~/info/con/$hostName ]; then
         mkdir -p ~/info/con/$hostName
     fi

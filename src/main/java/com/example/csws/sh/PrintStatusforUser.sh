@@ -7,9 +7,9 @@ PrintStatusforUser()
     local hostName=$1
     local hostIp=$2 
     
-    local userName=$3 # ÄÁÅ×ÀÌ³Ê¸¦ ½ÇÇà½ÃÅ² À¯Àú ÀÌ¸§
+    local userName=$3 # ì»¨í…Œì´ë„ˆë¥¼ ì‹¤í–‰ì‹œí‚¨ ìœ ì € ì´ë¦„
 
-    ssh $hostName@$hostIp "sh sh/H_PrintStatusforUser.sh $userName"    
+    ssh $hostName@$hostIp "sh ~/sh/H_PrintStatusforUser.sh $userName"    
 }
 Start PrintStatusforUser
 PrintStatusforUser $1 $2 $3 && CSWSSuccess PrintStatusforUser || CSWSFailure PrintStatusforUser
