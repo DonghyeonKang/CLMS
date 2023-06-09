@@ -4,30 +4,25 @@ import { List, ListItemButton } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRecoilState } from "recoil";
-import { baseUrl, tokenState } from "../../../Atoms";
+import { baseUrl } from "../../../Atoms";
 import RamChart from "./RamChart";
 import DiskChart from "./DiskChart";
 
 const ServerResource = ({server,studentList,serverId}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
-    const [token,] = useRecoilState(tokenState);
     const navigate = useNavigate();
     const [resources,setResources] = useState({});
 
     //서버 리소스
     useEffect(()=>{
-        if(serverId !== '' && serverId !== undefined && token){
+        if(serverId !== '' && serverId !== undefined){
             try {
-              axios.get(BASEURL + `/servers/management/resources?serverId=${serverId}`,{
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                  }
-              }).then((response)=> setResources(response.data));
+              axios.get(BASEURL + `/servers/management/resources?serverId=${serverId}`).then((response)=> setResources(response.data));
             } catch (error) {
               console.error(error);
             }
         }
-      },[serverId, BASEURL, token]);
+      },[serverId, BASEURL]);
     return (
         <>
         <ServerAddress>{server}</ServerAddress>

@@ -2,23 +2,17 @@ import axios from "axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { baseUrl, tokenState } from "../../../Atoms";
+import { baseUrl } from "../../../Atoms";
 
 //인스턴스 생성 버튼 누르면 API 요청 하게 함수 수정하기
 const CreateInstanceButtons = ({data, validate}) => {
   const navigate = useNavigate();
   const [BASEURL,] = useRecoilState(baseUrl);
-  const [token,] = useRecoilState(tokenState);
     //인스턴스 생성
   const createInstance = () => {
-    if(token){
       if(validate){
         try{
-        axios.post(BASEURL + '/instances/creation', data, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }).then((response)=>console.log(response));
+        axios.post(BASEURL + '/instances/creation', data).then((response)=>console.log(response));
       } catch (error) {
         console.error(error);
       };
@@ -26,7 +20,6 @@ const CreateInstanceButtons = ({data, validate}) => {
     } else {
       alert('입력이 올바르지 않습니다.');
     }
-  }
   }
     return (
     <Btn>

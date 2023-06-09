@@ -4,12 +4,10 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { baseUrl, tokenState } from "../../../Atoms";
+import { baseUrl } from "../../../Atoms";
 
-//post랑 delete 기능 구현하기
 const TabsContent = ({data, domainName}) => {
   const [BASEURL,] = useRecoilState(baseUrl);
-  const [token,] = useRecoilState(tokenState);
   const navigate = useNavigate();
   const [list,setList] = useState('detail');
   const [inboundRules, setInboundRules] = useState([]);
@@ -30,18 +28,12 @@ const TabsContent = ({data, domainName}) => {
  
 
   const loadInboundRules = () => {
-    if(token){
       try {
-        axios.get(BASEURL + `/instances/inbounds/list?instanceId=${instanceId}`,{
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }).then((response)=> setInboundRules(response.data.inbounds));
+        axios.get(BASEURL + `/instances/inbounds/list?instanceId=${instanceId}`).then((response)=> setInboundRules(response.data.inbounds));
     } catch (error) {
       console.error(error);
     }
-  }
-  }
+  };
   
   const domainHandler = (event) => {
     const value = event.target.value;
@@ -56,7 +48,7 @@ const TabsContent = ({data, domainName}) => {
     }else {
       setDomainValidate(false);
     }
-  }
+  };
 
   const ownerHandler = (event) => {
     const value = event.target.value;
@@ -71,19 +63,15 @@ const TabsContent = ({data, domainName}) => {
     }else {
       setOwnerValidate(false);
     }
-  }
+  };
 
   //요청 보낸 다음 기능 추가하기
   //도메인 변경
   const saveDomain = () => {
-    if(token){
       if(domainValidate){
         try {
         axios.post(BASEURL + `/instances/domain`,{
-          data : {instanceId, domainName: newDomain},
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+          data : {instanceId, domainName: newDomain}
         }).then((response)=> console.log(response));
       } catch (error) {
         console.error(error);
@@ -91,46 +79,35 @@ const TabsContent = ({data, domainName}) => {
     } else {
       alert('도메인 주소를 입력해 주세요.')
     }
-  }
   };
   //도메인 삭제
   const deleteDomain = () => {
-    if(token){
       try {
         axios.delete(BASEURL + `/instances/domain`,{
-        data: {instanceId},
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        data: {instanceId}
       }).then((response)=> console.log(response));
     } catch (error) {
       console.error(error);
     }
-  }
   };
 //소유자 변경 API
   const changeOwner = () => {
-    if(token){
       if(ownerValidate){
         try {
         axios.patch(BASEURL + `/instances/owner`,{
-          data: {username: owner, instanceId},
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }).then((response)=> console.log(response));
+          data: {username: owner, instanceId}
+          }).then((response)=> console.log(response));
       } catch (error) {
         console.error(error);
       }
     } else {
       alert('사용자 이름(이메일)을 입력해 주세요.');
     }
-  }
   };
   //인바운드 규칙 리스트 불러오기
   useEffect(()=>{
     loadInboundRules();
-  },[BASEURL, token, instanceId]);
+  },[BASEURL, instanceId]);
 
     return (
         <>

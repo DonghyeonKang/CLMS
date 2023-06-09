@@ -1,17 +1,15 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { loginState, tokenState } from "../Atoms";
+import { loginState } from "../Atoms";
 import mainlogo from "../img/Logo.png" ;
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
-  const [, setToken] = useRecoilState(tokenState);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     setIsLoggedIn(0);
-    setToken(null);
     localStorage.removeItem('jwt');
     navigate('/login');
   };

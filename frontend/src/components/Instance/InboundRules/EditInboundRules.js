@@ -4,12 +4,11 @@ import styled from "styled-components";
 import InboundRule from "./InboundRule";
 import axios from "axios";
 import { useRecoilState } from "recoil";
-import { baseUrl, tokenState } from "../../../Atoms";
+import { baseUrl } from "../../../Atoms";
 
 //instanceId 별로 인바운드 리스트 조회 API 요청 하도록 구현
 const EditInboundRules = () => {
     const [BASEURL,] = useRecoilState(baseUrl);
-    const [token,] = useRecoilState(tokenState);
     const navigate = useNavigate();
     const {instanceId} = useParams();
     const [data,setData] = useState([]);
@@ -24,37 +23,24 @@ const EditInboundRules = () => {
 
     //인바운드 규칙 저장
     const saveInboundRules = () => {
-      if(token){
         try {
-          axios.put(BASEURL + `/instances/inbounds/setting`,{
-          data,
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }).then((response)=> console.log(response));
+          axios.put(BASEURL + `/instances/inbounds/setting`, data).then((response)=> console.log(response));
         navigate(`/dashboard/${instanceId}`);
       } catch (error) {
         console.error(error);
       }
-    }
     };
     //인바운드 규칙 리스트 불러오기
     const loadInboundRules = () => {
-      if(token){
         try {
-          axios.get(BASEURL + `/instances/inbounds/list?instanceId=${instanceId}`,{
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          }).then((response)=> setData(response.data.inbounds));
+          axios.get(BASEURL + `/instances/inbounds/list?instanceId=${instanceId}`).then((response)=> setData(response.data.inbounds));
         } catch (error) {
           console.error(error);
         }
-      }
     }
     useEffect(()=>{
       loadInboundRules();
-    },[BASEURL, token, instanceId]);
+    },[BASEURL, instanceId]);
 
     return (
         <>

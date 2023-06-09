@@ -5,13 +5,12 @@ import ServerTabs from "../../components/Server/ServerResources/ServerTabs";
 import ServerResource from "../../components/Server/ServerResources/ServerResource";
 import axios from "axios";
 import { useRecoilState } from "recoil";
-import { baseUrl, tokenState } from "../../Atoms";
+import { baseUrl } from "../../Atoms";
 
 //serverId 별로 학생 리스트 요청하도록 구현하기
 //serverId 변경되면 학생리스트, 리소스 API 요청 하게 수정하기
 const ServerResources = () => {
     const [BASEURL,] = useRecoilState(baseUrl);
-    const [token,] = useRecoilState(tokenState);
     const [data, setData] = useState([]);
     const [serverList,setServerList] = useState([]);
     const [server,setServer] = useState('');
@@ -19,31 +18,19 @@ const ServerResources = () => {
     const [serverId,setServerId] = useState('');
     //서버 리스트 (학과 ID값 받아와야 함)
     const loadServerList = () => {
-        if(token){
             try {
-                axios.get(BASEURL + `/servers/management/list?departmentId=0`,{
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                      }
-                }).then((response)=> setData(response.data.servers));
+                axios.get(BASEURL + `/servers/management/list?departmentId=0`).then((response)=> setData(response.data.servers));
               } catch (error) {
                 console.error(error);
               }
-        }
     }
     //학생 리스트 (serverId 쿼리로)
     const loadStudentList = () => {
-        if(token){
             try {
-                axios.get(BASEURL + `/user/student/list`,{
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                  }
-            }).then((response)=> setStudentList(response.data.students));
+                axios.get(BASEURL + `/user/student/list`).then((response)=> setStudentList(response.data.students));
           } catch (error) {
             console.error(error);
-          }
-        }
+          }        
     }
     useEffect(()=>{
         loadServerList();
