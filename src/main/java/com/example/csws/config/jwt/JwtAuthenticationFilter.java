@@ -3,6 +3,7 @@ package com.example.csws.config.jwt;
 import com.example.csws.common.exception.ErrorCode;
 import com.example.csws.config.LoginRequestDto;
 import com.example.csws.config.auth.PrincipalDetails;
+import com.example.csws.repository.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 	private final AuthenticationManager authenticationManager;
 	private final JwtService jwtService;
-	
+
 	// Authentication 객체 만들어서 리턴 => 의존 : AuthenticationManager
 	// 인증 요청시에 실행되는 함수 => /login
 	@Override
@@ -101,9 +102,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		response.setHeader("Authorization", accessToken);
 		response.setHeader("Set-Cookie", refreshCookie.toString());
 
+		// json 객체 생성
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("success", true);
 		jsonObject.put("refreshToken", refreshToken);
+		jsonObject.put("role", principalDetails.getRole());
+		jsonObject.put("departmentId", principalDetails.getDepartmentId());
 
 		response.getWriter().print(jsonObject);
 	}
