@@ -1,11 +1,14 @@
 package com.example.csws.entity.instance;
 
+import com.example.csws.entity.boundPolicy.InboundPolicy;
 import com.example.csws.entity.server.Server;
 import com.example.csws.entity.user.User;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Entity
@@ -33,6 +36,8 @@ public class Instance {
     @ManyToOne(targetEntity = Server.class)
     @JoinColumn(name = "server_id")
     private Server server;
+    @OneToMany(mappedBy = "instance", orphanRemoval = true)
+    private List<InboundPolicy> inboundPolicy = new ArrayList<>();
 
     public InstanceDto toDto() {
         return InstanceDto.builder()
@@ -53,5 +58,9 @@ public class Instance {
 
     public void updateInstancePort(int port) {
         this.port = port;
+    }
+
+    public void updateStatus(String status) {
+        this.state = status;
     }
 }

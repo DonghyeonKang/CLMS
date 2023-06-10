@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 @RequiredArgsConstructor
 public class InstanceServiceImpl implements InstanceService{
@@ -24,6 +25,7 @@ public class InstanceServiceImpl implements InstanceService{
     private final UserRepository userRepository;
     private final ServerRepository serverRepository;
     private final InstanceRepository instanceRepository;
+    private final EntityManager entityManager;
     private final ShRunner shRunner;
 
     // 컨트롤러에서 이미 인스턴스의 code 필드를 받아왔음을 가정함.
@@ -91,11 +93,18 @@ public class InstanceServiceImpl implements InstanceService{
 
     // 실행할 스크립트 파일 이름과 필요 인수를 넘겨주고 실행. 실패 시 예외 문구가 뜬다.
     // 쉘에서 인수로 받는 컨테이너 이름 : instance 테이블의 name + instanceId
+    @Transactional
     @Override
     public String startInstance(int instanceId) {
         // instanceId를 이용해서 인스턴스와 서버 정보 가져옴
         Instance entity = instanceRepository.findById(instanceId).get();
-        Server baseServer = serverRepository.findById(instanceId).get();
+        Server baseServer = entity.getServer();
+
+        // db 에서 상태 업데이트
+        entityManager.persist(entity);
+        entity.updateStatus("running");
+
+        // 쉘 실행
         // 1 서버에서 사용하는 계정명(serverUsername), 2 서버 ip 주소,
         // 3 컨테이너_이름(인스턴스 name + 인스턴스 id)을 인수로 넘겨준다.
         try {
@@ -106,11 +115,17 @@ public class InstanceServiceImpl implements InstanceService{
             return e.toString();
         }
     }
-
+    @Transactional
     @Override
     public String stopInstance(int instanceId) {
         Instance entity = instanceRepository.findById(instanceId).get();
-        Server baseServer = serverRepository.findById(instanceId).get();
+        Server baseServer = entity.getServer();
+
+        // db 에서 상태 업데이트
+        entityManager.persist(entity);
+        entity.updateStatus("stopped");
+
+        // 쉘 실행
         try {
             shRunner.execCommand("StopContainer.sh", baseServer.getServerUsername(),
                     baseServer.getIpv4(), entity.getName() + entity.getId());
@@ -119,11 +134,17 @@ public class InstanceServiceImpl implements InstanceService{
             return e.toString();
         }
     }
-
+    @Transactional
     @Override
     public String restartInstance(int instanceId) {
         Instance entity = instanceRepository.findById(instanceId).get();
-        Server baseServer = serverRepository.findById(instanceId).get();
+        Server baseServer = entity.getServer();
+
+        // db 에서 상태 업데이트
+        entityManager.persist(entity);
+        entity.updateStatus("restarting");
+
+        // 쉘 실행
         try {
             shRunner.execCommand("RestartContainer.sh", baseServer.getServerUsername(),
                     baseServer.getIpv4(), entity.getName() + entity.getId());
@@ -132,14 +153,20 @@ public class InstanceServiceImpl implements InstanceService{
             return e.toString();
         }
     }
-
+    @Transactional
     @Override
     public String deleteInstance(int instanceId) {
         Instance entity = instanceRepository.findById(instanceId).get();
-        Server baseServer = serverRepository.findById(instanceId).get();
+        Server baseServer = entity.getServer();
+
+        // 쉘 실행
         try {
+            // 인스턴스 제거
             shRunner.execCommand("RemoveContainer.sh", baseServer.getServerUsername(),
                     baseServer.getIpv4(), entity.getName() + entity.getId());
+
+            // db 에서 제거
+            instanceRepository.deleteById(instanceId);
             return "success";
         } catch (Exception e) {
             return e.toString();
