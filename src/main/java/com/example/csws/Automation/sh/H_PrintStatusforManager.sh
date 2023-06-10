@@ -4,7 +4,18 @@
 
 H_PrintStatusforManager()
 {
-    docker ps -a --format "table {{.Names}}\t{{.Status}}\t"
+    # info 디렉토리가 존재하지 않으면 생성
+    if [ ! -d ~/etc/info ]; then
+        mkdir -p ~/etc/info
+    fi
+
+    # 파일이 존재하지 않으면 생성
+    if [ ! ~/etc/info/PrintStatusforManager.txt ]; then
+        touch ~/etc/info/PrintStatusforManager.txt
+    fi
+
+
+    docker ps -a --format "table {{.Names}}\t{{.Status}}\t" > ~/etc/info/PrintStatusforManager.txt 2>&1
 }
 
 Start H_PrintStatusforManager

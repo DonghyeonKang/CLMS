@@ -18,15 +18,15 @@ CheckContainerResource()
 
 
     # info 디렉토리가 존재하지 않으면 생성
-    if [ ! -d ~/info/con/$hostName ]; then
-        mkdir -p ~/info/con/$hostName
+    if [ ! -d ~/info/$hostName/con ]; then
+        mkdir -p ~/info/$hostName/con
     fi
 
     if [ -f ~/info/con/$hostName/$container.txt ]; then
-        rm ~/info/con/$hostName/$container.txt
+        rm ~/info/$hostName/con/$container.txt
     fi
 
-    scp $hostName@$hostIp:~/etc/info/con/$container.txt ~/info/con/$hostName/  
+    scp $hostName@$hostIp:~/etc/info/con/$container.txt ~/info/$hostName/con/  
 }
 
 Start CheckContainerResource

@@ -15,15 +15,15 @@ CheckServerResource()
     ssh $hostName@$hostIp "mpstat | tail -1 | awk '{print 100-\$NF}' >> ~/etc/info/server/info.txt"
 
     # info 디렉토리가 존재하지 않으면 생성
-    if [ ! -d ~/info/server/$hostName ]; then
-        mkdir -p ~/info/server/$hostName
+    if [ ! -d ~/info/$hostName/server ]; then
+        mkdir -p ~/info/$hostName/server
     fi
 
-    if [ -f ~/info/server/$hostName/info.txt ]; then
-        rm ~/info/server/$hostName/info.txt
+    if [ -f ~/info/$hostName/server/info.txt ]; then
+        rm ~/info/$hostName/server/info.txt
     fi
 
-    scp $hostName@$hostIp:~/etc/info/server/info.txt ~/info/server/$hostName/  
+    scp $hostName@$hostIp:~/etc/info/server/info.txt ~/info/$hostName/server 
 }
 
 Start CheckServerResource
