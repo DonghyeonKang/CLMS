@@ -169,7 +169,7 @@ const TabsContent = ({data, domainName}) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {inboundRules.map((i)=>{
+                      {inboundRules?.map((i)=>{
                         return(<tr>
                           <RulesBody style={{minWidth:'180px'}}>{i?.id}</RulesBody>
                           <RulesBody style={{minWidth:'120px'}}>TCP</RulesBody>
