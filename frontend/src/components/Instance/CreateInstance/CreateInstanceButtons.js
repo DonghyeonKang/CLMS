@@ -1,6 +1,6 @@
 import axios from "axios";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, redirect } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { baseUrl } from "../../../Atoms";
 
@@ -12,11 +12,11 @@ const CreateInstanceButtons = ({data, validate}) => {
   const createInstance = () => {
       if(validate){
         try{
-        axios.post(BASEURL + '/instances/creation', data).then((response)=>console.log(response));
+        axios.post(BASEURL + '/instances/creation', data).then(redirect('/dashboard'));
       } catch (error) {
         console.error(error);
       };
-      navigate("/dashboard");
+        navigate('/dashboard');
     } else {
       alert('입력이 올바르지 않습니다.');
     }
