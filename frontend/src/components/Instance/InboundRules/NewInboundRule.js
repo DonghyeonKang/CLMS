@@ -3,13 +3,14 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
-const InboundRule = ({data, setData, i}) => {
+const NewInboundRule = ({newData, setNewData, i}) => {
     const {instanceId} = useParams();
     const [rule,setRule] = useState({
         id: i.id,
         hostPort: i?.hostPort,
         instancePort: Number(i.instancePort),
         instanceId: Number(instanceId),
+        number: Number(i.number)
     });
 
     const [validate, setValidate] = useState(false);
@@ -27,27 +28,27 @@ const InboundRule = ({data, setData, i}) => {
           }
         setRule({...rule, instancePort: value});
         const newObj = {...rule, instancePort: Number(value)};
-        const rest = await data.filter((item)=>item?.id !== i?.id);
-        await setData([...rest, newObj].sort((a,b)=>a.id-b.id));
+        const rest = await newData.filter((item)=>item?.number !== i?.number);
+        await setNewData([...rest, newObj].sort((a,b)=>a.number-b.number));
     };
 
     return (
         <>
-            <tr key={i.id}>
+            <tr key={i.number}>
                 <td style={{width:'200px'}}>{i?.id === -1 ? '' : i?.id}</td>
                 <td style={{width:'200px'}} size="small">TCP</td>
                 <td style={{width:'300px'}} size="small">{i?.hostPort === -1 ? '' : i?.hostPort}</td>
                 <td style={{width:'300px'}}><TextField defaultValue={i?.instancePort} error={!validate} onChange={(e)=>handleInstancePort(e)} size="small"/></td>
-                <DeleteRule onClick={()=>{setData(data.filter((item)=>item?.id !== i?.id))}}>삭제</DeleteRule>
+                <DeleteRule onClick={()=>{setNewData(newData.filter((item)=>item?.id !== i?.id))}}>삭제</DeleteRule>
             </tr>
         </>
     );
 };
 
-export default InboundRule;
+export default NewInboundRule;
 
 const DeleteRule = styled.td`
-  cursor: pointer;ㄴ
+  cursor: pointer;
   background-color: white;
   border: 3px solid #3eb5c4;
   border-radius: 20px;

@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { baseUrl } from "../../../Atoms";
 
-const TabsContent = ({data, domainName}) => {
+const TabsContent = ({data, domainName, setDomainName}) => {
   const [BASEURL,] = useRecoilState(baseUrl);
   const userRole = localStorage.getItem('userRole');
   const navigate = useNavigate();
@@ -72,7 +72,11 @@ const TabsContent = ({data, domainName}) => {
       if(domainValidate){
         try {
         axios.post(BASEURL + `/instances/domain`,{instanceId, domainName: newDomain})
-        .then((response)=> console.log(response));
+        .then((response)=>{
+          if(response.data.success){
+            setDomainName(response.data.domainName);
+          }
+        });
       } catch (error) {
         console.error(error);
       }
@@ -85,7 +89,11 @@ const TabsContent = ({data, domainName}) => {
       try {
         console.log(instanceId)
         axios.post(BASEURL + `/instances/domain/remove`,{instanceId, domainName: newDomain})
-        .then((response)=> console.log(response));
+        .then((response)=>{
+          if(response.data.success){
+            setDomainName('');
+          }
+        });
     } catch (error) {
       console.error(error);
     }
