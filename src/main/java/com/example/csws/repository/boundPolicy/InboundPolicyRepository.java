@@ -6,15 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface InboundPolicyRepository extends JpaRepository<InboundPolicy, Long> {
+public interface InboundPolicyRepository extends JpaRepository<InboundPolicy, Integer> {
 
     List<InboundPolicy> findAllByInstanceIdIn(List<Integer> idList);
-
-//    InboundPolicy save(InboundPolicy inboundPolicy);
-//
-//    List<InboundPolicy> saveAll(List<InboundPolicy> inboundPolicyList);
-//
-//    void delete(InboundPolicy inboundPolicy);
 
     void deleteAllByIdIn(List<Long> idList);
 

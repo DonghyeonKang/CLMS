@@ -8,15 +8,19 @@ import com.example.csws.repository.instance.InstanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class InboundPolicyServiceImpl implements InboundPolicyService{
 
     private final InboundPolicyRepository inboundPolicyRepository;
     private final InstanceRepository instanceRepository;
+    private final EntityManager entityManager;
 
     @Override
     public List<InboundPolicyDto> findAllByInstanceId(int instanceId) {
@@ -48,20 +52,64 @@ public class InboundPolicyServiceImpl implements InboundPolicyService{
         Instance userInstance = instanceRepository.getReferenceById(instanceId);
 
         // 컨트롤러에서 받은 dto 리스트를 반복문으로 entity로 변환. 매번 인자로 instance 엔티티 넘기기
-        List<InboundPolicy> entityList = new ArrayList<>();
+        List<InboundPolicy> newEntityList = new ArrayList<>();
+        List<InboundPolicy> updateEntityList = new ArrayList<>();
+
         for (InboundPolicyDto dto : dtoList) {
-            entityList.add(dto.toEntity(userInstance));
-        }
-        
-        // 저장 후 반환된 값을 dto로 다시 변환해서 컨트롤러에 반환
-        List<InboundPolicy> savedEntityList = inboundPolicyRepository.saveAll(entityList);
-        List<InboundPolicyDto> savedDtoList = new ArrayList<>();
-
-        for (InboundPolicy entity : savedEntityList) {
-            savedDtoList.add(entity.toDto());
+            if(dto.getId() == -1) { // id 가 -1 인 dto 는 생성을 위한 엔티티로 변환
+                newEntityList.add(dto.toCreatingEntity(userInstance));
+            } else {    // id 가 -1 이 아니면 업데이트를 위한 엔티티로 변환
+                updateEntityList.add(dto.toUpdatingEntity(userInstance));
+            }
         }
 
-        return savedDtoList;
+        // 저장 --------------------
+        List<InboundPolicyDto> responseDtoList = new ArrayList<>();
+        if(newEntityList.size() != 0) {
+            // 생성
+            List<InboundPolicy> createdEntityList =  this.createNew(newEntityList);
+
+            // 포트 업데이트
+            for (InboundPolicy entity : createdEntityList) {
+                // hostPort 지정
+                entityManager.persist(entity);
+                entity.updateHostPort();
+
+
+                System.out.println("새로 생성된 hostport");
+                System.out.println(entity.getHostPort());
+                // 응답 리스트에 저장
+                responseDtoList.add(entity.toDto());
+            }
+        }
+
+        // 업데이트 --------------------
+        if(updateEntityList.size() != 0) {
+            for (InboundPolicy entity : updateEntityList) {
+                // 엔티티 조회
+                System.out.println("엔티티 조회");
+                System.out.println(entity.getId());
+                InboundPolicy inboundPolicy = inboundPolicyRepository.findById(entity.getId()).get();
+
+                // 영속성 지정
+                entityManager.persist(inboundPolicy);
+
+                // 업데이트
+                inboundPolicy.updateAllPort(entity.getHostPort(), entity.getInstancePort());
+
+                // 응답 리스트 저장
+                responseDtoList.add(entity.toDto());
+            }
+        }
+
+        return responseDtoList;
+    }
+
+    private List<InboundPolicy> createNew(List<InboundPolicy> newEntityList) {
+        System.out.println("createNew 진입");
+        System.out.println(newEntityList.get(0).getInstancePort());
+        List<InboundPolicy> createdEntityList = inboundPolicyRepository.saveAll(newEntityList);
+        return createdEntityList;
     }
 
     @Override

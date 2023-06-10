@@ -31,7 +31,7 @@ const ExistingInboundRule = ({data, setData, i}) => {
 export default ExistingInboundRule;
 
 const DeleteRule = styled.td`
-  cursor: pointer;
+  cursor: pointer;ㄴ
   background-color: white;
   border: 3px solid #3eb5c4;
   border-radius: 20px;
