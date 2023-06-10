@@ -66,8 +66,8 @@ OpenPort()
     # 스프링에서 랜덤으로 지정한 포트 값을 받아옴
     local hPort=$1
 
-    sudo iptables -A INPUT -p tcp --dport $hPort -j ACCEPT
-    sudo netfilter-persistent save
+    echo `cat ~/etc/pw.txt` | sudo -S iptables -A INPUT -p tcp --dport $hPort -j ACCEPT
+    echo `cat ~/etc/pw.txt` | sudo -S netfilter-persistent save
 }
 
 SavePort()

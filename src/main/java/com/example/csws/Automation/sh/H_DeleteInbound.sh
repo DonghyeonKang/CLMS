@@ -61,8 +61,8 @@ H_DeleteInbound()
     #     sudo ufw disable
     #     sudo ufw enable
     
-    sudo iptables -D INPUT -p tcp --dport $delHport -j ACCEPT
-    sudo netfilter-persistent save
+    echo `cat ~/etc/pw.txt` | sudo -S iptables -D INPUT -p tcp --dport $delHport -j ACCEPT
+    echo `cat ~/etc/pw.txt` | sudo -S netfilter-persistent save
 }
 Start H_DeleteInbound
 H_DeleteInbound $1 $2 $3 $4 && HostSuccess H_DeleteInbound || HostFailure H_DeleteInbound

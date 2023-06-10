@@ -52,7 +52,6 @@ public class ServerController {
     @GetMapping("/management/list")
     public JSONObject getServerList(HttpServletRequest req) {
         List<ServerListResponse> serverList =  serverService.getServerList(Integer.parseInt(req.getParameter("departmentId")));
-        System.out.println(serverList);
 
         JSONObject obj = new JSONObject();
         obj.put("servers", serverList);

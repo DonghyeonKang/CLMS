@@ -2,17 +2,17 @@
 
 . ~/sh/CSWSException.sh
 
-# ÄÁÅ×ÀÌ³Ê »ı¼ºÇÒ ¶§ ÀÌ°Íµµ csws¿¡¼­ ½ÇÇàµÇ¾î¾ß ÇÑ´Ù.
+# ì»¨í…Œì´ë„ˆ ìƒì„±í•  ë•Œ ì´ê²ƒë„ cswsì—ì„œ ì‹¤í–‰ë˜ì–´ì•¼ í•œë‹¤.
 SendPublickey()
 {
-    local hostName=$1 # »ç¿ëÀÚ ¼­¹ö ÀÌ¸§
-    local hostIp=$2 # »ç¿ëÀÚ ¼­¹ö IP ÁÖ¼Ò
+    local hostName=$1 # ì‚¬ìš©ì ì„œë²„ ì´ë¦„
+    local hostIp=$2 # ì‚¬ìš©ì ì„œë²„ IP ì£¼ì†Œ
     local conName=$3
     local keyName=$4
 
-    ssh $hostName@$hostIp "mkdir Keys"
+    ssh -t $hostName@$hostIp "mkdir Keys"
     scp ~/Keys/$hostName/$keyName.pub $hostName@$hostIp:~/Keys/ 
-    ssh $hostName@$hostIp "sh H_SendPublickey.sh $keyName $conName"
+    ssh -t $hostName@$hostIp "sh ~/sh/H_SendPublickey.sh $keyName $conName"
 }
 Start SendPublickey
 SendPublickey $1 $2 $3 $4 && CSWSSuccess SendPublickey || CSWSFailure SendPublickey

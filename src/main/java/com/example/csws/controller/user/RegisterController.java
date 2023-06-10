@@ -94,10 +94,9 @@ public class RegisterController {
 
     // 회원가입 인증번호 확인
     @PostMapping("/verification")
-    public boolean checkVerificationNumber(@RequestBody VerificationRequest model) {
-        System.out.println("RegisterController 진입");
-        System.out.println(model.getAuthNumber());
-        System.out.println(model.getEmail());
-        return emailService.checkAuthNum(model.getEmail(), model.getAuthNumber());
+    public JSONObject checkVerificationNumber(@RequestBody VerificationRequest model) {
+        JSONObject obj = new JSONObject();
+        obj.put("success", emailService.checkAuthNum(model.getEmail(), model.getAuthNumber()));
+        return obj;
     }
 }

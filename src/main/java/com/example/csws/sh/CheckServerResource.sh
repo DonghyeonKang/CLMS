@@ -14,7 +14,7 @@ CheckServerResource()
     ssh $hostName@$hostIp "echo =================================CPU================================= >> ~/etc/info/server/info.txt"
     ssh $hostName@$hostIp "mpstat | tail -1 | awk '{print 100-\$NF}' >> ~/etc/info/server/info.txt"
 
-    # info µğ·ºÅä¸®°¡ Á¸ÀçÇÏÁö ¾ÊÀ¸¸é »ı¼º
+    # info ë””ë ‰í† ë¦¬ê°€ ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ ìƒì„±
     if [ ! -d ~/info/server/$hostName ]; then
         mkdir -p ~/info/server/$hostName
     fi

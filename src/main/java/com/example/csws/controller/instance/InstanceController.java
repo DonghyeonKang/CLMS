@@ -236,35 +236,41 @@ public class InstanceController {
 
     // 특정 인스턴스의 도메인 조회(instanceId)
     @GetMapping("/domain")
-    public String domainList(@RequestParam Integer instanceId, Model model) {
+    public JSONObject getDomainName(@RequestParam Integer instanceId) {
 
-        Domain domain = domainService.findByInstanceId(String.valueOf(instanceId));
-        model.addAttribute("domain", domain);
-
-        return "도메인 페이지 경로";
+        return domainService.findByInstanceId(instanceId);
     }
 
     // 특정 인스턴스의 도메인 저장(추가)
     @PostMapping("/domain")
-    public String domainCreate(@RequestBody DomainInstanceRequest domainInstanceRequest, Model model) {
+    public JSONObject domainCreate(@RequestBody DomainInstanceRequest domainInstanceRequest) {
+        System.out.println(domainInstanceRequest.getDomainName());
+        System.out.println(domainInstanceRequest.getInstanceId());
 
-        DomainDto newDto = new DomainDto(domainInstanceRequest.getDomainName(), domainInstanceRequest.getInstanceId());
+        // 새로운 도메인 추가
+        DomainDto domainDto = domainService.createDomain(
+                new DomainDto(domainInstanceRequest.getDomainName(), domainInstanceRequest.getInstanceId()));
 
-        domainService.createDomain(newDto);
-        model.addAttribute("domain", newDto);
-
-        return "도메인 페이지 경로";
+        // 저장된 도메인 명 응답
+        JSONObject obj = new JSONObject();
+        obj.put("success", true);
+        obj.put("domainName", domainDto.getName());
+        return obj;
     }
 
     // 특정 인스턴스의 도메인 삭제
-    @DeleteMapping("/domain")
-    public String domainDelete(@RequestBody DomainInstanceRequest domainInstanceRequest, Model model) {
+    @PostMapping("/domain/remove")
+    public JSONObject domainDelete(@RequestBody(required = false) DomainInstanceRequest domainInstanceRequest) {
+        System.out.println(domainInstanceRequest.getInstanceId());
+        domainService.deleteDomain(
+                DomainDto.builder()
+                        .instanceId(domainInstanceRequest.getInstanceId())
+                        .build());
 
-        DomainDto newDto = new DomainDto(domainInstanceRequest.getDomainName(), domainInstanceRequest.getInstanceId());
-
-        domainService.deleteDomain(newDto);
-
-        return "도메인 페이지 경로";
+        // 저장된 도메인 명 응답
+        JSONObject obj = new JSONObject();
+        obj.put("success", true);
+        return obj;
     }
 
     // 특정 인스턴스의 인바운드 리스트 조회

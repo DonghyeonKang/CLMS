@@ -12,7 +12,7 @@ H_DeleteNginx()
         exit 1
     fi
 
-    sudo rm /etc/nginx/conf.d/$1.conf
+    echo `cat ~/etc/pw.txt` | sudo -S rm /etc/nginx/conf.d/$1.conf
     nginx -s reload
 }
 
