@@ -37,7 +37,7 @@ const InstanceDetail = () => {
         <Header/>
         <Content>
           <Navigation/>
-          <InstanceDescription data={instanceDetail} domainName={domainName}/>
+          <InstanceDescription data={instanceDetail} domainName={domainName} setInstanceDetail={setInstanceDetail}/>
           <TabsContent data={instanceDetail} domainName={domainName} setDomainName={setDomainName}/>
         </Content>
       </>
