@@ -7,13 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
 @Transactional
-public class Test_StartContainer {
+public class Test_RemoveContainer {
 
     @Test
-    void 컨테이너_시작() {
+    void 컨테이너_삭제() {
 
         ShRunner shRunner = new ShRunner();
-        Map result = shRunner.execCommand("StartContainer.sh pika 192.168.50.49 ghlTest123");
+        Map result = shRunner.execCommand("RemoveContainer.sh pika 192.168.50.49 ghlTest 123");
         System.out.println(result.get(0) + "\n" + result.get(1));
 
     }

@@ -13,7 +13,7 @@ public class Test_RestartContainer {
     void 컨테이너_재시작() {
 
         ShRunner shRunner = new ShRunner();
-        Map<Integer, String> result = shRunner.execCommand("H_RestartContainer.sh test03");
+        Map result = shRunner.execCommand("RestartContainer.sh pika 192.168.50.49 ghlTest123");
         System.out.println(result.get(0) + "\n" + result.get(1));
 
     }

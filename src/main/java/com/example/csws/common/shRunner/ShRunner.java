@@ -17,7 +17,7 @@ public class ShRunner {
         // making shell command
         String baseStrShellScriptPath = "sh src/main/java/com/example/CSWS/sh/";
         String shellScriptPath = baseStrShellScriptPath + Arrays.toString(str).replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(",", "");
-        String baseStrShellPath = "/bin/bash";
+        String baseStrShellPath = "/C:/Program Files/Git/git-bash.exe";
         // 0번 인수 : 배쉬 쉘 실행파일 경로
         String[] callCmd = {baseStrShellPath, "-c", shellScriptPath};
         ProcessBuilder pb = new ProcessBuilder(callCmd);
