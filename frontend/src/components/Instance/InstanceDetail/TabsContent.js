@@ -8,6 +8,7 @@ import { baseUrl } from "../../../Atoms";
 
 const TabsContent = ({data, domainName}) => {
   const [BASEURL,] = useRecoilState(baseUrl);
+  const userRole = localStorage.getItem('userRole');
   const navigate = useNavigate();
   const [list,setList] = useState('detail');
   const [inboundRules, setInboundRules] = useState([]);
@@ -119,9 +120,9 @@ const TabsContent = ({data, domainName}) => {
           {list === 'domain' ? 
           <SelectedTab onClick={()=>setList('domain')}>도메인 적용</SelectedTab> : 
           <DetailTab onClick={()=>setList('domain')}>도메인 적용</DetailTab>}
-          {list === 'owner' ? /* 관리자 아니면 안보이게 */
+          {userRole === 'ROLE_MANAGER' ? ((list === 'owner') ? 
           <SelectedTab onClick={()=>setList('owner')}>인스턴스 소유자 변경</SelectedTab> : 
-          <DetailTab onClick={()=>setList('owner')}>인스턴스 소유자 변경</DetailTab>}
+          <DetailTab onClick={()=>setList('owner')}>인스턴스 소유자 변경</DetailTab>) : (<></>)}
 
             <DetailContent>
                 {(list === 'detail') ? 
@@ -168,7 +169,7 @@ const TabsContent = ({data, domainName}) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {inboundRules.map((i)=>{
+                      {inboundRules?.map((i)=>{
                         return(<tr>
                           <RulesBody style={{minWidth:'180px'}}>{i?.id}</RulesBody>
                           <RulesBody style={{minWidth:'120px'}}>TCP</RulesBody>

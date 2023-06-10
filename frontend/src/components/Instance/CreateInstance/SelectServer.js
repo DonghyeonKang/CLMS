@@ -7,6 +7,7 @@ import { baseUrl } from "../../../Atoms";
 
 const SelectServer = ({data, setData, setHostname}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
+    const departmentId = localStorage.getItem('departmentId');
     const [serverList,setServerList] = useState([]);
     const serverIdHandler = (event) => {
       const value = event.target.value;
@@ -14,10 +15,10 @@ const SelectServer = ({data, setData, setHostname}) => {
       const hostname = serverList?.filter((i)=>i?.serverId === value)[0]?.hostname;
       setHostname(hostname);
       };
-    //학과 ID값 받게 해야 함
+      
     const loadServerList = () => {
         try {
-          axios.get(BASEURL + `/servers/management/list?departmentId=1`).then((response)=> setServerList(response.data.servers));
+          axios.get(BASEURL + `/servers/management/list?departmentId=${departmentId}`).then((response)=> setServerList(response.data.servers));
         } catch (error) {
           console.error(error);
         }

@@ -11,6 +11,7 @@ import { baseUrl } from "../../Atoms";
 //serverId 변경되면 학생리스트, 리소스 API 요청 하게 수정하기
 const ServerResources = () => {
     const [BASEURL,] = useRecoilState(baseUrl);
+    const departmentId = localStorage.getItem('departmentId');
     const [data, setData] = useState([]);
     const [serverList,setServerList] = useState([]);
     const [server,setServer] = useState('');
@@ -19,7 +20,7 @@ const ServerResources = () => {
     //서버 리스트 (학과 ID값 받아와야 함)
     const loadServerList = () => {
             try {
-                axios.get(BASEURL + `/servers/management/list?departmentId=0`).then((response)=> setData(response.data.servers));
+                axios.get(BASEURL + `/servers/management/list?departmentId=${departmentId}`).then((response)=> setData(response.data.servers));
               } catch (error) {
                 console.error(error);
               }

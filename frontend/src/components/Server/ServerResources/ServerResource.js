@@ -41,11 +41,11 @@ const ServerResource = ({server,studentList,serverId}) => {
             <ResourceList>
                 <Title>서버 리소스</Title>
                 <Resources>
-                    if(resources.ram){
-                        <RamChart dataAvg={resources.ram} dataLabel={'램 사용량'}/>
+                    {
+                        (resources.ram) ? <RamChart dataAvg={resources.ram} dataLabel={'램 사용량'}/> : ''
                     }
-                    if(resources.disk){
-                        <DiskChart dataAvg={resources.disk} dataLabel={'디스크 사용량'}/>
+                    {
+                    (resources.disk) ? <DiskChart dataAvg={resources.disk} dataLabel={'디스크 사용량'}/> : ''
                     }
                     <Resource>서버 연결 상태 {resources?.connection === 'connected' ? '✅' : '❌'}</Resource>
                 </Resources>
@@ -75,6 +75,7 @@ const ServerDetail = styled.div`
     background-color: white;
     width: 95%;
     display: flex;
+    min-height: 150px;
 `;
 
 const StudentList = styled.div`

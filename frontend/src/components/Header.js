@@ -1,16 +1,15 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { loginState } from "../Atoms";
 import mainlogo from "../img/Logo.png" ;
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useRecoilState(loginState);
+  const userRole = localStorage.getItem('userRole');
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    setIsLoggedIn(0);
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('departmentId');
     navigate('/login');
   };
 
@@ -18,12 +17,17 @@ const Header = () => {
     <HeaderContent>
       <HeaderLogo src={mainlogo} onClick={() => navigate('/')}/>
       <div style={{marginRight:'50px'}}>
-      {isLoggedIn === 0 ? 
-        <HeaderBtn onClick={() => navigate('/login')}>로그인</HeaderBtn> : 
-        <ButtonGroup>
+      {(userRole === null) ? 
+        (<HeaderBtn onClick={() => navigate('/login')}>로그인</HeaderBtn>
+        ) : (userRole === 'ROLE_MANAGER') ?
+        (<ButtonGroup>
+          <HeaderBtn onClick={() => navigate('/serverResources')}>서버 리소스</HeaderBtn>
           <HeaderBtn onClick={() => navigate('/dashboard')}>대시보드</HeaderBtn>
           <HeaderBtn onClick={() => handleLogout()}>로그아웃</HeaderBtn>
-        </ButtonGroup>
+        </ButtonGroup>) : (<ButtonGroup>
+          <HeaderBtn onClick={() => navigate('/dashboard')}>대시보드</HeaderBtn>
+          <HeaderBtn onClick={() => handleLogout()}>로그아웃</HeaderBtn>
+        </ButtonGroup>)
       }
       </div>
     </HeaderContent>
@@ -59,7 +63,7 @@ const HeaderBtn = styled.button`
   color: white;
   background-color: #3eb5c4;
   border: 2px #3eb5c4 solid;
-  border-radius: 5vh;
+  border-radius: 20px;
   margin-right: 20px;
   &:hover{
     background-color: #2da4b3;

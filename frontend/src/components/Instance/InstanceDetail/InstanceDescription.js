@@ -1,9 +1,51 @@
+import axios from "axios";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { baseUrl } from "../../../Atoms";
 
-//인스턴스 상태 API 만들어지면 추가하기
 const InstanceDescription = ({data, domainName}) => {
+  const [BASEURL,] = useRecoilState(baseUrl);
   const [IOption, setIOption] = useState(false);
+  const {instanceId} = useParams();
+  //인스턴스 시작
+  const instanceStart = () => {
+    try{
+      axios.post(BASEURL + '/instances/start', {instanceId}).then((response)=>console.log(response));
+    } catch (error) {
+      console.error(error);
+    };
+    setIOption((prev)=>!prev);
+  };
+  //인스턴스 중지
+  const instanceStop = () => {
+    try{
+      axios.post(BASEURL + '/instances/stop', {instanceId}).then((response)=>console.log(response));
+    } catch (error) {
+      console.error(error);
+    };
+    setIOption((prev)=>!prev);
+  };
+  //인스턴스 재부팅
+  const instanceRestart = () => {
+    try{
+      axios.post(BASEURL + '/instances/restart', {instanceId}).then((response)=>console.log(response));
+    } catch (error) {
+      console.error(error);
+    };
+    setIOption((prev)=>!prev);
+  };
+  //인스턴스 종료
+  const instanceDelete = () => {
+    try{
+      axios.post(BASEURL + '/instances/delete', {instanceId}).then((response)=>console.log(response));
+    } catch (error) {
+      console.error(error);
+    };
+    setIOption((prev)=>!prev);
+  };
+
     return (
         <>
             <DetailHeader>
@@ -12,10 +54,10 @@ const InstanceDescription = ({data, domainName}) => {
                 <State onClick={()=>{setIOption((prev)=>!prev)}}>{IOption ? '인스턴스 상태 ▲' : '인스턴스 상태 ▼'}</State>
                 {IOption ? (
                   <SetStates>
-                    <SetState onClick={()=>{setIOption((prev)=>!prev)}}>인스턴스 시작</SetState>
-                    <SetState onClick={()=>{setIOption((prev)=>!prev)}}>인스턴스 중지</SetState>
-                    <SetState onClick={()=>{setIOption((prev)=>!prev)}}>인스턴스 재부팅</SetState>
-                    <SetState onClick={()=>{setIOption((prev)=>!prev)}}>인스턴스 종료</SetState>
+                    <SetState onClick={()=>instanceStart()}>인스턴스 시작</SetState>
+                    <SetState onClick={()=>instanceStop()}>인스턴스 중지</SetState>
+                    <SetState onClick={()=>instanceRestart()}>인스턴스 재부팅</SetState>
+                    <SetState onClick={()=>instanceDelete()}>인스턴스 종료</SetState>
                   </SetStates>) : (<></>)}
               </InstanceState>
             </DetailHeader>
