@@ -11,8 +11,8 @@ import { baseUrl } from "../../Atoms";
 const CreateServer = () => {
     const [BASEURL,] = useRecoilState(baseUrl);
     const navigate = useNavigate();
-    //departmentId 값 받아오면 넣기
-    const [serverData,setServerData] = useState({departmentId: 1});
+    const departmentId = localStorage.getItem('departmentId') 
+    const [serverData,setServerData] = useState({departmentId});
 
     const [IPValidate,setIPValidate] = useState(false);
     const IPValidation = (str) => {
