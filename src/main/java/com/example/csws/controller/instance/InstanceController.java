@@ -224,15 +224,6 @@ public class InstanceController {
         return "redirect:listUserid?userId=" + newUserId;   // 해당 학생의 userId로 인스턴스 리스트 조회하는 페이지 이동
     }
 
-    // 인스턴스 세부사항 조회(instanceId 이용)
-    @GetMapping("/detail")
-    public String detail(@RequestParam Integer instanceId, Model model) {
-
-        InstanceDto dto = instanceService.findById(instanceId).get();
-        model.addAttribute("instance", dto);
-
-        return "세부사항 페이지 경로";
-    }
 
     // 특정 인스턴스의 도메인 조회(instanceId)
     @GetMapping("/domain")
@@ -275,33 +266,33 @@ public class InstanceController {
 
     // 특정 인스턴스의 인바운드 리스트 조회
     @GetMapping("/inbounds/list")
-    public String inboundList(@RequestParam(required = false) Integer instanceId, Model model) {
-
-        if (instanceId == null) {
-            return "/";     // instanceId 없는 접근일 경우 메인으로 보냄
-        }
-
+    public JSONObject inboundList(@RequestParam(required = false) Integer instanceId) {
+        // 인바운드 정책 조회
         List<InboundPolicyDto> dtoList = inboundPolicyService.findAllByInstanceId(instanceId);
-        model.addAttribute("inbounds", dtoList);
 
-        return "인바운드 리스트 페이지 경로";
+        // json 화
+        JSONObject obj = new JSONObject();
+        obj.put("inbounds", dtoList);
+        return obj;
     }
 
     @PutMapping("/inbounds/setting")
-    public String inboundSetting(@RequestBody List<InboundPolicyDto> inbounds, Model model) {
-
-        if (inbounds == null) {
-            return "/";     // inbound 리스트 없으면 메인으로 반환
-        }
-
+    public JSONObject inboundSetting(@RequestBody List<InboundPolicyDto> inbounds) {
+        // request 값 출력
+        System.out.println("inbounds setting 진입");
         for (InboundPolicyDto inbound : inbounds) {
-            System.out.println(inbound.toString());
+            System.out.println(inbound.getId());
+            System.out.println(inbound.getHostPort());
+            System.out.println(inbound.getInstancePort());
         }
 
+        // 저장
         List<InboundPolicyDto> savedList = inboundPolicyService.saveAll(inbounds);
-        model.addAttribute("inbounds", savedList);
 
-        return "인바운드 리스트 페이지 경로";
+        // json 화
+        JSONObject obj = new JSONObject();
+        obj.put("inbounds", savedList);
+        return obj;
     }
 
 }
