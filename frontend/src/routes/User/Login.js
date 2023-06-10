@@ -6,8 +6,7 @@ import Container from '@mui/material/Container';
 import MyBox from '../../components/User/MUI/MyBox';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useRecoilState } from "recoil";
-import { baseUrl } from "../../Atoms"
-import { loginState } from "../../Atoms";
+import { baseUrl, userState } from "../../Atoms"
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import MyButton from "../../components/User/MUI/MyButton";
@@ -16,13 +15,10 @@ import MyAvatar from '../../components/User/MUI/MyAvatar';
 import MyTextFieldID from '../../components/User/MUI/MyTextFieldID';
 import MyTextFieldPW from '../../components/User/MUI/MyTextFieldPW';
 import axios from 'axios';
-import { tokenState } from '../../Atoms';
-import Cookies from 'js-cookie';
 import Header from'../../components/Header';
 
 const Login = () => {
-  const [, setToken] = useRecoilState(tokenState);
-  const [loginStatus, setLoginStatus] = useRecoilState(loginState);
+  const [, setUserState] = useRecoilState(userState);
   const [BASEURL,] = useRecoilState(baseUrl);
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -66,9 +62,12 @@ const Login = () => {
       .then(response => {
         if (response.data.success) {
           const accessToken = response.headers.authorization;
+          const userRole = response.data.role;
+          const deptId = response.data.departmentId;
           localStorage.setItem('accessToken', accessToken);
-          setLoginStatus(true);
-          setToken(accessToken);
+          localStorage.setItem('userRole', userRole);
+          localStorage.setItem('departmentId', deptId);
+          setUserState(userRole);
           navigate('/');
         } else {
           alert('이메일 또는 비밀번호가 일치하지 않습니다.');
@@ -95,15 +94,6 @@ const Login = () => {
   };
 
   const PasswordIcon = passwordType.visible ? VisibilityIcon : VisibilityOffIcon;
-
-  useEffect(() => {
-    const refreshToken = Cookies.get('refreshToken');
-    const accessToken = localStorage.getItem('accessToken');
-    if (refreshToken && accessToken) {
-      setToken(accessToken);
-      setLoginStatus(true);
-    }
-  }, [setToken, setLoginStatus]);
 
   // API 요청 시 Authorization 헤더에 토큰 추가
   axios.interceptors.request.use(

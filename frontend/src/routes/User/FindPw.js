@@ -6,8 +6,6 @@ import MyTypography from '../../components/User/MUI/MyTypography';
 import Container from '@mui/material/Container';
 import MyBox from '../../components/User/MUI/MyBox';
 import MyAvatar from '../../components/User/MUI/MyAvatar';
-import { useRecoilState } from "recoil";
-import { loginState } from "../../Atoms";
 import Grid from '@mui/material/Grid';
 import MyTextFieldNumber from '../../components/User/MUI/MyTextFieldNumber';
 import Header from'../../components/Header';
@@ -21,7 +19,6 @@ const User = {
 const FindPw = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
-  const [, setUserState] = useRecoilState(loginState);
   const [emailValid, setEmailValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
   const [showEmailField, setShowEmailField] = useState(false);
