@@ -11,7 +11,7 @@ public class Test_CreateKeypairs {
     void 키페어_생성() {
 
         ShRunner shRunner = new ShRunner();
-        shRunner.execCommand("CreateKeypairs.sh pika ghlkey");
+        shRunner.execCommand("CreateKeypairs.sh pika ghlTestKey");
 
     }
 
