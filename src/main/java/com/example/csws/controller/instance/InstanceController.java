@@ -37,41 +37,56 @@ public class InstanceController {
     private final UserService userService;
     private final InstanceService instanceService;
     private final DomainService domainService;
-     private final InboundPolicyService inboundPolicyService;
+    private final InboundPolicyService inboundPolicyService;
 
-    // return VIEWPATH + "웹 페이지 경로" : 이동할 웹 페이지 경로를 반환(사용자에게 경로 숨김).
-    // return "redirect:매핑 이름" : 해당 매핑으로 리다이렉트
-    
+
     // 인스턴스 시작
     @PostMapping("/start")
-    public String startInstance(Model model, @ModelAttribute StartInstanceRequest request) {
-        String result = instanceService.startInstance(Integer.parseInt(request.getInstanceId()));
-        model.addAttribute("result", result);
-        return "redirect:/dashboard";
+    public JSONObject startInstance(@RequestBody ControlInstanceRequest request) {
+        String result = instanceService.startInstance(request.getInstanceId());
+
+        JSONObject obj = new JSONObject();
+        obj.put("success", true);
+        obj.put("instanceId", request.getInstanceId());
+        obj.put("status", "running");
+        return obj;
     }
 
     // 인스턴스 재시작
     @PostMapping("/restart")
-    public String restartInstance(Model model, @ModelAttribute StartInstanceRequest request) {
-        String result = instanceService.restartInstance(Integer.parseInt(request.getInstanceId()));
-        model.addAttribute("result", result);
-        return "redirect:/dashboard";
+    public JSONObject restartInstance(@RequestBody ControlInstanceRequest request) {
+        String result = instanceService.restartInstance(request.getInstanceId());
+
+        JSONObject obj = new JSONObject();
+        obj.put("success", true);
+        obj.put("instanceId", request.getInstanceId());
+        obj.put("status", "restarting");
+        return obj;
     }
 
     // 인스턴스 정지
     @PostMapping("/stop")
-    public String stopInstance(Model model, @ModelAttribute StartInstanceRequest request) {
-        String result = instanceService.stopInstance(Integer.parseInt(request.getInstanceId()));
-        model.addAttribute("result", result);
-        return "redirect:/dashboard";
+    public JSONObject stopInstance(@RequestBody ControlInstanceRequest request) {
+        String result = instanceService.stopInstance(request.getInstanceId());
+
+        JSONObject obj = new JSONObject();
+        obj.put("success", true);
+        obj.put("instanceId", request.getInstanceId());
+        obj.put("status", "stopped");
+        return obj;
+
     }
 
     // 인스턴스 삭제
     @PostMapping("/delete")
-    public String deleteInstance(Model model, @ModelAttribute StartInstanceRequest request) {
-        String result = instanceService.deleteInstance(Integer.parseInt(request.getInstanceId()));
-        model.addAttribute("result", result);
-        return "redirect:/instances/listUserid";
+    public JSONObject deleteInstance(@RequestBody ControlInstanceRequest request) {
+        String result = instanceService.deleteInstance(request.getInstanceId());
+
+        JSONObject obj = new JSONObject();
+        obj.put("success", true);
+        obj.put("instanceId", request.getInstanceId());
+        obj.put("status", "deleted");
+        return obj;
     }
 
     // 인스턴스 생성 후 인스턴스 목록으로 이동. 실패(오류 발생) 시 생성 페이지로 돌아가기.

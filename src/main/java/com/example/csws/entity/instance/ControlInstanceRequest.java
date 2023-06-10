@@ -7,6 +7,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StartInstanceRequest {
-    private String instanceId;
+public class ControlInstanceRequest {
+    private Integer instanceId;
 }
