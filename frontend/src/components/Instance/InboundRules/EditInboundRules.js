@@ -5,26 +5,34 @@ import InboundRule from "./InboundRule";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { baseUrl } from "../../../Atoms";
+import NewInboundRule from "./NewInboundRule";
 
 //instanceId 별로 인바운드 리스트 조회 API 요청 하도록 구현
 const EditInboundRules = () => {
     const [BASEURL,] = useRecoilState(baseUrl);
     const navigate = useNavigate();
     const {instanceId} = useParams();
+    const [number,setNumber] = useState(1);
     const [data,setData] = useState([]);
+    const [newData,setNewData] = useState([]);
+    const [reqData, setReqData] = useState([]);
+    const [countValidate,setCountValidate] = useState(0);
     //규칙 추가 함수
     const addData = () => {
-        setData((prev) => [...prev,{
-        id:-1,
-        port:'',
-        instanceId
+        setNewData((prev) => [...prev,{
+        id: -1,
+        hostPort: null,
+        instancePort: null,
+        instanceId: Number(instanceId),
+        number: number
         }]);
+        setNumber((prev)=>prev+1);
     };
-
     //인바운드 규칙 저장
     const saveInboundRules = () => {
+      console.log(reqData);
         try {
-          axios.put(BASEURL + `/instances/inbounds/setting`, data).then((response)=> console.log(response));
+          axios.put(BASEURL + `/instances/inbounds/setting`, reqData).then((response)=> console.log(response));
         navigate(`/dashboard/${instanceId}`);
       } catch (error) {
         console.error(error);
@@ -33,11 +41,24 @@ const EditInboundRules = () => {
     //인바운드 규칙 리스트 불러오기
     const loadInboundRules = () => {
         try {
-          axios.get(BASEURL + `/instances/inbounds/list?instanceId=${instanceId}`).then((response)=> setData(response.data.inbounds));
+          axios.get(BASEURL + `/instances/inbounds/list?instanceId=${instanceId}`).then((response)=> setData(response?.data?.inbounds));
         } catch (error) {
           console.error(error);
         }
     }
+
+    useEffect(()=>{
+      const newArr = newData?.map((i)=>{
+        const {number, ...rest} = i;
+        return rest;
+      });
+      if(data){
+        setReqData([...data, ...newArr]);
+      } else{
+        setReqData(newArr);
+      }
+    },[data, newData]);
+
     useEffect(()=>{
       loadInboundRules();
     },[BASEURL, instanceId]);
@@ -49,13 +70,17 @@ const EditInboundRules = () => {
                 <Rules>
                 <tbody>
                 <tr>
-                    <RulesHeader style={{minWidth:'150px'}}>보안 그룹 ID</RulesHeader>
-                    <RulesHeader style={{minWidth:'80px'}}>프로토콜</RulesHeader>
-                    <RulesHeader style={{minWidth:'100px'}}>포트 범위</RulesHeader>
+                    <RulesHeader style={{width:'200px'}}>인바운드 규칙 ID</RulesHeader>
+                    <RulesHeader style={{width:'200px'}}>프로토콜</RulesHeader>
+                    <RulesHeader style={{width:'300px'}}>서버 포트 범위</RulesHeader>
+                    <RulesHeader style={{width:'300px'}}>인스턴스 포트 범위</RulesHeader>
                     <th> </th>
                 </tr>
-                {data.map((i)=>{
-                    return(<InboundRule data={data} setData={setData} i={i} key={i.id}/>)})
+                {data?.map((i)=>{
+                    return(<InboundRule data={data} setData={setData} setCountValidate={setCountValidate} i={i} key={i?.id}/>)})
+                }
+                {newData?.map((i)=>{
+                    return(<NewInboundRule newData={newData} setNewData={setNewData} setCountValidate={setCountValidate} i={i} key={i?.number}/>)})
                 }
                 </tbody>
                 </Rules>
