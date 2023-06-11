@@ -150,7 +150,7 @@ public class InstanceServiceImpl implements InstanceService{
 
         // db 에서 상태 업데이트
         entityManager.persist(entity);
-        entity.updateStatus("restarting");
+        entity.updateStatus("running");
 
         // 쉘 실행
         try {
