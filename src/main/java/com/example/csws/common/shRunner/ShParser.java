@@ -13,6 +13,20 @@ import java.util.StringTokenizer;
 @Component
 public class ShParser {
 
+    public Boolean getSuccess(String resultString) {
+        String[] splitedResult = resultString.split(" ");
+
+        // failure 나오면 false 리턴
+        for(String token : splitedResult) {
+            if(token.equals("Failure\n")) {
+                return false;
+            }
+        }
+
+        // 성공 리턴
+        return true;
+    }
+
     public BufferedReader readResultFile(String... str) {
 
         BufferedReader br;
