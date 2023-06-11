@@ -176,10 +176,12 @@ public class InstanceServiceImpl implements InstanceService{
     // csws에 파일이 생성되는 경로 : ~/keys/서버_계정명/사용자_입력_키_이름.pem, pub
     @Override
     public String createKeyPair(String hostName, String keyName) {
-        System.out.println("instance Service 진입");
         try {
-            shRunner.execCommand("CreateKeypairs.sh", hostName, keyName);
-            return "success";
+            Map result = shRunner.execCommand("CreateKeypairs.sh", hostName, keyName);
+            if(shParser.isSuccess(result.get(1).toString())) {
+                return "success";
+            }
+            return "failure";
         } catch (Exception e) {
             return e.toString();
         }

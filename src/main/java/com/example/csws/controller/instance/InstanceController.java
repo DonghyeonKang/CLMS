@@ -3,6 +3,7 @@ package com.example.csws.controller.instance;
 import com.example.csws.config.auth.PrincipalDetails;
 import org.json.simple.JSONObject;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import com.example.csws.entity.boundPolicy.InboundPolicyDto;
 import com.example.csws.entity.domain.Domain;
@@ -124,14 +125,12 @@ public class InstanceController {
     // 키페어 생성
     @PostMapping("/keypair")
     public ResponseEntity<Resource> createKeypair(@RequestBody Map<String, String> testName) throws IOException {
-        System.out.println("keypair 생성 진입");
-
         // 키페어 생성
-        instanceService.createKeyPair(testName.get("hostName"), testName.get("keyName"));
-
+        instanceService.createKeyPair(testName.get("hostname"), testName.get("name"));
 
         // 파일 경로 지정 (여기서는 resources 디렉토리에 있는 "example.txt" 파일 사용)
-        Resource resource = new ClassPathResource("a.pem");
+        String fileName = testName.get("name") + ".pem";
+        Resource resource = new FileSystemResource("/Users/donghyeonkang/Keys/" + testName.get("hostname") + "/" + fileName);
 
         // 다운로드할 파일의 MIME 타입 설정
         String mimeType = Files.probeContentType(resource.getFile().toPath());
