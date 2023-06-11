@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 @Component
 public class ShParser {
 
-    public Boolean getSuccess(String resultString) {
+    public boolean isSuccess(String resultString) {
         String[] splitedResult = resultString.split(" ");
 
         // failure 나오면 false 리턴
