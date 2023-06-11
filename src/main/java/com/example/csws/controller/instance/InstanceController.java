@@ -1,11 +1,15 @@
 package com.example.csws.controller.instance;
 
+import com.example.csws.common.shRunner.ParserResponseDto;
+import com.example.csws.common.shRunner.ShParser;
 import com.example.csws.config.auth.PrincipalDetails;
+import com.example.csws.entity.server.ServerDto;
+import com.example.csws.service.server.ServerService;
+import lombok.Getter;
 import org.json.simple.JSONObject;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import com.example.csws.entity.boundPolicy.InboundPolicyDto;
-import com.example.csws.entity.domain.Domain;
 import com.example.csws.entity.domain.DomainDto;
 import com.example.csws.entity.instance.*;
 import com.example.csws.entity.user.User;
@@ -21,6 +25,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Timestamp;
@@ -38,7 +44,7 @@ public class InstanceController {
     private final InstanceService instanceService;
     private final DomainService domainService;
     private final InboundPolicyService inboundPolicyService;
-
+    private final ServerService serverService;
 
     // 인스턴스 시작
     @PostMapping("/start")
@@ -309,5 +315,76 @@ public class InstanceController {
         obj.put("inbounds", savedList);
         return obj;
     }
+
+    
+    // 자원 사용량 조회 - 컨테이너(학생)
+    @GetMapping("/resource/container")
+    public ParserResponseDto checkContainerResource(Authentication authentication, @RequestParam Integer instanceId) {
+
+        // 서버 정보를 얻기 위해 인스턴스 엔티티의 serverId 가져오기
+        InstanceDto instanceDto = instanceService.findById(instanceId).get();
+        // 서버 id로 서버 정보 가져오기
+        ServerDto serverDto = serverService.findById(instanceDto.getServerId());
+        // 유저(학생 본인) 정보 가져오기
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+
+        // 호스트 계정 이름, 호스트 ip, 컨테이너 이름(유저 이름 + 인스턴스 id)
+        ParserResponseDto parserResponseDto = instanceService.checkContainerResource(serverDto.getServerUsername(),
+                        serverDto.getIpv4(), principalDetails.getUsername() + instanceDto.getInstanceId());
+
+        // dto 반환
+        return parserResponseDto;
+    }
+
+    // 자원 사용량 조회 - 서버(관리자)
+    @GetMapping("/resource/server")
+    public ParserResponseDto checkServerResource(@RequestParam Integer serverId) {
+
+        // 서버 id로 서버 정보 가져오기
+        ServerDto serverDto = serverService.findById(serverId);
+
+        // 호스트 계정 이름, 호스트 ip
+        ParserResponseDto parserResponseDto = instanceService.checkServerResource(serverDto.getServerUsername(),
+                                           serverDto.getIpv4());
+
+        // dto 반환
+        return parserResponseDto;
+    }
+
+    // 모든 컨테이너 상태 출력(관리자)
+    @GetMapping("/status/container/manager")
+    public ParserResponseDto printStatusforManager(@RequestParam Integer serverId) {
+
+        // 서버 id로 서버 정보 가져오기
+        ServerDto serverDto = serverService.findById(serverId);
+
+        // 호스트 계정 이름, 호스트 ip
+        ParserResponseDto parserResponseDto = instanceService.printStatusforManager(serverDto.getServerUsername(),
+                                           serverDto.getIpv4());
+
+        // dto 반환
+        return parserResponseDto;
+    }
+
+    // 본인 소유 컨테이너 상태 출력(학생)
+    @GetMapping("/status/container/user")
+    public ParserResponseDto printStatusforUser(Authentication authentication) {
+
+        // 유저(학생 본인) 정보 가져오기
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        // 인스턴스 목록 가져오기
+        List<InstanceDto> dtoList = instanceService.findAllByUserId(principalDetails.getId());
+        // 서버 id 가져오기
+        int serverId = dtoList.get(0).getServerId();
+        // 서버 정보 가져오기
+        ServerDto serverDto = serverService.findById(serverId);
+        // 호스트 계정 이름, 호스트 ip, 유저 이름
+        ParserResponseDto parserResponseDto = instanceService.printStatusforUser(serverDto.getServerUsername(),
+                                          serverDto.getIpv4(), principalDetails.getUsername());
+
+        // dto 반환
+        return parserResponseDto;
+    }
+
 
 }
