@@ -131,10 +131,6 @@ const SignUpAd = () => {
       }
     };
 
-    const aa = () => {
-      console.log(Tel)
-    }
-
     const handleTel = (e) => {
       setTel(e.target.value);
       if (e.target.value.length > 0) { // 전화번호 한글자로 입력을 했을 시
@@ -193,7 +189,7 @@ const SignUpAd = () => {
             <MyTextFieldUnivStu setUnivStu={setUnivStu}/>
             <MyTextFieldDeptStu universityId={UnivStu} setDeptStu={setDeptStu}/>  
             <MyTextFieldTel value={Tel}  onChange={handleTel}/>
-            <MyButton disabled={notAllow} OnClick={onClickConfirmButton}/>
+            <MyButton disabled={notAllow} onClick={onClickConfirmButton}/>
         </MyBox>
     </Container></>
     );
