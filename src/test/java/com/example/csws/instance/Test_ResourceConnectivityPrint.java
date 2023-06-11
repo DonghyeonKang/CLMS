@@ -13,7 +13,7 @@ public class Test_ResourceConnectivityPrint {
 
     @Test
     void 체크_컨테이너_리소스() {
-        Map result = shRunner.execCommand("CheckContainerResource.sh pika 192.168.50.49" +
+        Map result = shRunner.execCommand("CheckContainerResource.sh pika 192.168.50.49 " +
                                                             "ghlTest123");
         System.out.println(result.get(0));
         System.out.println(result.get(1));
@@ -63,7 +63,7 @@ public class Test_ResourceConnectivityPrint {
 
     @Test
     void 컨테이너_상태_학생() {
-        Map result = shRunner.execCommand("PrintStatusforUser.sh pika 192.168.50.49 ghlTest123");
+        Map result = shRunner.execCommand("PrintStatusforUser.sh pika 192.168.50.49 ghlTest");
         System.out.println(result.get(0));
         System.out.println(result.get(1));
     }

@@ -18,6 +18,6 @@ public class Test_StartContainer {
 
         // 실행 후 실행 성공 여부 체크
         ShParser shParser = new ShParser();
-        System.out.println(shParser.getSuccess(result.get(1).toString()));
+        System.out.println(shParser.isSuccess(result.get(1).toString()));
     }
 }
