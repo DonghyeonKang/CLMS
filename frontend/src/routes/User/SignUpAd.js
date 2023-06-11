@@ -46,6 +46,7 @@ const SignUpAd = () => {
     const [showEmailField, setShowEmailField] = useState(false);
     const [UnivStu, setUnivStu] = useState('');
     const [DeptStu, setDeptStu] = useState('');
+    const [Tel, setTel] = useState('');
 
     //
     const handleEmail = (e)=> {
@@ -88,7 +89,7 @@ const SignUpAd = () => {
         alert('비밀번호를 다시 확인해주세요.');
       }
       else {
-        axios.post(BASEURL+'/register/student', { username: email, password: pw, universityId: UnivStu , departmentId: DeptStu, phone: TelValid})
+        axios.post(BASEURL+'/register/manager', { username: email, password: pw, universityId: UnivStu , departmentId: DeptStu, phone: Tel})
         .then(response => {
           navigate('/login');
         })
@@ -130,11 +131,15 @@ const SignUpAd = () => {
       }
     };
 
+    const aa = () => {
+      console.log(Tel)
+    }
+
     const handleTel = (e) => {
-      setTelValid(e.target.value);
-      if (e.target.value.length > 0) { // 이메일에 한글자로 입력을 했을 시
+      setTel(e.target.value);
+      if (e.target.value.length > 0) { // 전화번호 한글자로 입력을 했을 시
           setTelValid(true);
-        } else { // 이메일에 아무것도 입력 안 했을 시
+        } else { // 전화번호 아무것도 입력 안 했을 시
           setTelValid(false);
         }
       };
@@ -187,7 +192,7 @@ const SignUpAd = () => {
         </div>    
             <MyTextFieldUnivStu setUnivStu={setUnivStu}/>
             <MyTextFieldDeptStu universityId={UnivStu} setDeptStu={setDeptStu}/>  
-            <MyTextFieldTel  onChange={handleTel}/>
+            <MyTextFieldTel value={Tel}  onChange={handleTel}/>
             <MyButton disabled={notAllow} OnClick={onClickConfirmButton}/>
         </MyBox>
     </Container></>
