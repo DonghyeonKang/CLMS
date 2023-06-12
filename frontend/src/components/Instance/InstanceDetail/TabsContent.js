@@ -162,14 +162,17 @@ const TabsContent = ({data, domainName, setDomainName}) => {
                   <Rules> 
                     <thead>
                       <tr>
-                        <RulesHeader style={{minWidth:'180px'}}>
+                        <RulesHeader style={{minWidth:'120px'}}>
                         ID
                         </RulesHeader>
                         <RulesHeader style={{minWidth:'120px'}}>
                         프로토콜
                         </RulesHeader>
                         <RulesHeader style={{minWidth:'120px'}}>
-                        포트범위
+                        서버 포트 범위
+                        </RulesHeader>
+                        <RulesHeader style={{minWidth:'120px'}}>
+                        인스턴스 포트 범위
                         </RulesHeader>
                         <RulesHeader style={{minWidth:'120px'}}>
                         소스
@@ -179,9 +182,10 @@ const TabsContent = ({data, domainName, setDomainName}) => {
                     <tbody>
                       {inboundRules?.map((i)=>{
                         return(<tr>
-                          <RulesBody style={{minWidth:'180px'}}>{i?.id}</RulesBody>
+                          <RulesBody style={{minWidth:'120px'}}>{i?.id}</RulesBody>
                           <RulesBody style={{minWidth:'120px'}}>TCP</RulesBody>
-                          <RulesBody style={{minWidth:'120px'}}>{i?.port}</RulesBody>
+                          <RulesBody style={{minWidth:'120px'}}>{i?.hostPort}</RulesBody>
+                          <RulesBody style={{minWidth:'120px'}}>{i?.instancePort}</RulesBody>
                           <RulesBody style={{minWidth:'120px'}}>0.0.0.0/0</RulesBody>
                         </tr>)
                         })}
