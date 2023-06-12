@@ -57,12 +57,15 @@ public class InstanceServiceImpl implements InstanceService{
         // 1 서버에서 사용하는 계정명(serverUsername), 2 서버 ip 주소, 3 호스트 포트, 4 컨테이너 포트(항상 22),
         // 5 인스턴스 name, 6 인스턴스 id, 7 용량, 8 OS
         try {
-            shRunner.execCommand("CreateContainer.sh", baseServer.getServerUsername(), baseServer.getIpv4(),
+            Map result = shRunner.execCommand("CreateContainer.sh", baseServer.getServerUsername(), baseServer.getIpv4(),
                     Integer.toString(entity.getPort()), "22",
                     entity.getName(), Integer.toString(entity.getId()),
                     Double.toString(entity.getStorage()), entity.getOs());
+            if(shParser.isSuccess(result.get(1).toString())) {
+                return "success";
+            }
 
-            return "success";
+            return "failure";
         } catch (Exception e) {
             return e.toString();
         }

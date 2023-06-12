@@ -1,8 +1,11 @@
 package com.example.csws.service.boundPolicy;
 
+import com.example.csws.common.shRunner.ShParser;
+import com.example.csws.common.shRunner.ShRunner;
 import com.example.csws.entity.boundPolicy.InboundPolicy;
 import com.example.csws.entity.boundPolicy.InboundPolicyDto;
 import com.example.csws.entity.instance.Instance;
+import com.example.csws.entity.server.Server;
 import com.example.csws.repository.boundPolicy.InboundPolicyRepository;
 import com.example.csws.repository.instance.InstanceRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Service
@@ -21,7 +25,8 @@ public class InboundPolicyServiceImpl implements InboundPolicyService{
     private final InboundPolicyRepository inboundPolicyRepository;
     private final InstanceRepository instanceRepository;
     private final EntityManager entityManager;
-
+    private final ShRunner shRunner;
+    private final ShParser shParser;
     @Override
     public List<InboundPolicyDto> findAllByInstanceId(int instanceId) {
 
@@ -81,6 +86,26 @@ public class InboundPolicyServiceImpl implements InboundPolicyService{
                 // 응답 리스트에 저장
                 responseDtoList.add(entity.toDto());
             }
+
+
+            // 쉘 실행
+            Instance entity = instanceRepository.findById(instanceId).get();
+            Server baseServer = entity.getServer();
+            String containerName = entity.getName() + entity.getId();
+            String newPorts = "";
+
+            for (InboundPolicyDto inboundPolicyDto: responseDtoList) {
+                try {
+                    Map result = shRunner.execCommand("AddInbound.sh", baseServer.getServerUsername(),
+                            baseServer.getIpv4(), containerName, inboundPolicyDto.getHostPort() + ":" + inboundPolicyDto.getInstancePort(), entity.getStorage().toString(), entity.getOs());
+
+                    shParser.isSuccess(result.get(1).toString());
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+
+
         }
 
         // 업데이트 --------------------

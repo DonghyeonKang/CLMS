@@ -13,7 +13,7 @@ public class Test_CreateContainer {
     void 컨테이너_생성() {
         ShRunner shRunner = new ShRunner();
         Map result = shRunner.execCommand("CreateContainer.sh pika 192.168.50.49 " +
-                                            "10004 22 ghlTest 123 2G jamesclerkmaxwell/csws_ubuntu:0.71");
+                                            "10123 22 dong 1 2G jamesclerkmaxwell/csws_ubuntu:0.71");
         System.out.println(result.get(0));
         System.out.println(result.get(1));
     }
