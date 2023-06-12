@@ -63,7 +63,6 @@ public class InstanceServiceImpl implements InstanceService{
                     Integer.toString(entity.getPort()), "22",
                     username, Integer.toString(entity.getId()),
                     Double.toString(entity.getStorage()), entity.getOs());
-
             if (!shParser.isSuccess(result.get(1).toString())) { // TODO: 실패시 엔티티 삭제해야함
                 return "failure";
             }

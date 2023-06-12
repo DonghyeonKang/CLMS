@@ -1,8 +1,12 @@
 package com.example.csws.service.domain;
 
+import com.example.csws.common.shRunner.ShParser;
+import com.example.csws.common.shRunner.ShRunner;
 import com.example.csws.entity.domain.Domain;
 import com.example.csws.entity.domain.DomainDto;
+import com.example.csws.entity.instance.CreateDomainDto;
 import com.example.csws.entity.instance.Instance;
+import com.example.csws.entity.server.Server;
 import com.example.csws.repository.domain.DomainRepository;
 import com.example.csws.repository.instance.InstanceRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +14,7 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -17,6 +22,8 @@ import java.util.Optional;
 public class DomainServiceImpl implements DomainService {
     private final DomainRepository domainRepository;
     private final InstanceRepository instanceRepository;
+    private final ShRunner shRunner;
+    private final ShParser shParser;
 
     // instanceId 로 domain 조회
     public JSONObject findByInstanceId(Integer instanceId) {
@@ -34,19 +41,65 @@ public class DomainServiceImpl implements DomainService {
         return obj;
     }
 
-    public DomainDto createDomain(DomainDto domainDto) {
+    public CreateDomainDto createDomain(DomainDto domainDto) {
         // instance 의 참조값 가져오기
-        Instance instance = instanceRepository.getReferenceById(domainDto.getInstanceId());
+        Instance entity = instanceRepository.findById(domainDto.getInstanceId()).get();
+        Server baseServer = entity.getServer();
 
-        // 저장
-        Domain domain = domainRepository.save(domainDto.toEntity(instance));
-        return DomainDto.builder()
-                .name(domain.getName())
-                .build();
+        // 쉘 실행
+        try {
+            Map result = shRunner.execCommand("H_DeleteNginx.sh", baseServer.getServerUsername(),
+                    baseServer.getIpv4(), domainDto.getName(), "80");
+
+            // 성공 리턴
+            if(shParser.isSuccess(result.get(1).toString())) {
+                // 저장
+                Domain domain = domainRepository.save(domainDto.toEntity(entity));
+                return CreateDomainDto.builder()
+                        .domainName(domain.getName())
+                        .success(true)
+                        .build();
+            }
+
+            // 실패 리턴
+            return CreateDomainDto.builder()
+                    .domainName("")
+                    .success(false)
+                    .build();
+        } catch (Exception e) {
+            System.out.println(e);
+            // 실패 리턴
+            return CreateDomainDto.builder()
+                    .domainName("")
+                    .success(false)
+                    .build();
+        }
     }
 
     @Transactional
-    public void deleteDomain(DomainDto domainDto) {
-        domainRepository.deleteByInstanceId(domainDto.getInstanceId());
+    public Boolean deleteDomain(DomainDto domainDto) {
+        // instance 의 참조값 가져오기
+        Instance entity = instanceRepository.findById(domainDto.getInstanceId()).get();
+        Server baseServer = entity.getServer();
+
+        // 쉘 실행
+        try {
+            Map result = shRunner.execCommand("H_AddNginx.sh", baseServer.getServerUsername(),
+                    baseServer.getIpv4(), domainDto.getName(), "80");
+
+            // 성공 리턴
+            if(shParser.isSuccess(result.get(1).toString())) {
+                // 삭제
+                domainRepository.deleteByInstanceId(domainDto.getInstanceId());
+                return true;
+            }
+
+            // 실패 리턴
+            return false;
+        } catch (Exception e) {
+            System.out.println(e);
+            // 실패 리턴
+            return false;
+        }
     }
 }
