@@ -1,5 +1,6 @@
 package com.example.csws.service.instance;
 
+import com.example.csws.common.shRunner.ShParser;
 import com.example.csws.common.shRunner.ShRunner;
 import com.example.csws.entity.instance.Instance;
 import com.example.csws.entity.instance.InstanceDto;
@@ -15,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -27,6 +29,7 @@ public class InstanceServiceImpl implements InstanceService{
     private final InstanceRepository instanceRepository;
     private final EntityManager entityManager;
     private final ShRunner shRunner;
+    private final ShParser shParser;
 
     // 컨트롤러에서 이미 인스턴스의 code 필드를 받아왔음을 가정함.
     // DB에서 프로시저를 이용하여 code를 설정할 것이라면 연관된 전체 기능 수정 필요.
