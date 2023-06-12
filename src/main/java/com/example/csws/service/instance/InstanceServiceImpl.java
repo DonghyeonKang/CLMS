@@ -3,11 +3,12 @@ package com.example.csws.service.instance;
 import com.example.csws.common.shRunner.ParserResponseDto;
 import com.example.csws.common.shRunner.ShParser;
 import com.example.csws.common.shRunner.ShRunner;
-import com.example.csws.config.auth.PrincipalDetails;
+import com.example.csws.entity.boundPolicy.InboundPolicy;
 import com.example.csws.entity.instance.Instance;
 import com.example.csws.entity.instance.InstanceDto;
 import com.example.csws.entity.server.Server;
 import com.example.csws.entity.user.User;
+import com.example.csws.repository.boundPolicy.InboundPolicyRepository;
 import com.example.csws.repository.instance.InstanceRepository;
 import com.example.csws.repository.server.ServerRepository;
 import com.example.csws.repository.user.UserRepository;
@@ -29,6 +30,7 @@ public class InstanceServiceImpl implements InstanceService{
     private final UserRepository userRepository;
     private final ServerRepository serverRepository;
     private final InstanceRepository instanceRepository;
+    private final InboundPolicyRepository inboundPolicyRepository;
     private final EntityManager entityManager;
     private final ShRunner shRunner;
     private final ShParser shParser;
@@ -62,12 +64,20 @@ public class InstanceServiceImpl implements InstanceService{
                     username, Integer.toString(entity.getId()),
                     Double.toString(entity.getStorage()), entity.getOs());
 
-            if (shParser.isSuccess(result.get(1).toString()) == false) { // TODO: 실패시 엔티티 삭제해야함
+            if (!shParser.isSuccess(result.get(1).toString())) { // TODO: 실패시 엔티티 삭제해야함
                 return "failure";
             }
         } catch (Exception e) {
             return e.toString();
         }
+
+        // 인바운드 추가
+        InboundPolicy inboundPolicy = InboundPolicy.builder()
+                .instance(entity)
+                .instancePort(22)
+                .hostPort(entity.getPort())
+                .build();
+        inboundPolicyRepository.save(inboundPolicy);
 
         // TODO: 퍼블릭 키 호스트 서버로 전송
         try {
@@ -75,7 +85,7 @@ public class InstanceServiceImpl implements InstanceService{
                     entity.getName() + Integer.toString(entity.getId()),
                     entity.getKeyName());
 
-            if (shParser.isSuccess(result.get(1).toString()) == false) { // TODO: 실패시 엔티티 삭제해야함
+            if (!shParser.isSuccess(result.get(1).toString())) { // TODO: 실패시 엔티티 삭제해야함
                 return "failure";
             }
         } catch (Exception e) {
