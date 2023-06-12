@@ -1,5 +1,6 @@
 package com.example.csws.service.instance;
 
+import com.example.csws.common.shRunner.ParserResponseDto;
 import com.example.csws.common.shRunner.ShParser;
 import com.example.csws.common.shRunner.ShRunner;
 import com.example.csws.entity.instance.Instance;
@@ -10,6 +11,7 @@ import com.example.csws.repository.instance.InstanceRepository;
 import com.example.csws.repository.server.ServerRepository;
 import com.example.csws.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -30,7 +32,6 @@ public class InstanceServiceImpl implements InstanceService{
     private final EntityManager entityManager;
     private final ShRunner shRunner;
     private final ShParser shParser;
-
     // 컨트롤러에서 이미 인스턴스의 code 필드를 받아왔음을 가정함.
     // DB에서 프로시저를 이용하여 code를 설정할 것이라면 연관된 전체 기능 수정 필요.
     // dto를 entity로 변환 후 save(insert 혹은 update)한 결과값을 컨트롤러에 반환.
@@ -205,4 +206,64 @@ public class InstanceServiceImpl implements InstanceService{
 
         return entity.toDto();
     }
+
+
+    // 에러 발생시 에러 출력 및 false 값 담긴 responseDto 반환
+    // 성공시 데이터 담긴 dto 반환
+    @Override
+    public ParserResponseDto checkContainerResource(String hostName, String hostIp, String containerName) {
+
+        try {
+            Map result = shRunner.execCommand("CheckContainerResource.sh", hostName, hostIp, containerName);
+            return shParser.checkContainerResource(result.get(1).toString());
+        } catch (Exception e) {
+            ParserResponseDto responseDto = new ParserResponseDto();
+            responseDto.setSuccess(false);
+            System.out.println(e.toString());
+            return responseDto;
+        }
+    }
+
+    @Override
+    public ParserResponseDto checkServerResource(String hostName, String hostIp) {
+
+        try {
+            Map result = shRunner.execCommand("CheckServerResource.sh", hostName, hostIp);
+            return shParser.checkContainerResource(result.get(1).toString());
+        } catch (Exception e) {
+            ParserResponseDto responseDto = new ParserResponseDto();
+            responseDto.setSuccess(false);
+            System.out.println(e.toString());
+            return responseDto;
+        }
+    }
+
+    @Override
+    public ParserResponseDto printStatusforManager(String hostName, String hostIp) {
+
+        try {
+            Map result = shRunner.execCommand("PrintStatusforManager.sh", hostName, hostIp);
+            return shParser.checkContainerResource(result.get(1).toString());
+        } catch (Exception e) {
+            ParserResponseDto responseDto = new ParserResponseDto();
+            responseDto.setSuccess(false);
+            System.out.println(e.toString());
+            return responseDto;
+        }
+    }
+
+    @Override
+    public ParserResponseDto printStatusforUser(String hostName, String hostIp, String username) {
+
+        try {
+            Map result = shRunner.execCommand("PrintStatusforUser.sh", hostName, hostIp, username);
+            return shParser.checkContainerResource(result.get(1).toString());
+        } catch (Exception e) {
+            ParserResponseDto responseDto = new ParserResponseDto();
+            responseDto.setSuccess(false);
+            System.out.println(e.toString());
+            return responseDto;
+        }
+    }
+
 }
