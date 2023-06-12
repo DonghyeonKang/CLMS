@@ -18,7 +18,7 @@ public class ShParser {
 
         // failure 나오면 false 리턴
         for(String token : splitedResult) {
-            if(token.equals("Failure\n")) {
+            if(token.contains("Failure")) {
                 return false;
             }
         }

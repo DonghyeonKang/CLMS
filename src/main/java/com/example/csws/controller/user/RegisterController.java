@@ -65,7 +65,7 @@ public class RegisterController {
 
     // 관리자 회원가입
     @PostMapping("/manager")
-    public Object registerManager(@ModelAttribute RegisterManagerRequest model) {
+    public Object registerManager(@RequestBody RegisterManagerRequest model) {
         try {
             model.setPassword(passwordEncoder.encode(model.getPassword()));  // password encoding
             // request -> userDto
@@ -76,6 +76,10 @@ public class RegisterController {
 
             // register
             registerService.register(userDto);
+
+            // 관리자 인증 요청
+
+
             return Map.of("result", "성공");  // 성공 리턴
         } catch (Exception e) {
             throw e;
