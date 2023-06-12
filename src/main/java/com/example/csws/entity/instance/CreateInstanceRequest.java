@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class CreateInstanceRequest {
     private String name;
     private String storage;
-    private String keyName;
+    private String keyPair;
     private String address;
     private String os;
     private int serverId;

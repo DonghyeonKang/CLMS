@@ -48,6 +48,7 @@ public class InstanceServiceImpl implements InstanceService{
         User newUser = userRepository.getReferenceById(instanceDto.getUserId());
         Server baseServer = serverRepository.findById(instanceDto.getServerId()).get();
         Instance entity = instanceRepository.save(instanceDto.toEntity(newUser, baseServer));
+        username = username.replaceAll("[@.]", "");
 
         // ssh port 값 생성
         int instanceId = entity.getId();
@@ -64,6 +65,7 @@ public class InstanceServiceImpl implements InstanceService{
                     username, Integer.toString(entity.getId()),
                     Double.toString(entity.getStorage()), entity.getOs());
             if (!shParser.isSuccess(result.get(1).toString())) { // TODO: 실패시 엔티티 삭제해야함
+                instanceRepository.deleteById(entity.getId());
                 return "failure";
             }
         } catch (Exception e) {
@@ -81,31 +83,17 @@ public class InstanceServiceImpl implements InstanceService{
         // TODO: 퍼블릭 키 호스트 서버로 전송
         try {
             Map result = shRunner.execCommand("SendPublickey.sh", baseServer.getServerUsername(), baseServer.getIpv4(),
-                    entity.getName() + Integer.toString(entity.getId()),
-                    entity.getKeyName());
-
-            if (!shParser.isSuccess(result.get(1).toString())) { // TODO: 실패시 엔티티 삭제해야함
-                return "failure";
-            }
-        } catch (Exception e) {
-            return e.toString();
-        }
-
-        // TODO: 퍼블릭 키 호스트 서버에서 인스턴스에 등록
-        try {
-            Map result = shRunner.execCommand("H_SendPublickey.sh",
                     username + Integer.toString(entity.getId()),
                     entity.getKeyName());
 
             if (shParser.isSuccess(result.get(1).toString())) {
-                instanceRepository.deleteById(entity.getId());
                 return "success";
             }
+            instanceRepository.deleteById(entity.getId());
             return "failure";
         } catch (Exception e) {
             return e.toString();
         }
-
     }
 
     // 인스턴스 id를 이용해 개별 인스턴스 검색 후 Optional에 넣어서 반환. 객체가 없으면 null이 담겨있음.

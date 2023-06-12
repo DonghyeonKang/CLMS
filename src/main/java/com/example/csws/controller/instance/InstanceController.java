@@ -3,6 +3,7 @@ package com.example.csws.controller.instance;
 import com.example.csws.common.shRunner.ParserResponseDto;
 import com.example.csws.common.shRunner.ShParser;
 import com.example.csws.config.auth.PrincipalDetails;
+import com.example.csws.entity.boundPolicy.InboundPolicy;
 import com.example.csws.entity.server.ServerDto;
 import com.example.csws.service.server.ServerService;
 import lombok.Getter;
@@ -107,12 +108,10 @@ public class InstanceController {
         InstanceDto newDto = new InstanceDto();
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         newDto.setUserId(principalDetails.getId());
-        System.out.println(principalDetails.getId());
-
         // request 의 데이터 dto 에 넣기
         newDto.setName(request.getName());
         newDto.setStorage(Double.parseDouble(request.getStorage().substring(0, request.getStorage().length() - 1)));
-        newDto.setKeyName(request.getKeyName());
+        newDto.setKeyName(request.getKeyPair());
         newDto.setOs(request.getOs());
         newDto.setServerId(request.getServerId());
         newDto.setAddress(request.getAddress());
