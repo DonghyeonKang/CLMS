@@ -1,6 +1,8 @@
 package com.example.csws.controller.instance;
 
+import com.example.csws.common.shRunner.ShRunner;
 import com.example.csws.config.auth.PrincipalDetails;
+import com.example.csws.config.auth.PrincipalDetailsService;
 import org.json.simple.JSONObject;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -38,15 +40,19 @@ public class InstanceController {
     private final InstanceService instanceService;
     private final DomainService domainService;
     private final InboundPolicyService inboundPolicyService;
-
+    private final ShRunner shRunner;
 
     // 인스턴스 시작
     @PostMapping("/start")
-    public JSONObject startInstance(@RequestBody ControlInstanceRequest request) {
-        String result = instanceService.startInstance(request.getInstanceId());
-
+    public JSONObject startInstance(@RequestBody ControlInstanceRequest request, Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String result = instanceService.startInstance(request.getInstanceId(), principalDetails.getUsername());
         JSONObject obj = new JSONObject();
-        obj.put("success", true);
+        if(result.equals("success")) {
+            obj.put("success", true);
+        } else {
+            obj.put("success", false);
+        }
         obj.put("instanceId", request.getInstanceId());
         obj.put("status", "running");
         return obj;
@@ -54,8 +60,12 @@ public class InstanceController {
 
     // 인스턴스 재시작
     @PostMapping("/restart")
-    public JSONObject restartInstance(@RequestBody ControlInstanceRequest request) {
-        String result = instanceService.restartInstance(request.getInstanceId());
+    public JSONObject restartInstance(@RequestBody ControlInstanceRequest request, Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String result = instanceService.restartInstance(request.getInstanceId(), principalDetails.getUsername());
+
+        // 쉘 스크립트 실행
+        shRunner.execCommand("H_RestartContainer.sh");
 
         JSONObject obj = new JSONObject();
         obj.put("success", true);
@@ -66,8 +76,12 @@ public class InstanceController {
 
     // 인스턴스 정지
     @PostMapping("/stop")
-    public JSONObject stopInstance(@RequestBody ControlInstanceRequest request) {
-        String result = instanceService.stopInstance(request.getInstanceId());
+    public JSONObject stopInstance(@RequestBody ControlInstanceRequest request, Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String result = instanceService.stopInstance(request.getInstanceId(), principalDetails.getUsername());
+
+        // 쉘 스크립트 실행
+        shRunner.execCommand("H_StopContainer.sh");
 
         JSONObject obj = new JSONObject();
         obj.put("success", true);
@@ -79,8 +93,12 @@ public class InstanceController {
 
     // 인스턴스 삭제
     @PostMapping("/delete")
-    public JSONObject deleteInstance(@RequestBody ControlInstanceRequest request) {
-        String result = instanceService.deleteInstance(request.getInstanceId());
+    public JSONObject deleteInstance(@RequestBody ControlInstanceRequest request, Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String result = instanceService.deleteInstance(request.getInstanceId(), principalDetails.getUsername());
+
+        // 쉘 스크립트 실행
+        shRunner.execCommand("H_StopContainer.sh");
 
         JSONObject obj = new JSONObject();
         obj.put("success", true);
