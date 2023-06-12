@@ -264,13 +264,13 @@ public class InstanceController {
         System.out.println(domainInstanceRequest.getInstanceId());
 
         // 새로운 도메인 추가
-        DomainDto domainDto = domainService.createDomain(
+        CreateDomainDto createDomainDto = domainService.createDomain(
                 new DomainDto(domainInstanceRequest.getDomainName(), domainInstanceRequest.getInstanceId()));
 
         // 저장된 도메인 명 응답
         JSONObject obj = new JSONObject();
-        obj.put("success", true);
-        obj.put("domainName", domainDto.getName());
+        obj.put("success", createDomainDto.getSuccess());
+        obj.put("domainName", createDomainDto.getDomainName());
         return obj;
     }
 
