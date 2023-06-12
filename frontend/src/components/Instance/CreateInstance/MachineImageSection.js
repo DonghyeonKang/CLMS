@@ -3,13 +3,13 @@ import ubuntu from '../../../img/ubuntu.png'
 
 const MachineImageSection = ({setData, data}) => {
     const setUbuntu = () => {
-      setData({...data, os: 'ubuntu:latest'});
+      setData({...data, os: 'jamesclerkmaxwell/csws_ubuntu:0.71'});
     };
     return (
         <Content>
             <Title>운영체제 종류</Title>
             <OSTabs>
-              {data.os === 'ubuntu:latest' ? 
+              {data.os === 'jamesclerkmaxwell/csws_ubuntu:0.71' ? 
               (<OSTabSelected>
                 <div>ubuntu:latest</div>
                 <OSImg src={ubuntu} onClick={()=>setUbuntu()}/>
