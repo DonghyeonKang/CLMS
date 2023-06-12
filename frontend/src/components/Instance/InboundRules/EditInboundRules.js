@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { redirect, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import InboundRule from "./InboundRule";
 import axios from "axios";
@@ -16,7 +16,12 @@ const EditInboundRules = () => {
     const [data,setData] = useState([]);
     const [newData,setNewData] = useState([]);
     const [reqData, setReqData] = useState([]);
-    const [countValidate,setCountValidate] = useState(0);
+    const [allValidate,setAllValidate] = useState(false);
+    const validation = (str) => {
+      const reg = /^(6553[0-5]|655[0-2]\d|65[0-4]\d{2}|6[0-4]\d{3}|5\d{4}|4\d{4}|3\d{4}|2\d{4}|1\d{4}|[1-9]\d{0,3}|[0])$/;
+      return reg.test(Number(str));
+    }
+
     //규칙 추가 함수
     const addData = () => {
         setNewData((prev) => [...prev,{
@@ -30,12 +35,16 @@ const EditInboundRules = () => {
     };
     //인바운드 규칙 저장
     const saveInboundRules = () => {
-      console.log(reqData);
+      if(allValidate){
         try {
           axios.put(BASEURL + `/instances/inbounds/setting`, reqData).then((response)=> console.log(response));
+        } catch (error) {
+          console.error(error);
+        }
+        redirect(`/dashboard/${instanceId}`);
         navigate(`/dashboard/${instanceId}`);
-      } catch (error) {
-        console.error(error);
+      } else {
+        alert('올바른 포트를 입력해 주세요.');
       }
     };
     //인바운드 규칙 리스트 불러오기
@@ -52,12 +61,22 @@ const EditInboundRules = () => {
         const {number, ...rest} = i;
         return rest;
       });
+      let ary = [];
       if(data){
         setReqData([...data, ...newArr]);
+        ary = [...data, ...newArr];
       } else{
         setReqData(newArr);
+        ary = newArr;
       }
-    },[data, newData]);
+      const arr = ary?.map((i)=>validation(i?.instancePort));
+      let validate = arr[0];
+      for(let i=0;i<arr.length;i++){
+        validate = validate && arr[i];
+      }
+      setAllValidate(validate);
+    },[data, newData])
+
 
     useEffect(()=>{
       loadInboundRules();
@@ -77,10 +96,10 @@ const EditInboundRules = () => {
                     <th> </th>
                 </tr>
                 {data?.map((i)=>{
-                    return(<InboundRule data={data} setData={setData} setCountValidate={setCountValidate} i={i} key={i?.id}/>)})
+                    return(<InboundRule data={data} setData={setData} i={i} key={i?.id}/>)})
                 }
                 {newData?.map((i)=>{
-                    return(<NewInboundRule newData={newData} setNewData={setNewData} setCountValidate={setCountValidate} i={i} key={i?.number}/>)})
+                    return(<NewInboundRule newData={newData} setNewData={setNewData} i={i} key={i?.number}/>)})
                 }
                 </tbody>
                 </Rules>
