@@ -25,7 +25,10 @@ public class ShRunner {
         Process process = null;
 
         //  쉘 실행
-        System.out.println("shell process start");
+        for(String i : callCmd) {
+            System.out.print(i + " ");
+        }
+        System.out.println("\nshell process start");
         try {
             process = pb.start();
         } catch (IOException e) {
