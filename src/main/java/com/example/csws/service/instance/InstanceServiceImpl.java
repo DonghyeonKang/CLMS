@@ -2,14 +2,17 @@ package com.example.csws.service.instance;
 
 import com.example.csws.common.shRunner.ShParser;
 import com.example.csws.common.shRunner.ShRunner;
+import com.example.csws.config.auth.PrincipalDetails;
 import com.example.csws.entity.instance.Instance;
 import com.example.csws.entity.instance.InstanceDto;
 import com.example.csws.entity.server.Server;
 import com.example.csws.entity.user.User;
+import com.example.csws.repository.boundPolicy.InboundPolicyRepository;
 import com.example.csws.repository.instance.InstanceRepository;
 import com.example.csws.repository.server.ServerRepository;
 import com.example.csws.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -40,7 +43,7 @@ public class InstanceServiceImpl implements InstanceService{
     // 5) 용량. 6) 이미지 이름
     @Transactional
     @Override
-    public String createInstance(InstanceDto instanceDto) {
+    public String createInstance(InstanceDto instanceDto, String username) {
         // port null 로 저장
         User newUser = userRepository.getReferenceById(instanceDto.getUserId());
         Server baseServer = serverRepository.findById(instanceDto.getServerId()).get();
@@ -56,15 +59,46 @@ public class InstanceServiceImpl implements InstanceService{
         // 1 서버에서 사용하는 계정명(serverUsername), 2 서버 ip 주소, 3 호스트 포트, 4 컨테이너 포트(항상 22),
         // 5 인스턴스 name, 6 인스턴스 id, 7 용량, 8 OS
         try {
-            shRunner.execCommand("CreateContainer.sh", baseServer.getServerUsername(), baseServer.getIpv4(),
+            Map result = shRunner.execCommand("CreateContainer.sh", baseServer.getServerUsername(), baseServer.getIpv4(),
                     Integer.toString(entity.getPort()), "22",
-                    entity.getName(), Integer.toString(entity.getId()),
+                    username, Integer.toString(entity.getId()),
                     Double.toString(entity.getStorage()), entity.getOs());
 
-            return "success";
+            if (shParser.isSuccess(result.get(1).toString()) == false) { // TODO: 실패시 엔티티 삭제해야함
+                return "failure";
+            }
         } catch (Exception e) {
             return e.toString();
         }
+
+        // TODO: 퍼블릭 키 호스트 서버로 전송
+        try {
+            Map result = shRunner.execCommand("SendPublickey.sh", baseServer.getServerUsername(), baseServer.getIpv4(),
+                    entity.getName() + Integer.toString(entity.getId()),
+                    entity.getKeyName());
+
+            if (shParser.isSuccess(result.get(1).toString()) == false) { // TODO: 실패시 엔티티 삭제해야함
+                return "failure";
+            }
+        } catch (Exception e) {
+            return e.toString();
+        }
+
+        // TODO: 퍼블릭 키 호스트 서버에서 인스턴스에 등록
+        try {
+            Map result = shRunner.execCommand("H_SendPublickey.sh",
+                    username + Integer.toString(entity.getId()),
+                    entity.getKeyName());
+
+            if (shParser.isSuccess(result.get(1).toString())) {
+                instanceRepository.deleteById(entity.getId());
+                return "success";
+            }
+            return "failure";
+        } catch (Exception e) {
+            return e.toString();
+        }
+
     }
 
     // 인스턴스 id를 이용해 개별 인스턴스 검색 후 Optional에 넣어서 반환. 객체가 없으면 null이 담겨있음.

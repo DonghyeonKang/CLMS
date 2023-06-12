@@ -118,7 +118,7 @@ public class InstanceController {
         newDto.setCreated(curTimestamp);
 
         // 요청에 따라 쉘 스크립트 실행
-        String result = instanceService.createInstance(newDto);
+        String result = instanceService.createInstance(newDto, principalDetails.getUsername());
         if (result.equals("success")) { // 성공적으로 db에 insert 및 쉘 스크립트 실행
             return "redirect:/instances/list/user";
         } else {
@@ -237,7 +237,7 @@ public class InstanceController {
         Long newUserId = student.getId();
         newDto.setUserId(newUserId);
 
-        instanceService.createInstance(newDto); // 기존에 존재하던 객체를 업데이트
+        instanceService.createInstance(newDto, "username"); // 기존에 존재하던 객체를 업데이트 TODO: username 받아오는 걸로 수정
 
         return "redirect:listUserid?userId=" + newUserId;   // 해당 학생의 userId로 인스턴스 리스트 조회하는 페이지 이동
     }

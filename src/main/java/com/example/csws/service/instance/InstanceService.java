@@ -1,13 +1,14 @@
 package com.example.csws.service.instance;
 
 import com.example.csws.entity.instance.InstanceDto;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface InstanceService {
 
-    public String createInstance(InstanceDto instanceDto);
+    public String createInstance(InstanceDto instanceDto, String username);
     public Optional<InstanceDto> findById(int instanceId);
     public List<InstanceDto> findAllByUserId(Long userId);
     public List<InstanceDto> findAllByServerId(int serverId);
