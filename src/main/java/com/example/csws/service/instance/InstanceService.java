@@ -1,5 +1,6 @@
 package com.example.csws.service.instance;
 
+import com.example.csws.common.shRunner.ParserResponseDto;
 import com.example.csws.entity.instance.InstanceDto;
 import org.springframework.security.core.Authentication;
 
@@ -21,5 +22,13 @@ public interface InstanceService {
     public String createKeyPair(String hostName, String keyPairName);
 
     public InstanceDto changeUserid(InstanceDto instanceDto);
+
+    public ParserResponseDto checkContainerResource(String hostName, String hostIp, String containerName);
+
+    public ParserResponseDto checkServerResource(String hostName, String hostIp);
+
+    public ParserResponseDto printStatusforManager(String hostName, String hostIp);
+
+    public ParserResponseDto printStatusforUser(String hostName, String hostIp, String username);
 
 }
