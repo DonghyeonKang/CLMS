@@ -44,36 +44,39 @@ public class InstanceController {
     // 인스턴스 시작
     @PostMapping("/start")
     public JSONObject startInstance(@RequestBody ControlInstanceRequest request) {
-        String result = instanceService.startInstance(request.getInstanceId());
+        Boolean result = instanceService.startInstance(request.getInstanceId());
 
         JSONObject obj = new JSONObject();
-        obj.put("success", true);
+        obj.put("success", result);
         obj.put("instanceId", request.getInstanceId());
         obj.put("status", "running");
+
         return obj;
     }
 
     // 인스턴스 재시작
     @PostMapping("/restart")
     public JSONObject restartInstance(@RequestBody ControlInstanceRequest request) {
-        String result = instanceService.restartInstance(request.getInstanceId());
+        Boolean result = instanceService.restartInstance(request.getInstanceId());
 
         JSONObject obj = new JSONObject();
-        obj.put("success", true);
+        obj.put("success", result);
         obj.put("instanceId", request.getInstanceId());
         obj.put("status", "restarting");
+
         return obj;
     }
 
     // 인스턴스 정지
     @PostMapping("/stop")
     public JSONObject stopInstance(@RequestBody ControlInstanceRequest request) {
-        String result = instanceService.stopInstance(request.getInstanceId());
+        Boolean result = instanceService.stopInstance(request.getInstanceId());
 
         JSONObject obj = new JSONObject();
-        obj.put("success", true);
+        obj.put("success", result);
         obj.put("instanceId", request.getInstanceId());
         obj.put("status", "stopped");
+
         return obj;
 
     }
@@ -81,12 +84,13 @@ public class InstanceController {
     // 인스턴스 삭제
     @PostMapping("/delete")
     public JSONObject deleteInstance(@RequestBody ControlInstanceRequest request) {
-        String result = instanceService.deleteInstance(request.getInstanceId());
+        Boolean result = instanceService.deleteInstance(request.getInstanceId());
 
         JSONObject obj = new JSONObject();
-        obj.put("success", true);
+        obj.put("success", result);
         obj.put("instanceId", request.getInstanceId());
         obj.put("status", "deleted");
+
         return obj;
     }
 
