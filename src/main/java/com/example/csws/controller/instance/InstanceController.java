@@ -129,7 +129,9 @@ public class InstanceController {
         newDto.setKeyName(request.getKeyPair());
         newDto.setOs(request.getOs());
         newDto.setServerId(request.getServerId());
-        newDto.setAddress(request.getAddress());
+
+        ServerDto serverDto = serverService.findById(request.getServerId());
+        newDto.setAddress(serverDto.getIpv4());
 
         // dto default 값 추가
         newDto.setCode(1); // 필요없으면 향후 삭제 예정.
