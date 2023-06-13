@@ -12,11 +12,13 @@ const CreateInstanceButtons = ({data, validate}) => {
   const createInstance = () => {
       if(validate){
         try{
-        axios.post(BASEURL + '/instances/creation', data).then(redirect('/dashboard'));
+        axios.post(BASEURL + '/instances/creation', data).then(setTimeout(()=>{
+        redirect('/dashboard');
+        navigate('/dashboard');
+        },1000));
       } catch (error) {
         console.error(error);
       };
-        navigate('/dashboard');
     } else {
       alert('입력이 올바르지 않습니다.');
     }

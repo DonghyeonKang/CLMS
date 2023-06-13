@@ -116,7 +116,6 @@ const TabsContent = ({data, domainName, setDomainName}) => {
   useEffect(()=>{
     loadInboundRules();
   },[BASEURL, instanceId]);
-
     return (
         <>
           {list === 'detail' ? 
@@ -141,7 +140,7 @@ const TabsContent = ({data, domainName, setDomainName}) => {
                 </DetailGrid>
                 <DetailGrid>
                   <GridTitle>시작 시간</GridTitle>
-                  <GridContent>{data?.created}</GridContent>
+                  <GridContent>{Date(data?.created).split(' ').slice(0,5).join(' ')}</GridContent>
                 </DetailGrid>
                 <DetailGrid>
                   <GridTitle>키 페어 이름</GridTitle>
