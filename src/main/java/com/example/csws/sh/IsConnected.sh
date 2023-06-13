@@ -8,6 +8,7 @@ IsConnected()
     local hostIp=$2 
 
     ssh -o StrictHostKeyChecking=no $hostName@$hostIp 'cat ~/etc/logo2.txt | wall'
+    scp ~/Automation/Automation.tar $hostName@$hostIp:~/
 }
 
 Start IsConnected
