@@ -3,11 +3,13 @@ package com.example.csws.controller.instance;
 import com.example.csws.common.shRunner.ParserResponseDto;
 import com.example.csws.common.shRunner.ShParser;
 import com.example.csws.config.auth.PrincipalDetails;
+import com.example.csws.entity.boundPolicy.InboundPolicy;
 import com.example.csws.entity.server.ServerDto;
 import com.example.csws.service.server.ServerService;
 import lombok.Getter;
 import org.json.simple.JSONObject;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import com.example.csws.entity.boundPolicy.InboundPolicyDto;
 import com.example.csws.entity.domain.DomainDto;
@@ -106,12 +108,10 @@ public class InstanceController {
         InstanceDto newDto = new InstanceDto();
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         newDto.setUserId(principalDetails.getId());
-        System.out.println(principalDetails.getId());
-
         // request 의 데이터 dto 에 넣기
         newDto.setName(request.getName());
         newDto.setStorage(Double.parseDouble(request.getStorage().substring(0, request.getStorage().length() - 1)));
-        newDto.setKeyName(request.getKeyName());
+        newDto.setKeyName(request.getKeyPair());
         newDto.setOs(request.getOs());
         newDto.setServerId(request.getServerId());
         newDto.setAddress(request.getAddress());
@@ -123,7 +123,7 @@ public class InstanceController {
         newDto.setCreated(curTimestamp);
 
         // 요청에 따라 쉘 스크립트 실행
-        String result = instanceService.createInstance(newDto);
+        String result = instanceService.createInstance(newDto, principalDetails.getUsername());
         if (result.equals("success")) { // 성공적으로 db에 insert 및 쉘 스크립트 실행
             return "redirect:/instances/list/user";
         } else {
@@ -134,14 +134,12 @@ public class InstanceController {
     // 키페어 생성
     @PostMapping("/keypair")
     public ResponseEntity<Resource> createKeypair(@RequestBody Map<String, String> testName) throws IOException {
-        System.out.println("keypair 생성 진입");
-
         // 키페어 생성
-        instanceService.createKeyPair(testName.get("hostName"), testName.get("keyName"));
-
+        instanceService.createKeyPair(testName.get("hostname"), testName.get("name"));
 
         // 파일 경로 지정 (여기서는 resources 디렉토리에 있는 "example.txt" 파일 사용)
-        Resource resource = new ClassPathResource("a.pem");
+        String fileName = testName.get("name") + ".pem";
+        Resource resource = new FileSystemResource("/Users/donghyeonkang/Keys/" + testName.get("hostname") + "/" + fileName);
 
         // 다운로드할 파일의 MIME 타입 설정
         String mimeType = Files.probeContentType(resource.getFile().toPath());
@@ -244,7 +242,7 @@ public class InstanceController {
         Long newUserId = student.getId();
         newDto.setUserId(newUserId);
 
-        instanceService.createInstance(newDto); // 기존에 존재하던 객체를 업데이트
+        instanceService.createInstance(newDto, "username"); // 기존에 존재하던 객체를 업데이트 TODO: username 받아오는 걸로 수정
 
         return "redirect:listUserid?userId=" + newUserId;   // 해당 학생의 userId로 인스턴스 리스트 조회하는 페이지 이동
     }
