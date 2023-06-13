@@ -1,5 +1,7 @@
 package com.example.csws.service.server;
 
+import com.example.csws.common.shRunner.ShParser;
+import com.example.csws.common.shRunner.ShRunner;
 import com.example.csws.entity.department.Department;
 import com.example.csws.entity.server.Server;
 import com.example.csws.entity.server.ServerDto;
@@ -13,12 +15,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class ServerService {
     private final ServerRepository serverRepository;
     private final DepartmentRepository departmentRepository;
+    private final ShRunner shRunner;
+    private final ShParser shParser;
 
     // 서버 등록
     public void registerServer(ServerDto serverDto) {
@@ -53,9 +58,9 @@ public class ServerService {
         ServerResourceResponse serverResourceResponse = new ServerResourceResponse();
         // serverId 로 쉘스크립트에 필요한 파라미터 DB에서 가져와 만들어야함
 
-        serverResourceResponse.setConnection(getServerConnection());
-        serverResourceResponse.setDisk(getDiskStatus());
-        serverResourceResponse.setRam(getRamStatus());
+        serverResourceResponse.setConnection(getServerConnection(serverId));
+        serverResourceResponse.setDisk(getDiskStatus(serverId));
+        serverResourceResponse.setRam(getRamStatus(serverId));
         return serverResourceResponse;
     }
 
@@ -69,18 +74,37 @@ public class ServerService {
     }
 
     // 디스크 사용량 조회
-    private String getDiskStatus() {
+    private String getDiskStatus(int serverId) {
+        Server baseServer = serverRepository.findById(serverId).get();
+
         return "";
     }
 
     // 램 사용량 조회
-    private String getRamStatus() {
+    private String getRamStatus(int serverId) {
+        Server baseServer = serverRepository.findById(serverId).get();
+
         return "";
     }
 
     // 서버의 연결 상태 확인 -> .sh 실행 후 리턴 값 편집
-    private String getServerConnection() {
-        return "";
+    private String getServerConnection(int serverId) {
+        Server baseServer = serverRepository.findById(serverId).get();
+
+        // 쉘 실행
+        try {
+            // 인스턴스 제거
+            Map result = shRunner.execCommand("IsConnected.sh", baseServer.getServerUsername(),
+                    baseServer.getIpv4());
+
+            if(shParser.isSuccess(result.get(1).toString())) {
+                return "connected";
+            }
+
+            return "disconnected";
+        } catch (Exception e) {
+            return e.toString();
+        }
     }
 
     public ServerDto findById(int serverId) {

@@ -14,10 +14,10 @@ public interface InstanceService {
     public List<InstanceDto> findAllByUserId(Long userId);
     public List<InstanceDto> findAllByServerId(int serverId);
 
-    public Boolean startInstance(int instanceId);
-    public Boolean stopInstance(int instanceId);
-    public Boolean restartInstance(int instanceId);
-    public Boolean deleteInstance(int instanceId);
+    public String startInstance(int instanceId, String username);
+    public String stopInstance(int instanceId, String username);
+    public String restartInstance(int instanceId, String username);
+    public String deleteInstance(int instanceId, String username);
 
     public String createKeyPair(String hostName, String keyPairName);
 
