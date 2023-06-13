@@ -40,7 +40,7 @@ const KeyPairModal = ({setModalOpen, data, setData, setKeyPairName,setKeyPairVal
 
     //키 페어 다운로드 시킬 함수
     const downloadKeyPair = (str) => {
-        const fileName = `${keyPairData?.name}.txt`;
+        const fileName = `${keyPairData?.name}.pem`;
         const data = str;
         const element = document.createElement('a');
         const file = new Blob([data], {
