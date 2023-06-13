@@ -14,8 +14,5 @@ AddNginx()
     ssh $hostName@$hostIp "bash ~/sh/H_AddNginx.sh $containerName $domain $port $hostIp"    
 }
 Start AddNginx
-<<<<<<< Updated upstream
+
 AddNginx $1 $2 $3 $4 && CSWSSuccess AddNginx || CSWSFailure AddNginx
-=======
-AddNginx $1 $2 $3 $4 $5 && CSWSSuccess AddNginx || CSWSFailure AddNginx
->>>>>>> Stashed changes
