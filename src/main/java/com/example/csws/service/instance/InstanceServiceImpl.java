@@ -285,7 +285,7 @@ public class InstanceServiceImpl implements InstanceService{
 
         try {
             Map result = shRunner.execCommand("CheckServerResource.sh", hostName, hostIp);
-            return shParser.checkContainerResource(result.get(1).toString());
+            return shParser.checkServerResource(result.get(1).toString());
         } catch (Exception e) {
             ParserResponseDto responseDto = new ParserResponseDto();
             responseDto.setSuccess(false);

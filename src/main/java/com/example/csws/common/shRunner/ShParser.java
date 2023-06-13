@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -114,6 +115,9 @@ public class ShParser {
             final int MEM = 1;
             final int DISK = 2;
             final int CPU = 3;
+            int count = 0;
+            double ram = 0;
+            double left;
 
             while ((line = br.readLine()) != null) {
 
@@ -127,45 +131,44 @@ public class ShParser {
 
                 JSONObject obj = new JSONObject();  // 리스트에 새로 추가할 객체
                 st = new StringTokenizer(line); // 문장을 단어별로 토큰화
-                double ram = 0;
-                double disk;
-                int count = 0;
 
                 switch (data) { // 1 메모리 / 2 디스크 / 3 CPU 정보에 따라 json에 담는 정보 구분
                     case MEM:
                         // 1번째 토큰 : 메모리 정보 / 2, 3번째 토큰 : 메모리 사용량, 단위(kb)
                         count++;
-                        if (count == 1) {   // 최대 메모리 용량
-                            st.nextToken();
+                        String tmp = st.nextToken().trim();
+                        if (tmp.equals("MemTotal:")) {   // 최대 메모리 용량
                             ram = Double.parseDouble(st.nextToken());
-                        } else if (count == 3) { // 가용량
-                            st.nextToken();    // 현재 사용량 = 최대 메모리 용량 - 가용 메모리 용량
-                            double used = ram - Double.parseDouble(st.nextToken());
-                            ram = used / ram;  // 사용률 = 현재 사용량 / 최대 용량
+                        } else if (tmp.equals("MemAvailable:")) { // 가용량
+                            // 현재 사용량 = 최대 메모리 용량 - 가용 메모리 용량
+                            left = Double.parseDouble(st.nextToken());
+                            ram /= left;  // 사용률 = 현재 사용량 / 최대 용량
 
-                            JSONObject ramObj = new JSONObject();
-                            ramObj.put("ram", ram);
-                            responseDto.resultList.add(ramObj);
+                            String ramStr = Double.toString(ram);
+                            int dotIndex = ramStr.indexOf('.');
+                            ram = Double.parseDouble(ramStr.substring(0, dotIndex + 3));
+
+                            obj.put("ram", ram);
+                            responseDto.resultList.add(obj);
                         }
                         break;
                     case DISK:
-                        st.nextToken(); // 불필요한 토큰 생략
-                        String sizeStr = st.nextToken(); // 전체 용량
-                        String usedStr = st.nextToken(); // 사용량
-                        // 마지막자리 단위(G, M 등) 삭제
-                        Double size = Double.parseDouble(sizeStr.substring(0, sizeStr.length() - 1));
-                        Double used = Double.parseDouble(usedStr.substring(0, usedStr.length() - 1));
-                        disk = used / size; // 현재 사용률
+                        for (int i = 0; i < 4; i++) {
+                            st.nextToken(); // 불필요한 토큰 생략
+                        }
 
-                        st.nextToken(); st.nextToken();
-                        if (st.nextToken().equals("/home")) { // home 디렉터리 장치일 경우
-                            JSONObject diskObj = new JSONObject();
-                            diskObj.put("disk", disk);
-                            responseDto.resultList.add(diskObj);
+                        String diskStr = st.nextToken().trim();
+                        if (st.hasMoreTokens() && "/home".equals(st.nextToken().trim())) { // home 디렉터리 장치일 경우
+                            int index = diskStr.indexOf('%');
+                            if (index != -1) {
+                                Double disk = Double.parseDouble(diskStr.substring(0, index)); // 현재 사용률
+                                obj.put("disk", disk);
+                                responseDto.resultList.add(obj);
+                            }
                         }
                         break;
                     case CPU:
-                        obj.put("CPU", Double.parseDouble(st.nextToken()));
+                        obj.put("CPU", st.nextToken());
                         responseDto.resultList.add(obj);
                         break;
                 }
