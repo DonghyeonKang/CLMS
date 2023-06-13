@@ -11,7 +11,9 @@ SendPublickey()
     local keyName=$4
 
     ssh $hostName@$hostIp "mkdir Keys"
+
     scp ~/Keys/$hostName/$keyName.pub $hostName@$hostIp:~/Keys/ 
+
     ssh $hostName@$hostIp "sh ~/sh/H_SendPublickey.sh $keyName $conName"
 }
 Start SendPublickey
