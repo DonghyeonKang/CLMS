@@ -1,14 +1,11 @@
 package com.example.csws.controller.instance;
 
-import com.example.csws.common.shRunner.ParserResponseDto;
-import com.example.csws.common.shRunner.ShParser;
+import com.example.csws.common.shRunner.ShRunner;
 import com.example.csws.config.auth.PrincipalDetails;
-import com.example.csws.entity.boundPolicy.InboundPolicy;
+import com.example.csws.common.shRunner.ParserResponseDto;
 import com.example.csws.entity.server.ServerDto;
 import com.example.csws.service.server.ServerService;
-import lombok.Getter;
 import org.json.simple.JSONObject;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import com.example.csws.entity.boundPolicy.InboundPolicyDto;
@@ -48,13 +45,19 @@ public class InstanceController {
     private final InboundPolicyService inboundPolicyService;
     private final ServerService serverService;
 
+    private final ShRunner shRunner;
+
     // 인스턴스 시작
     @PostMapping("/start")
-    public JSONObject startInstance(@RequestBody ControlInstanceRequest request) {
-        Boolean result = instanceService.startInstance(request.getInstanceId());
-
+    public JSONObject startInstance(@RequestBody ControlInstanceRequest request, Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String result = instanceService.startInstance(request.getInstanceId(), principalDetails.getUsername());
         JSONObject obj = new JSONObject();
-        obj.put("success", result);
+        if (result.equals("success")) {
+            obj.put("success", true);
+        } else {
+            obj.put("success", false);
+        }
         obj.put("instanceId", request.getInstanceId());
         obj.put("status", "running");
 
@@ -63,8 +66,12 @@ public class InstanceController {
 
     // 인스턴스 재시작
     @PostMapping("/restart")
-    public JSONObject restartInstance(@RequestBody ControlInstanceRequest request) {
-        Boolean result = instanceService.restartInstance(request.getInstanceId());
+    public JSONObject restartInstance(@RequestBody ControlInstanceRequest request, Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String result = instanceService.restartInstance(request.getInstanceId(), principalDetails.getUsername());
+
+        // 쉘 스크립트 실행
+        shRunner.execCommand("H_RestartContainer.sh");
 
         JSONObject obj = new JSONObject();
         obj.put("success", result);
@@ -76,8 +83,12 @@ public class InstanceController {
 
     // 인스턴스 정지
     @PostMapping("/stop")
-    public JSONObject stopInstance(@RequestBody ControlInstanceRequest request) {
-        Boolean result = instanceService.stopInstance(request.getInstanceId());
+    public JSONObject stopInstance(@RequestBody ControlInstanceRequest request, Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String result = instanceService.stopInstance(request.getInstanceId(), principalDetails.getUsername());
+
+        // 쉘 스크립트 실행
+        shRunner.execCommand("H_StopContainer.sh");
 
         JSONObject obj = new JSONObject();
         obj.put("success", result);
@@ -90,8 +101,12 @@ public class InstanceController {
 
     // 인스턴스 삭제
     @PostMapping("/delete")
-    public JSONObject deleteInstance(@RequestBody ControlInstanceRequest request) {
-        Boolean result = instanceService.deleteInstance(request.getInstanceId());
+    public JSONObject deleteInstance(@RequestBody ControlInstanceRequest request, Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String result = instanceService.deleteInstance(request.getInstanceId(), principalDetails.getUsername());
+
+        // 쉘 스크립트 실행
+        shRunner.execCommand("H_StopContainer.sh");
 
         JSONObject obj = new JSONObject();
         obj.put("success", result);
@@ -153,6 +168,12 @@ public class InstanceController {
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(resource);
+    }
+
+    @GetMapping("/detail")
+    public InstanceDto instanceDetail(@RequestParam Integer instanceId) {
+        InstanceDto instanceDto = instanceService.findById(instanceId).get();
+        return instanceDto;
     }
 
     // 본인 혹은 타인(관리자 권한)의 인스턴스 목록 조회(userId)
@@ -318,7 +339,7 @@ public class InstanceController {
         return obj;
     }
 
-    
+
     // 자원 사용량 조회 - 컨테이너(학생)
     @GetMapping("/resource/container")
     public ParserResponseDto checkContainerResource(Authentication authentication, @RequestParam Integer instanceId) {
@@ -332,7 +353,7 @@ public class InstanceController {
 
         // 호스트 계정 이름, 호스트 ip, 컨테이너 이름(유저 이름 + 인스턴스 id)
         ParserResponseDto parserResponseDto = instanceService.checkContainerResource(serverDto.getServerUsername(),
-                        serverDto.getIpv4(), principalDetails.getUsername() + instanceDto.getInstanceId());
+                serverDto.getIpv4(), principalDetails.getUsername() + instanceDto.getInstanceId());
 
         // dto 반환
         return parserResponseDto;
@@ -347,7 +368,7 @@ public class InstanceController {
 
         // 호스트 계정 이름, 호스트 ip
         ParserResponseDto parserResponseDto = instanceService.checkServerResource(serverDto.getServerUsername(),
-                                           serverDto.getIpv4());
+                serverDto.getIpv4());
 
         // dto 반환
         return parserResponseDto;
@@ -362,7 +383,7 @@ public class InstanceController {
 
         // 호스트 계정 이름, 호스트 ip
         ParserResponseDto parserResponseDto = instanceService.printStatusforManager(serverDto.getServerUsername(),
-                                           serverDto.getIpv4());
+                serverDto.getIpv4());
 
         // dto 반환
         return parserResponseDto;
@@ -382,11 +403,9 @@ public class InstanceController {
         ServerDto serverDto = serverService.findById(serverId);
         // 호스트 계정 이름, 호스트 ip, 유저 이름
         ParserResponseDto parserResponseDto = instanceService.printStatusforUser(serverDto.getServerUsername(),
-                                          serverDto.getIpv4(), principalDetails.getUsername());
+                serverDto.getIpv4(), principalDetails.getUsername());
 
         // dto 반환
         return parserResponseDto;
     }
-
-
 }

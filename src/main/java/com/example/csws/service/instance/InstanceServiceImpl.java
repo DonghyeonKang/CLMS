@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,9 @@ public class InstanceServiceImpl implements InstanceService{
     private final EntityManager entityManager;
     private final ShRunner shRunner;
     private final ShParser shParser;
+
+    static StringTokenizer stringTokenizer;
+
     // 컨트롤러에서 이미 인스턴스의 code 필드를 받아왔음을 가정함.
     // DB에서 프로시저를 이용하여 code를 설정할 것이라면 연관된 전체 기능 수정 필요.
     // dto를 entity로 변환 후 save(insert 혹은 update)한 결과값을 컨트롤러에 반환.
@@ -64,6 +68,7 @@ public class InstanceServiceImpl implements InstanceService{
                     Integer.toString(entity.getPort()), "22",
                     username, Integer.toString(entity.getId()),
                     Double.toString(entity.getStorage()), entity.getOs());
+
             if (!shParser.isSuccess(result.get(1).toString())) { // TODO: 실패시 엔티티 삭제해야함
                 instanceRepository.deleteById(entity.getId());
                 return "failure";
@@ -128,7 +133,7 @@ public class InstanceServiceImpl implements InstanceService{
     // 쉘에서 인수로 받는 컨테이너 이름 : instance 테이블의 name + instanceId
     @Transactional
     @Override
-    public Boolean startInstance(int instanceId) {
+    public String startInstance(int instanceId, String username) {
         // instanceId를 이용해서 인스턴스와 서버 정보 가져옴
         Instance entity = instanceRepository.findById(instanceId).get();
         Server baseServer = entity.getServer();
@@ -142,17 +147,23 @@ public class InstanceServiceImpl implements InstanceService{
         // 3 컨테이너_이름(인스턴스 name + 인스턴스 id)을 인수로 넘겨준다.
         try {
             Map result = shRunner.execCommand("StartContainer.sh", baseServer.getServerUsername(),
-                    baseServer.getIpv4(), entity.getName() + entity.getId());
+                    baseServer.getIpv4(), username + entity.getId());
 
-            return shParser.isSuccess(result.get(1).toString());
+            if(shParser.isSuccess(result.get(1).toString())) {
+                System.out.println("success");
+                return "success";
+            }
+
+            System.out.println("failure");
+            return "failure";
         } catch (Exception e) {
             System.out.println(e);
-            return false;
+            return "failure";
         }
     }
     @Transactional
     @Override
-    public Boolean stopInstance(int instanceId) {
+    public String stopInstance(int instanceId, String username) {
         Instance entity = instanceRepository.findById(instanceId).get();
         Server baseServer = entity.getServer();
 
@@ -163,17 +174,21 @@ public class InstanceServiceImpl implements InstanceService{
         // 쉘 실행
         try {
             Map result = shRunner.execCommand("StopContainer.sh", baseServer.getServerUsername(),
-                    baseServer.getIpv4(), entity.getName() + entity.getId());
+                    baseServer.getIpv4(), username + entity.getId());
 
-            return shParser.isSuccess(result.get(1).toString());
+            if(shParser.isSuccess(result.get(1).toString())) {
+                return "success";
+            }
+
+            return "failure";
         } catch (Exception e) {
             System.out.println(e);
-            return false;
+            return "failure";
         }
     }
     @Transactional
     @Override
-    public Boolean restartInstance(int instanceId) {
+    public String restartInstance(int instanceId, String username) {
         Instance entity = instanceRepository.findById(instanceId).get();
         Server baseServer = entity.getServer();
 
@@ -184,17 +199,22 @@ public class InstanceServiceImpl implements InstanceService{
         // 쉘 실행
         try {
             Map result = shRunner.execCommand("RestartContainer.sh", baseServer.getServerUsername(),
-                    baseServer.getIpv4(), entity.getName() + entity.getId());
+                    baseServer.getIpv4(), username + entity.getId());
 
-            return shParser.isSuccess(result.get(1).toString());
+
+            if(shParser.isSuccess(result.get(1).toString())) {
+                return "success";
+            }
+
+            return "failure";
         } catch (Exception e) {
             System.out.println(e);
-            return false;
+            return "failure";
         }
     }
     @Transactional
     @Override
-    public Boolean deleteInstance(int instanceId) {
+    public String deleteInstance(int instanceId, String username) {
         Instance entity = instanceRepository.findById(instanceId).get();
         Server baseServer = entity.getServer();
 
@@ -202,12 +222,18 @@ public class InstanceServiceImpl implements InstanceService{
         try {
             // 인스턴스 제거
             Map result = shRunner.execCommand("RemoveContainer.sh", baseServer.getServerUsername(),
-                    baseServer.getIpv4(), entity.getName() + entity.getId());
+                    baseServer.getIpv4(), username + entity.getId());
 
-            return shParser.isSuccess(result.get(1).toString());
+            if(shParser.isSuccess(result.get(1).toString())) {
+                // db 에서 제거
+                instanceRepository.deleteById(instanceId);
+                return "success";
+            }
+
+            return "failure";
         } catch (Exception e) {
             System.out.println(e);
-            return false;
+            return "failure";
         }
     }
 
