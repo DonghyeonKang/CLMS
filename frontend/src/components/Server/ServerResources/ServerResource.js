@@ -11,15 +11,21 @@ import DiskChart from "./DiskChart";
 const ServerResource = ({server,studentList,serverId}) => {
     const [BASEURL,] = useRecoilState(baseUrl);
     const navigate = useNavigate();
-    const [resources,setResources] = useState({});
+    const [resources,setResources] = useState([]);
+    const [connection, setConnection] = useState('');
 
     //서버 리소스
     useEffect(()=>{
         if(serverId !== '' && serverId !== undefined){
             try {
-              axios.get(BASEURL + `/servers/management/resources?serverId=${serverId}`).then((response)=> setResources(response.data));
+              axios.get(BASEURL + `/instances/resource/server?serverId=${serverId}`).then((response)=> setResources(response.data.resultList));
             } catch (error) {
               console.error(error);
+            }
+            try {
+               axios.get(BASEURL + `/servers/management/resources?serverId=${serverId}`).then((response)=> setConnection(response.data.connection));
+            } catch (error) {
+               console.error(error);
             }
         }
       },[serverId, BASEURL]);
@@ -42,12 +48,12 @@ const ServerResource = ({server,studentList,serverId}) => {
                 <Title>서버 리소스</Title>
                 <Resources>
                     {
-                        (resources.ram) ? <RamChart dataAvg={resources.ram} dataLabel={'램 사용량'}/> : ''
+                        (resources[0]?.ram) ? <RamChart dataAvg={resources[0]?.ram} dataLabel={'램 사용량'}/> : ''
                     }
                     {
-                    (resources.disk) ? <DiskChart dataAvg={resources.disk} dataLabel={'디스크 사용량'}/> : ''
+                    (resources[1]?.disk) ? <DiskChart dataAvg={resources[1]?.disk} dataLabel={'디스크 사용량'}/> : ''
                     }
-                    <Resource>서버 연결 상태 {resources?.connection === 'connected' ? '✅' : '❌'}</Resource>
+                    <Resource>서버 연결 상태 {connection === 'connected' ? '✅' : '❌'}</Resource>
                 </Resources>
             </ResourceList>
         </ServerDetail>
