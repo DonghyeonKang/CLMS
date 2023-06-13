@@ -106,4 +106,16 @@ public class ServerService {
             return e.toString();
         }
     }
+
+    public ServerDto findById(int serverId) {
+        Server server = serverRepository.findById(serverId).get();
+
+        ServerDto dto = new ServerDto();
+        dto.setServerName(server.getName());
+        dto.setServerUsername(server.getServerUsername());
+        dto.setIpv4(server.getIpv4());
+        dto.setDepartmentId(server.getDepartment().getId());
+
+        return dto;
+    }
 }

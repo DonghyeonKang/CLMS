@@ -2,12 +2,13 @@ package com.example.csws.controller.instance;
 
 import com.example.csws.common.shRunner.ShRunner;
 import com.example.csws.config.auth.PrincipalDetails;
-import com.example.csws.config.auth.PrincipalDetailsService;
+import com.example.csws.common.shRunner.ParserResponseDto;
+import com.example.csws.entity.server.ServerDto;
+import com.example.csws.service.server.ServerService;
 import org.json.simple.JSONObject;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import com.example.csws.entity.boundPolicy.InboundPolicyDto;
-import com.example.csws.entity.domain.Domain;
 import com.example.csws.entity.domain.DomainDto;
 import com.example.csws.entity.instance.*;
 import com.example.csws.entity.user.User;
@@ -23,6 +24,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Timestamp;
@@ -40,6 +43,8 @@ public class InstanceController {
     private final InstanceService instanceService;
     private final DomainService domainService;
     private final InboundPolicyService inboundPolicyService;
+    private final ServerService serverService;
+
     private final ShRunner shRunner;
 
     // 인스턴스 시작
@@ -48,13 +53,14 @@ public class InstanceController {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String result = instanceService.startInstance(request.getInstanceId(), principalDetails.getUsername());
         JSONObject obj = new JSONObject();
-        if(result.equals("success")) {
+        if (result.equals("success")) {
             obj.put("success", true);
         } else {
             obj.put("success", false);
         }
         obj.put("instanceId", request.getInstanceId());
         obj.put("status", "running");
+
         return obj;
     }
 
@@ -68,9 +74,10 @@ public class InstanceController {
         shRunner.execCommand("H_RestartContainer.sh");
 
         JSONObject obj = new JSONObject();
-        obj.put("success", true);
+        obj.put("success", result);
         obj.put("instanceId", request.getInstanceId());
         obj.put("status", "restarting");
+
         return obj;
     }
 
@@ -84,9 +91,10 @@ public class InstanceController {
         shRunner.execCommand("H_StopContainer.sh");
 
         JSONObject obj = new JSONObject();
-        obj.put("success", true);
+        obj.put("success", result);
         obj.put("instanceId", request.getInstanceId());
         obj.put("status", "stopped");
+
         return obj;
 
     }
@@ -101,9 +109,10 @@ public class InstanceController {
         shRunner.execCommand("H_StopContainer.sh");
 
         JSONObject obj = new JSONObject();
-        obj.put("success", true);
+        obj.put("success", result);
         obj.put("instanceId", request.getInstanceId());
         obj.put("status", "deleted");
+
         return obj;
     }
 
@@ -114,12 +123,10 @@ public class InstanceController {
         InstanceDto newDto = new InstanceDto();
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         newDto.setUserId(principalDetails.getId());
-        System.out.println(principalDetails.getId());
-
         // request 의 데이터 dto 에 넣기
         newDto.setName(request.getName());
         newDto.setStorage(Double.parseDouble(request.getStorage().substring(0, request.getStorage().length() - 1)));
-        newDto.setKeyName(request.getKeyName());
+        newDto.setKeyName(request.getKeyPair());
         newDto.setOs(request.getOs());
         newDto.setServerId(request.getServerId());
         newDto.setAddress(request.getAddress());
@@ -131,7 +138,7 @@ public class InstanceController {
         newDto.setCreated(curTimestamp);
 
         // 요청에 따라 쉘 스크립트 실행
-        String result = instanceService.createInstance(newDto);
+        String result = instanceService.createInstance(newDto, principalDetails.getUsername());
         if (result.equals("success")) { // 성공적으로 db에 insert 및 쉘 스크립트 실행
             return "redirect:/instances/list/user";
         } else {
@@ -142,14 +149,12 @@ public class InstanceController {
     // 키페어 생성
     @PostMapping("/keypair")
     public ResponseEntity<Resource> createKeypair(@RequestBody Map<String, String> testName) throws IOException {
-        System.out.println("keypair 생성 진입");
-
         // 키페어 생성
-        instanceService.createKeyPair(testName.get("hostName"), testName.get("keyName"));
-
+        instanceService.createKeyPair(testName.get("hostname"), testName.get("name"));
 
         // 파일 경로 지정 (여기서는 resources 디렉토리에 있는 "example.txt" 파일 사용)
-        Resource resource = new ClassPathResource("a.pem");
+        String fileName = testName.get("name") + ".pem";
+        Resource resource = new FileSystemResource("/Users/donghyeonkang/Keys/" + testName.get("hostname") + "/" + fileName);
 
         // 다운로드할 파일의 MIME 타입 설정
         String mimeType = Files.probeContentType(resource.getFile().toPath());
@@ -163,6 +168,12 @@ public class InstanceController {
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(resource);
+    }
+
+    @GetMapping("/detail")
+    public InstanceDto instanceDetail(@RequestParam Integer instanceId) {
+        InstanceDto instanceDto = instanceService.findById(instanceId).get();
+        return instanceDto;
     }
 
     // 본인 혹은 타인(관리자 권한)의 인스턴스 목록 조회(userId)
@@ -252,7 +263,7 @@ public class InstanceController {
         Long newUserId = student.getId();
         newDto.setUserId(newUserId);
 
-        instanceService.createInstance(newDto); // 기존에 존재하던 객체를 업데이트
+        instanceService.createInstance(newDto, "username"); // 기존에 존재하던 객체를 업데이트 TODO: username 받아오는 걸로 수정
 
         return "redirect:listUserid?userId=" + newUserId;   // 해당 학생의 userId로 인스턴스 리스트 조회하는 페이지 이동
     }
@@ -272,13 +283,13 @@ public class InstanceController {
         System.out.println(domainInstanceRequest.getInstanceId());
 
         // 새로운 도메인 추가
-        DomainDto domainDto = domainService.createDomain(
+        CreateDomainDto createDomainDto = domainService.createDomain(
                 new DomainDto(domainInstanceRequest.getDomainName(), domainInstanceRequest.getInstanceId()));
 
         // 저장된 도메인 명 응답
         JSONObject obj = new JSONObject();
-        obj.put("success", true);
-        obj.put("domainName", domainDto.getName());
+        obj.put("success", createDomainDto.getSuccess());
+        obj.put("domainName", createDomainDto.getDomainName());
         return obj;
     }
 
@@ -328,4 +339,73 @@ public class InstanceController {
         return obj;
     }
 
+
+    // 자원 사용량 조회 - 컨테이너(학생)
+    @GetMapping("/resource/container")
+    public ParserResponseDto checkContainerResource(Authentication authentication, @RequestParam Integer instanceId) {
+
+        // 서버 정보를 얻기 위해 인스턴스 엔티티의 serverId 가져오기
+        InstanceDto instanceDto = instanceService.findById(instanceId).get();
+        // 서버 id로 서버 정보 가져오기
+        ServerDto serverDto = serverService.findById(instanceDto.getServerId());
+        // 유저(학생 본인) 정보 가져오기
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+
+        // 호스트 계정 이름, 호스트 ip, 컨테이너 이름(유저 이름 + 인스턴스 id)
+        ParserResponseDto parserResponseDto = instanceService.checkContainerResource(serverDto.getServerUsername(),
+                serverDto.getIpv4(), principalDetails.getUsername() + instanceDto.getInstanceId());
+
+        // dto 반환
+        return parserResponseDto;
+    }
+
+    // 자원 사용량 조회 - 서버(관리자)
+    @GetMapping("/resource/server")
+    public ParserResponseDto checkServerResource(@RequestParam Integer serverId) {
+
+        // 서버 id로 서버 정보 가져오기
+        ServerDto serverDto = serverService.findById(serverId);
+
+        // 호스트 계정 이름, 호스트 ip
+        ParserResponseDto parserResponseDto = instanceService.checkServerResource(serverDto.getServerUsername(),
+                serverDto.getIpv4());
+
+        // dto 반환
+        return parserResponseDto;
+    }
+
+    // 모든 컨테이너 상태 출력(관리자)
+    @GetMapping("/status/container/manager")
+    public ParserResponseDto printStatusforManager(@RequestParam Integer serverId) {
+
+        // 서버 id로 서버 정보 가져오기
+        ServerDto serverDto = serverService.findById(serverId);
+
+        // 호스트 계정 이름, 호스트 ip
+        ParserResponseDto parserResponseDto = instanceService.printStatusforManager(serverDto.getServerUsername(),
+                serverDto.getIpv4());
+
+        // dto 반환
+        return parserResponseDto;
+    }
+
+    // 본인 소유 컨테이너 상태 출력(학생)
+    @GetMapping("/status/container/user")
+    public ParserResponseDto printStatusforUser(Authentication authentication) {
+
+        // 유저(학생 본인) 정보 가져오기
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        // 인스턴스 목록 가져오기
+        List<InstanceDto> dtoList = instanceService.findAllByUserId(principalDetails.getId());
+        // 서버 id 가져오기
+        int serverId = dtoList.get(0).getServerId();
+        // 서버 정보 가져오기
+        ServerDto serverDto = serverService.findById(serverId);
+        // 호스트 계정 이름, 호스트 ip, 유저 이름
+        ParserResponseDto parserResponseDto = instanceService.printStatusforUser(serverDto.getServerUsername(),
+                serverDto.getIpv4(), principalDetails.getUsername());
+
+        // dto 반환
+        return parserResponseDto;
+    }
 }

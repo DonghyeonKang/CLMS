@@ -24,7 +24,7 @@ public class RegisterService {
     final private UniversityRepository universityRepository;
 
     @Transactional
-    public User register(UserDto userDto) {
+    public User register(UserDto userDto, String role) {
         System.out.println("Register Service start");
         // 회원가입 검증절차
         validateRegisterRequest(userDto);
@@ -35,7 +35,13 @@ public class RegisterService {
         University university = universityRepository.getReferenceById(userDto.getUniversityId());
 
         // dto to entity
-        User user = userDto.toEntity(department, university);
+        User user = new User();
+        if(role.equals("USER")) {
+            user = userDto.toUserEntity(department, university);
+        } else {
+            user = userDto.toManagerEntity(department, university);
+        }
+
         // jpa의 save
         return userRepository.save(user);
     }

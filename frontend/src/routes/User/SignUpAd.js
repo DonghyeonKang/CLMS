@@ -89,6 +89,7 @@ const SignUpAd = () => {
         alert('비밀번호를 다시 확인해주세요.');
       }
       else {
+      console.log("실행됨");
         axios.post(BASEURL+'/register/manager', { username: email, password: pw, universityId: UnivStu , departmentId: DeptStu, phone: Tel})
         .then(response => {
           navigate('/login');

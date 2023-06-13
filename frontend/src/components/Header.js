@@ -17,14 +17,25 @@ const Header = () => {
     <HeaderContent>
       <HeaderLogo src={mainlogo} onClick={() => navigate('/')}/>
       <div style={{marginRight:'50px'}}>
-      {(userRole === null) ? 
-        (<HeaderBtn onClick={() => navigate('/login')}>로그인</HeaderBtn>
-        ) : (userRole === 'ROLE_MANAGER') ?
-        (<ButtonGroup>
+      
+      {(userRole === null) ? (
+        /* 비로그인 상태 */
+        <HeaderBtn onClick={() => navigate('/login')}>로그인</HeaderBtn>
+        ) : (userRole === 'ROLE_ADMIN') ? (
+        /* 어드민 */
+        <ButtonGroup>
+          <HeaderBtn onClick={() => navigate('/Admin')}>관리자 인증</HeaderBtn>
+          <HeaderBtn onClick={() => handleLogout()}>로그아웃</HeaderBtn>
+        </ButtonGroup>) : 
+        (userRole === 'ROLE_MANAGER') ? (
+        /* 관리자 */
+        <ButtonGroup>
           <HeaderBtn onClick={() => navigate('/serverResources')}>서버 리소스</HeaderBtn>
           <HeaderBtn onClick={() => navigate('/dashboard')}>대시보드</HeaderBtn>
           <HeaderBtn onClick={() => handleLogout()}>로그아웃</HeaderBtn>
-        </ButtonGroup>) : (<ButtonGroup>
+        </ButtonGroup>) : (
+        /* 학생 */
+        <ButtonGroup>
           <HeaderBtn onClick={() => navigate('/dashboard')}>대시보드</HeaderBtn>
           <HeaderBtn onClick={() => handleLogout()}>로그아웃</HeaderBtn>
         </ButtonGroup>)

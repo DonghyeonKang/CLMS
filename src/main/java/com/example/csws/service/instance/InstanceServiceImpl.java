@@ -1,11 +1,14 @@
 package com.example.csws.service.instance;
 
+import com.example.csws.common.shRunner.ParserResponseDto;
 import com.example.csws.common.shRunner.ShParser;
 import com.example.csws.common.shRunner.ShRunner;
+import com.example.csws.entity.boundPolicy.InboundPolicy;
 import com.example.csws.entity.instance.Instance;
 import com.example.csws.entity.instance.InstanceDto;
 import com.example.csws.entity.server.Server;
 import com.example.csws.entity.user.User;
+import com.example.csws.repository.boundPolicy.InboundPolicyRepository;
 import com.example.csws.repository.instance.InstanceRepository;
 import com.example.csws.repository.server.ServerRepository;
 import com.example.csws.repository.user.UserRepository;
@@ -15,6 +18,10 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 
 @Service
@@ -24,6 +31,7 @@ public class InstanceServiceImpl implements InstanceService{
     private final UserRepository userRepository;
     private final ServerRepository serverRepository;
     private final InstanceRepository instanceRepository;
+    private final InboundPolicyRepository inboundPolicyRepository;
     private final EntityManager entityManager;
     private final ShRunner shRunner;
     private final ShParser shParser;
@@ -39,11 +47,12 @@ public class InstanceServiceImpl implements InstanceService{
     // 5) 용량. 6) 이미지 이름
     @Transactional
     @Override
-    public String createInstance(InstanceDto instanceDto) {
+    public String createInstance(InstanceDto instanceDto, String username) {
         // port null 로 저장
         User newUser = userRepository.getReferenceById(instanceDto.getUserId());
         Server baseServer = serverRepository.findById(instanceDto.getServerId()).get();
         Instance entity = instanceRepository.save(instanceDto.toEntity(newUser, baseServer));
+        username = username.replaceAll("[@.]", "");
 
         // ssh port 값 생성
         int instanceId = entity.getId();
@@ -57,13 +66,35 @@ public class InstanceServiceImpl implements InstanceService{
         try {
             Map result = shRunner.execCommand("CreateContainer.sh", baseServer.getServerUsername(), baseServer.getIpv4(),
                     Integer.toString(entity.getPort()), "22",
-                    entity.getName(), Integer.toString(entity.getId()),
+                    username, Integer.toString(entity.getId()),
                     Double.toString(entity.getStorage()), entity.getOs());
 
-            if(shParser.isSuccess(result.get(1).toString())) {
+            if (!shParser.isSuccess(result.get(1).toString())) { // TODO: 실패시 엔티티 삭제해야함
+                instanceRepository.deleteById(entity.getId());
+                return "failure";
+            }
+        } catch (Exception e) {
+            return e.toString();
+        }
+
+        // 인바운드 추가
+        InboundPolicy inboundPolicy = InboundPolicy.builder()
+                .instance(entity)
+                .instancePort(22)
+                .hostPort(entity.getPort())
+                .build();
+        inboundPolicyRepository.save(inboundPolicy);
+
+        // TODO: 퍼블릭 키 호스트 서버로 전송
+        try {
+            Map result = shRunner.execCommand("SendPublickey.sh", baseServer.getServerUsername(), baseServer.getIpv4(),
+                    username + Integer.toString(entity.getId()),
+                    entity.getKeyName());
+
+            if (shParser.isSuccess(result.get(1).toString())) {
                 return "success";
             }
-
+            instanceRepository.deleteById(entity.getId());
             return "failure";
         } catch (Exception e) {
             return e.toString();
@@ -126,7 +157,8 @@ public class InstanceServiceImpl implements InstanceService{
             System.out.println("failure");
             return "failure";
         } catch (Exception e) {
-            return e.toString();
+            System.out.println(e);
+            return "failure";
         }
     }
     @Transactional
@@ -150,7 +182,8 @@ public class InstanceServiceImpl implements InstanceService{
 
             return "failure";
         } catch (Exception e) {
-            return e.toString();
+            System.out.println(e);
+            return "failure";
         }
     }
     @Transactional
@@ -161,7 +194,7 @@ public class InstanceServiceImpl implements InstanceService{
 
         // db 에서 상태 업데이트
         entityManager.persist(entity);
-        entity.updateStatus("restarting");
+        entity.updateStatus("running");
 
         // 쉘 실행
         try {
@@ -175,7 +208,8 @@ public class InstanceServiceImpl implements InstanceService{
 
             return "failure";
         } catch (Exception e) {
-            return e.toString();
+            System.out.println(e);
+            return "failure";
         }
     }
     @Transactional
@@ -198,17 +232,20 @@ public class InstanceServiceImpl implements InstanceService{
 
             return "failure";
         } catch (Exception e) {
-            return e.toString();
+            System.out.println(e);
+            return "failure";
         }
     }
 
     // csws에 파일이 생성되는 경로 : ~/keys/서버_계정명/사용자_입력_키_이름.pem, pub
     @Override
     public String createKeyPair(String hostName, String keyName) {
-        System.out.println("instance Service 진입");
         try {
             Map result = shRunner.execCommand("CreateKeypairs.sh", hostName, keyName);
-            return "success";
+            if(shParser.isSuccess(result.get(1).toString())) {
+                return "success";
+            }
+            return "failure";
         } catch (Exception e) {
             return e.toString();
         }
@@ -225,4 +262,64 @@ public class InstanceServiceImpl implements InstanceService{
 
         return entity.toDto();
     }
+
+
+    // 에러 발생시 에러 출력 및 false 값 담긴 responseDto 반환
+    // 성공시 데이터 담긴 dto 반환
+    @Override
+    public ParserResponseDto checkContainerResource(String hostName, String hostIp, String containerName) {
+
+        try {
+            Map result = shRunner.execCommand("CheckContainerResource.sh", hostName, hostIp, containerName);
+            return shParser.checkContainerResource(result.get(1).toString());
+        } catch (Exception e) {
+            ParserResponseDto responseDto = new ParserResponseDto();
+            responseDto.setSuccess(false);
+            System.out.println(e.toString());
+            return responseDto;
+        }
+    }
+
+    @Override
+    public ParserResponseDto checkServerResource(String hostName, String hostIp) {
+
+        try {
+            Map result = shRunner.execCommand("CheckServerResource.sh", hostName, hostIp);
+            return shParser.checkContainerResource(result.get(1).toString());
+        } catch (Exception e) {
+            ParserResponseDto responseDto = new ParserResponseDto();
+            responseDto.setSuccess(false);
+            System.out.println(e.toString());
+            return responseDto;
+        }
+    }
+
+    @Override
+    public ParserResponseDto printStatusforManager(String hostName, String hostIp) {
+
+        try {
+            Map result = shRunner.execCommand("PrintStatusforManager.sh", hostName, hostIp);
+            return shParser.checkContainerResource(result.get(1).toString());
+        } catch (Exception e) {
+            ParserResponseDto responseDto = new ParserResponseDto();
+            responseDto.setSuccess(false);
+            System.out.println(e.toString());
+            return responseDto;
+        }
+    }
+
+    @Override
+    public ParserResponseDto printStatusforUser(String hostName, String hostIp, String username) {
+
+        try {
+            Map result = shRunner.execCommand("PrintStatusforUser.sh", hostName, hostIp, username);
+            return shParser.checkContainerResource(result.get(1).toString());
+        } catch (Exception e) {
+            ParserResponseDto responseDto = new ParserResponseDto();
+            responseDto.setSuccess(false);
+            System.out.println(e.toString());
+            return responseDto;
+        }
+    }
+
 }
