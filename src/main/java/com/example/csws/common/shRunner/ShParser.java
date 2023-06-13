@@ -41,46 +41,55 @@ public class ShParser {
             responseDto.success = true;
         }
 
-        responseDto.resultList = new ArrayList<>(); // 반환할 결과 리스트 선언
-        BufferedReader br = new BufferedReader(new StringReader(resultStr)); // 출력 결과 문자열을 버퍼에 담기
-        String line; // 한 줄씩 읽어올 변수
-        int data = 1; // 구분선에 따라 json에 담는 데이터 형식 구분
+        // try 시도와 동시에 출력 결과 문자열을 버퍼에 담기
+        try (BufferedReader br = new BufferedReader(new StringReader(resultStr))) {
+            responseDto.resultList = new ArrayList<>(); // 반환할 결과 리스트 선언
+            String line; // 한 줄씩 읽어올 변수
+            int data = 1; // 구분선에 따라 json에 담는 데이터 형식 구분
 
-        br.readLine(); // 쉘 출력 결과의 1행은 쉘 실행 시작 알림이기 때문에 생략
-        br.readLine(); // 그 다음 행도 쓸모없는 행(칼럼 이름)이기 때문에 생략
+            br.readLine(); // 쉘 출력 결과의 1행은 쉘 실행 시작 알림이기 때문에 생략
+            br.readLine(); // 그 다음 행도 쓸모없는 행(칼럼 이름)이기 때문에 생략
 
-        while (true) {
-            line = br.readLine();
-            if (line == null) { // 읽어온 줄이 null이면 출력의 끝이므로 탈출
-                break;
-            } else if (line.contains("===")) { // 구분선을 포함한 줄은 생략
-                data++; // 구분선 기준으로 정보가 바뀔 때마다 1 증가.
-                br.readLine(); // 구분선 변경 직후의 행은 쓸모없는 행(칼럼 이름)이기 때문에 생략
-                continue;
+            // 1 메모리 / 2 디스크 / 3 CPU 정보에 따라 json에 담는 정보 구분
+            final int MEM = 1;
+            final int DISK = 2;
+            final int CPU = 3;
+
+            while ((line = br.readLine()) != null) {
+                if (line.contains("===")) { // 구분선을 포함한 줄은 생략
+                    data++; // 구분선 기준으로 정보가 바뀔 때마다 1 증가.
+                    br.readLine(); // 구분선 변경 직후의 행은 쓸모없는 행(칼럼 이름)이기 때문에 생략
+                    continue;
+                }
+
+                JSONObject obj = new JSONObject();  // 리스트에 새로 추가할 객체
+
+                switch (data) {
+                    case MEM:
+                        // 1번째 단어 : 메모리 사용량 / 3번째 단어 : 메모리 제한(단위 포함)
+                        String[] words = line.split(" "); // 띄어쓰기 기준으로 단어 구분
+                        obj.put("MEM USAGE", words[0]);
+                        obj.put("LIMIT", words[2]);
+                        responseDto.getResultList().add(obj);
+                        break;
+                    case DISK:
+                        obj.put("Disk Usage", line);
+                        responseDto.getResultList().add(obj);
+                        break;
+                    case CPU:
+                        obj.put("CPU Usage(%)", line);
+                        responseDto.getResultList().add(obj);
+                        break;
+                }
             }
-
-            JSONObject obj = new JSONObject();  // 리스트에 새로 추가할 객체
-
-            switch (data) { // 1 메모리 / 2 디스크 / 3 CPU 정보에 따라 json에 담는 정보 구분
-                case 1:
-                    // 1번째 단어 : 메모리 사용량 / 3번째 단어 : 메모리 제한(단위 포함)
-                    String[] words = line.split(" "); // 띄어쓰기 기준으로 단어 구분
-                    obj.put("MEM USAGE", words[0]);
-                    obj.put("LIMIT", words[2]);
-                    responseDto.getResultList().add(obj);
-                    break;
-                case 2:
-                    obj.put("Disk Usage", line);
-                    responseDto.getResultList().add(obj);
-                    break;
-                case 3:
-                    obj.put("CPU Usage(%)", line);
-                    responseDto.getResultList().add(obj);
-                    break;
-            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
-        br.close(); // 사용 끝난 버퍼 닫기
+        // 리스트의 가장 마지막 객체(CSWS 성공 알림)는 제외
+        int last = responseDto.resultList.size() - 1;
+        responseDto.resultList.remove(last);
+
         return responseDto; // 출력 결과 및 json 리스트가 담긴 dto 객체 반환
     }
 
@@ -94,53 +103,61 @@ public class ShParser {
             responseDto.success = true;
         }
 
-        responseDto.resultList = new ArrayList<>(); // 반환할 결과 리스트 선언
-        BufferedReader br = new BufferedReader(new StringReader(resultStr)); // 출력 결과 문자열을 버퍼에 담기
-        StringTokenizer st; // 버퍼 내용을 각 단어별로 토큰화하는 클래스. " ", \n, \t으로 단어 구분.
-        String line; // 한 줄씩 읽어올 변수
-        int data = 0; // 구분선에 따라 json에 담는 데이터 형식 구분
+        try (BufferedReader br = new BufferedReader(new StringReader(resultStr))) {
+            responseDto.resultList = new ArrayList<>(); // 반환할 결과 리스트 선언
+            StringTokenizer st; // 버퍼 내용을 각 단어별로 토큰화하는 클래스. " ", \n, \t으로 단어 구분.
+            String line; // 한 줄씩 읽어올 변수
+            int data = 0; // 구분선에 따라 json에 담는 데이터 형식 구분
 
-        br.readLine();  // 쉘 출력 결과의 1행은 쉘 실행 시작 알림이기 때문에 생략
-        
-        while (true) {
-            line = br.readLine();
-            if (line == null) { // 읽어온 줄이 null이면 출력의 끝이므로 탈출
-                break;
-            } else if (line.contains("===")) { // 구분선을 포함한 줄은 생략
-                data++; // 구분선 기준으로 정보가 바뀔 때마다 1 증가.
-                if (data == 2) { // Disk 정보로 넘어간 직후, 쓸모없는 행(칼럼 이름) 생략.
-                    br.readLine();
+            br.readLine();  // 쉘 출력 결과의 1행은 쉘 실행 시작 알림이기 때문에 생략
+
+            final int MEM = 1;
+            final int DISK = 2;
+            final int CPU = 3;
+
+            while ((line = br.readLine()) != null) {
+
+                if (line.contains("===")) { // 구분선을 포함한 줄은 생략
+                    data++; // 구분선 기준으로 정보가 바뀔 때마다 1 증가.
+                    if (data == DISK) { // Disk 정보로 넘어간 직후, 쓸모없는 행(칼럼 이름) 생략.
+                        br.readLine();
+                    }
+                    continue;
                 }
-                continue;
-            }
 
-            JSONObject obj = new JSONObject();  // 리스트에 새로 추가할 객체
-            st = new StringTokenizer(line); // 문장을 단어별로 토큰화
+                JSONObject obj = new JSONObject();  // 리스트에 새로 추가할 객체
+                st = new StringTokenizer(line); // 문장을 단어별로 토큰화
 
-            switch (data) { // 1 메모리 / 2 디스크 / 3 CPU 정보에 따라 json에 담는 정보 구분
-                case 1:
-                    // 1번째 토큰 : 메모리 정보 / 2, 3번째 토큰 : 메모리 사용량 + 단위(kb)
-                    String dataName = st.nextToken().split(":")[0]; // 이름 끝에서 ":" 제거
-                    obj.put(dataName, st.nextToken() + " " + st.nextToken());
-                    responseDto.resultList.add(obj); // 반환할 리스트에 추가
-                    break;
-                case 2:
-                    obj.put("Filesystem", st.nextToken());
-                    obj.put("Size", st.nextToken());
-                    obj.put("Used", st.nextToken());
-                    obj.put("Avail", st.nextToken());
-                    obj.put("Use%", st.nextToken());
-                    obj.put("Mounted on", st.nextToken());
-                    responseDto.resultList.add(obj);
-                    break;
-                case 3:
-                    obj.put("CPU", st.nextToken() + "%");
-                    responseDto.resultList.add(obj);
-                    break;
+                switch (data) { // 1 메모리 / 2 디스크 / 3 CPU 정보에 따라 json에 담는 정보 구분
+                    case MEM:
+                        // 1번째 토큰 : 메모리 정보 / 2, 3번째 토큰 : 메모리 사용량 + 단위(kb)
+                        String dataName = st.nextToken().split(":")[0]; // 이름 끝에서 ":" 제거
+                        obj.put(dataName, st.nextToken() + " " + st.nextToken());
+                        responseDto.resultList.add(obj); // 반환할 리스트에 추가
+                        break;
+                    case DISK:
+                        obj.put("Filesystem", st.nextToken());
+                        obj.put("Size", st.nextToken());
+                        obj.put("Used", st.nextToken());
+                        obj.put("Avail", st.nextToken());
+                        obj.put("Use%", st.nextToken());
+                        obj.put("Mounted on", st.nextToken());
+                        responseDto.resultList.add(obj);
+                        break;
+                    case CPU:
+                        obj.put("CPU", st.nextToken() + "%");
+                        responseDto.resultList.add(obj);
+                        break;
+                }
             }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
-        br.close(); // 사용 끝난 버퍼 닫기
+        // 리스트의 가장 마지막 객체(CSWS 성공 알림)는 제외
+        int last = responseDto.resultList.size() - 1;
+        responseDto.resultList.remove(last);
+
         return responseDto; // 출력 결과 및 json 리스트가 담긴 dto 객체 반환
     }
 
@@ -161,7 +178,7 @@ public class ShParser {
             StringTokenizer st;
             String line;
 
-            br.readLine();
+            br.readLine();  // 쉘 실행 알림 1줄, 칼럼명 1줄 생략
             br.readLine();
 
             while ((line = br.readLine()) != null) {
@@ -183,6 +200,10 @@ public class ShParser {
         } catch (IOException e) {
             responseDto.success = false;
         }
+
+        // 리스트의 가장 마지막 객체(CSWS 성공 알림)는 제외
+        int last = responseDto.resultList.size() - 1;
+        responseDto.resultList.remove(last);
 
         return responseDto;
     }
@@ -228,6 +249,10 @@ public class ShParser {
             responseDto.success = false;
             // Optionally, log the error or handle it accordingly.
         }
+
+        // 리스트의 가장 마지막 객체(CSWS 성공 알림)는 제외
+        int last = responseDto.resultList.size() - 1;
+        responseDto.resultList.remove(last);
 
         return responseDto;
     }
