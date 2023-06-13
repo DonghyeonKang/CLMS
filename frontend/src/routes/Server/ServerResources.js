@@ -44,8 +44,8 @@ const ServerResources = () => {
 
     useEffect(()=>{
         const switchServer = data?.filter((i)=>i?.name===server);
-        setServerId(switchServer[0]?.id);
-        if(switchServer[0]?.id !== undefined){
+        setServerId(switchServer[0]?.serverId);
+        if(switchServer[0]?.serverId !== undefined){
             loadStudentList();
         }
     },[data,server]);
