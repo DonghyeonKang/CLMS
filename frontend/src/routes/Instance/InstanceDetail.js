@@ -18,7 +18,7 @@ const InstanceDetail = () => {
   //인스턴스 상세
   useEffect(()=>{
       try {
-        axios.get(BASEURL + `/instances/detail?instanceId=${instanceId}`).then((response)=> setInstanceDetail(response.data.instances[0]));
+        axios.get(BASEURL + `/instances/detail?instanceId=${instanceId}`).then((response)=> setInstanceDetail(response.data));
       } catch (error) {
         console.error(error);
       }

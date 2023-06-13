@@ -157,6 +157,12 @@ public class InstanceController {
                 .body(resource);
     }
 
+    @GetMapping("/detail")
+    public InstanceDto instanceDetail(@RequestParam Integer instanceId) {
+        InstanceDto instanceDto = instanceService.findById(instanceId).get();
+        return instanceDto;
+    }
+
     // 본인 혹은 타인(관리자 권한)의 인스턴스 목록 조회(userId)
     @GetMapping("/list/user")  // 본인의 목록을 조회하면 userId가 null로 넘어온다. null을 허용하기 위한 어노테이션.
     public JSONObject listByUserId(Authentication authentication) {
