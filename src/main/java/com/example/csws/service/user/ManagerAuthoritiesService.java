@@ -4,6 +4,7 @@ import com.example.csws.common.exception.EntityNotFoundException;
 import com.example.csws.common.exception.ErrorCode;
 import com.example.csws.entity.user.ManagerAuthority;
 import com.example.csws.entity.user.ManagerAuthorityDto;
+import com.example.csws.entity.user.ManagerAuthorityResponse;
 import com.example.csws.entity.user.User;
 import com.example.csws.repository.user.ManagerAuthoritiesRepository;
 import com.example.csws.repository.user.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,8 +29,23 @@ public class ManagerAuthoritiesService {
     }
 
     // 관리자 인증 요청 리스트 조회
-    public List<ManagerAuthority> getManagerVerificationList() {
-        return managerAuthoritiesRepository.findAll();
+    public List<ManagerAuthorityResponse> getManagerVerificationList() {
+        List<ManagerAuthority> managerAuthorityList = managerAuthoritiesRepository.findAll();
+
+        List<ManagerAuthorityResponse> managerAuthorityResponses = new ArrayList<>();
+        for(ManagerAuthority managerAuthority : managerAuthorityList) {
+            User user = userRepository.findById(managerAuthority.getUserId()).get();
+
+            managerAuthorityResponses.add(ManagerAuthorityResponse.builder()
+                            .username(user.getUsername())
+                            .university(user.getUniversity().getName())
+                            .department(user.getDepartment().getName())
+                            .phone(user.getPhone())
+                            .status(managerAuthority.getStatus())
+                            .build());
+        }
+
+        return managerAuthorityResponses;
     }
 
     // 관리자 인증 요청 승인

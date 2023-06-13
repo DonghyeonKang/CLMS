@@ -19,11 +19,22 @@ public class UserDto {
     private int universityId;
     private int departmentId;
 
-    public User toEntity(Department department, University university) {
+    public User toUserEntity(Department department, University university) {
         return User.builder()
                 .username(username)
                 .password(password)
                 .roles(role)
+                .department(department)
+                .university(university)
+                .build();
+    }
+
+    public User toManagerEntity(Department department, University university) {
+        return User.builder()
+                .username(username)
+                .password(password)
+                .roles(role)
+                .phone(phone)
                 .department(department)
                 .university(university)
                 .build();

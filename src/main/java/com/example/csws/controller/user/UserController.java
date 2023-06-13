@@ -5,6 +5,7 @@ import com.example.csws.entity.department.DepartmentResponse;
 import com.example.csws.entity.university.UniversityDto;
 import com.example.csws.entity.user.ManagerAuthority;
 import com.example.csws.entity.user.ManagerAuthorityDto;
+import com.example.csws.entity.user.ManagerAuthorityResponse;
 import com.example.csws.entity.user.ResetPasswordRequest;
 import com.example.csws.service.department.DepartmentService;
 import com.example.csws.service.university.UniversityService;
@@ -39,8 +40,7 @@ public class UserController {
 
     // 관리자 인증 요청 리스트 조회
     @GetMapping("/manager/verification")
-    public List<ManagerAuthority> getManagerVerificationList() {
-        System.out.println("controller");
+    public List<ManagerAuthorityResponse> getManagerVerificationList() {
         return managerAuthoritiesService.getManagerVerificationList();
     }
 
