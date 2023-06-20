@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { Button, TextField } from "@mui/material";
 import styled from "styled-components";
 import Header from "../../components/Header";
@@ -21,7 +21,7 @@ const CreateServer = () => {
     };
     const handleServerIP = (event) => {
         const value = event.target.value;
-        setServerData({...serverData, Ipv4:value});
+        setServerData({...serverData, Ipv4:value, departmentId});
         if(IPValidation(value)){
             setIPValidate(true);
         }else {
@@ -36,7 +36,7 @@ const CreateServer = () => {
     };
     const handleServerName = (event) => {
         const value = event.target.value;
-        setServerData({...serverData, serverName:value});
+        setServerData({...serverData, serverName:value, departmentId});
         if(value.length >= 1 && value.length <= 250){
             for(let i=0;i<value.length;i++){
               if(serverNameValidation(value[i])){
@@ -56,10 +56,10 @@ const CreateServer = () => {
       const reg = /[a-zA-Zㄱ-ㅎ가-힣0-9]+/gim;
       return reg.test(str);
     };
-  
+
     const handleServerUserName = (event) => {
         const value = event.target.value;
-        setServerData({...serverData, serverUsername:value});
+        setServerData({...serverData, serverUsername:value, departmentId});
         if(value.length >= 1 && value.length <= 250){
             for(let i=0;i<value.length;i++){
               if(serverUserNamevalidation(value[i])){
@@ -77,10 +77,10 @@ const CreateServer = () => {
     const registerServer = () => {
         if(IPValidate && serverNameValidate && serverUserNamevalidate){
           try{
-          axios.post(BASEURL + '/servers/register/new',{
-            data: serverData
-          }).then((response)=>console.log(response));
-          navigate('/serverResources');
+          axios.post(BASEURL + '/servers/register/new', serverData).then(setTimeout(()=>{
+            redirect('/serverResources')
+            navigate('/serverResources');
+          }));
         } catch (error) {
           console.error(error);
         };
