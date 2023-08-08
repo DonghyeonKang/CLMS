@@ -1,16 +1,17 @@
 package com.example.csws.entity.server;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.json.simple.JSONObject;
+
+import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServerResourceResponse {
-    private String ram;
-    private String disk;
-    private String connection;
+
+    List<JSONObject> resultList;
+    Boolean success;
 }

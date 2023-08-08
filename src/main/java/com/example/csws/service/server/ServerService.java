@@ -1,5 +1,6 @@
 package com.example.csws.service.server;
 
+import com.example.csws.common.shRunner.ParserResponseDto;
 import com.example.csws.common.shRunner.ShParser;
 import com.example.csws.common.shRunner.ShRunner;
 import com.example.csws.entity.department.Department;
@@ -55,13 +56,28 @@ public class ServerService {
 
     // 서버의 리소스 (램, 디스크 사용량, 서버 연결 상태) 조회 -> .sh 실행 후 리턴 값 편집
     public ServerResourceResponse getServerResource(int serverId) {
+        Server baseServer = serverRepository.findById(serverId).get();
         ServerResourceResponse serverResourceResponse = new ServerResourceResponse();
         // serverId 로 쉘스크립트에 필요한 파라미터 DB에서 가져와 만들어야함
 
-        serverResourceResponse.setConnection(getServerConnection(serverId));
-        serverResourceResponse.setDisk(getDiskStatus(serverId));
-        serverResourceResponse.setRam(getRamStatus(serverId));
-        return serverResourceResponse;
+        // 쉘 실행
+        try {
+            // 서버 리소스 확인
+            Map result = shRunner.execCommand("CheckServerResource.sh", baseServer.getServerUsername(),
+                    baseServer.getIpv4());
+
+            // 쉘 리턴 값 파싱
+            ParserResponseDto parserResponseDto = shParser.checkServerResource(result.get(1).toString());
+
+            if(shParser.isSuccess(result.get(1).toString())) {
+                return parserResponseDto.toDto();
+            }
+
+            return null;
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return null;
+        }
     }
 
     // 서버 삭제
@@ -71,20 +87,6 @@ public class ServerService {
         } catch (EmptyResultDataAccessException e) {    // deleteById 가 던질 수 있는 예외 처리
             System.out.println(e.toString());   // 프린트만 하는 게 아니라 exception return 할 수 있도록 처리해야한다.
         }
-    }
-
-    // 디스크 사용량 조회
-    private String getDiskStatus(int serverId) {
-        Server baseServer = serverRepository.findById(serverId).get();
-
-        return "";
-    }
-
-    // 램 사용량 조회
-    private String getRamStatus(int serverId) {
-        Server baseServer = serverRepository.findById(serverId).get();
-
-        return "";
     }
 
     // 서버의 연결 상태 확인 -> .sh 실행 후 리턴 값 편집
