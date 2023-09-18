@@ -109,7 +109,7 @@ public class ServerService {
         }
     }
 
-    public ServerDto findById(int serverId) {
+    public ServerDto findById(Long serverId) {
         Server server = serverRepository.findById(serverId).get();
 
         ServerDto dto = new ServerDto();

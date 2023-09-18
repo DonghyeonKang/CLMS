@@ -24,8 +24,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Timestamp;
@@ -363,7 +361,7 @@ public class InstanceController {
 
     // 자원 사용량 조회 - 서버(관리자)
     @GetMapping("/resource/server")
-    public ParserResponseDto checkServerResource(@RequestParam Integer serverId) {
+    public ParserResponseDto checkServerResource(@RequestParam Long serverId) {
 
         // 서버 id로 서버 정보 가져오기
         ServerDto serverDto = serverService.findById(serverId);
@@ -378,7 +376,7 @@ public class InstanceController {
 
     // 모든 컨테이너 상태 출력(관리자)
     @GetMapping("/status/container/manager")
-    public ParserResponseDto printStatusforManager(@RequestParam Integer serverId) {
+    public ParserResponseDto printStatusforManager(@RequestParam Long serverId) {
 
         // 서버 id로 서버 정보 가져오기
         ServerDto serverDto = serverService.findById(serverId);
@@ -400,7 +398,7 @@ public class InstanceController {
         // 인스턴스 목록 가져오기
         List<InstanceDto> dtoList = instanceService.findAllByUserId(principalDetails.getId());
         // 서버 id 가져오기
-        int serverId = dtoList.get(0).getServerId();
+        Long serverId = dtoList.get(0).getServerId();
         // 서버 정보 가져오기
         ServerDto serverDto = serverService.findById(serverId);
         // 호스트 계정 이름, 호스트 ip, 유저 이름

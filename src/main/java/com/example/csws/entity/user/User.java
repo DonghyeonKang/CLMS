@@ -1,6 +1,7 @@
 package com.example.csws.entity.user;
 
 import com.example.csws.entity.department.Department;
+import com.example.csws.entity.lecture.Lecture;
 import com.example.csws.entity.university.University;
 import lombok.*;
 

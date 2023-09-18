@@ -19,7 +19,7 @@ public class ServerRegisterRequest {
                 .ipv4(ipv4)
                 .serverName(serverName)
                 .serverUsername(serverUsername)
-                .departmentId(Integer.parseInt(departmentId))
+                .departmentId(Long.parseLong(departmentId))
                 .build();
     }
 }

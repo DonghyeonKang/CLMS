@@ -17,7 +17,7 @@ public class UserDto {
     private String role;
     private String phone;
     private int universityId;
-    private int departmentId;
+    private Long departmentId;
 
     public User toUserEntity(Department department, University university) {
         return User.builder()
