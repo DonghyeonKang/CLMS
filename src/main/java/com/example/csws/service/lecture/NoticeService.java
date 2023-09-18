@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface NoticeService {
     public List<NoticeDto> getNoticeList(Long lectureId);
-    public Notice getNoticeDetail(Long noticeId);
+    public NoticeDto getNoticeDetail(Long noticeId);
     public void postingNotice(NoticeDto noticeDto);
     public void deleteNotice(Long noticeId);
 }

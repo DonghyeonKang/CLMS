@@ -29,10 +29,17 @@ public class NoticeServiceImpl implements NoticeService {
 
         return result;
     }
-    public Notice getNoticeDetail(Long noticeId) {
+    public NoticeDto getNoticeDetail(Long noticeId) {
         Notice result = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
-        return result;
+
+        NoticeDto noticeDto = NoticeDto.builder()
+                .title(result.getTitle())
+                .content(result.getContent())
+                .lectureId(result.getLecture().getId())
+                .build();
+
+        return noticeDto;
     }
     public void postingNotice(NoticeDto noticeDto) {
         // 엔티티 생성 시 필요한 주소 값

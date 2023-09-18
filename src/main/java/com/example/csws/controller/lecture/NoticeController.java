@@ -31,7 +31,7 @@ public class NoticeController {
     @GetMapping()
     public JSONObject getNoticeDetail(@RequestParam(value = "id") Long noticeId) {
         // get notice detail
-        Notice result;
+        NoticeDto result;
         result = noticeService.getNoticeDetail(noticeId);
 
         // result to json
