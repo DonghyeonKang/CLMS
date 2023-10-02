@@ -61,7 +61,7 @@ const Login = () => {
     axios.post(BASEURL + '/login', { username: email, password: pw }, {withCredentials: true})
       .then(response => {
         if (response.data.success) {
-          const accessToken = response.headers.authorization;
+          const accessToken = response.headers.Authorization;
           const userRole = response.data.role;
           const deptId = response.data.departmentId;
           localStorage.setItem('accessToken', accessToken);

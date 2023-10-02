@@ -8,5 +8,5 @@ export const userState = atom({
 
 export const baseUrl = atom({
   key: `baseurl`,
-  default: 'http://localhost:8080',
+  default: '3.39.87.171',
 });
