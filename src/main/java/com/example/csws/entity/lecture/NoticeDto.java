@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NoticeDto {
+    private Long noticeId;
     private String title;
     private String content;
     private Long lectureId;

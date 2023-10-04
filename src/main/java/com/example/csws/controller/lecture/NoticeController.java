@@ -28,18 +28,6 @@ public class NoticeController {
         return obj;
     }
 
-    @GetMapping()
-    public JSONObject getNoticeDetail(@RequestParam(value = "id") Long noticeId) {
-        // get notice detail
-        NoticeDto result;
-        result = noticeService.getNoticeDetail(noticeId);
-
-        // result to json
-        JSONObject obj = new JSONObject();
-        obj.put("notice", result);
-        return obj;
-    }
-
     @PostMapping()
     public void postingNotice(@RequestBody PostingNoticeRequest postingNoticeRequest) {
         // request to dto

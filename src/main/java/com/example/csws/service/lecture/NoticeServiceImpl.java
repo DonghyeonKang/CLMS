@@ -29,18 +29,6 @@ public class NoticeServiceImpl implements NoticeService {
 
         return result;
     }
-    public NoticeDto getNoticeDetail(Long noticeId) {
-        Notice result = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
-
-        NoticeDto noticeDto = NoticeDto.builder()
-                .title(result.getTitle())
-                .content(result.getContent())
-                .lectureId(result.getLecture().getId())
-                .build();
-
-        return noticeDto;
-    }
     public void postingNotice(NoticeDto noticeDto) {
         // 엔티티 생성 시 필요한 주소 값
         Lecture lecture = lectureRepository.getReferenceById(noticeDto.getLectureId());

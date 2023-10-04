@@ -23,6 +23,7 @@ public class Notice {
 
     public NoticeDto toDto() {
         return NoticeDto.builder()
+                .noticeId(id)
                 .title(title)
                 .content(content)
                 .lectureId(lecture.getId())
