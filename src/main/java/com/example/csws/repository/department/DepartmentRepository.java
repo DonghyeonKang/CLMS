@@ -10,5 +10,5 @@ public interface DepartmentRepository {
     public List<Department> findAllByUniversity_Id(int universityId);
 
     // department 의 참조값을 넘겨줌
-    public Department getReferenceById(int departmentId);
+    public Department getReferenceById(Long departmentId);
 }

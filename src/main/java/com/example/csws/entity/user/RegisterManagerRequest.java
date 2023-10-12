@@ -19,7 +19,7 @@ public class RegisterManagerRequest {
                 .username(username)
                 .password(password)
                 .phone(phone)
-                .departmentId(Integer.parseInt(departmentId))
+                .departmentId(Long.parseLong(departmentId))
                 .universityId(Integer.parseInt(universityId))
                 .build();
     }

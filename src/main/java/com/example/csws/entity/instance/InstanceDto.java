@@ -24,7 +24,7 @@ public class InstanceDto {
     private String os;
     private Timestamp created;
     private Long userId;
-    private int serverId;
+    private Long serverId;
     private String domainName;
 
     public Instance toEntity(User user, Server server) {

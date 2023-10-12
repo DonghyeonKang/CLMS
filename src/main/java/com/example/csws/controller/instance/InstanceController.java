@@ -24,8 +24,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Timestamp;
@@ -181,6 +179,7 @@ public class InstanceController {
     // 본인 혹은 타인(관리자 권한)의 인스턴스 목록 조회(userId)
     @GetMapping("/list/user")  // 본인의 목록을 조회하면 userId가 null로 넘어온다. null을 허용하기 위한 어노테이션.
     public JSONObject listByUserId(Authentication authentication) {
+        System.out.println(authentication);
         // 로그인된 사용자 객체
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
@@ -269,7 +268,6 @@ public class InstanceController {
 
         return "redirect:listUserid?userId=" + newUserId;   // 해당 학생의 userId로 인스턴스 리스트 조회하는 페이지 이동
     }
-
 
     // 특정 인스턴스의 도메인 조회(instanceId)
     @GetMapping("/domain")
@@ -363,7 +361,7 @@ public class InstanceController {
 
     // 자원 사용량 조회 - 서버(관리자)
     @GetMapping("/resource/server")
-    public ParserResponseDto checkServerResource(@RequestParam Integer serverId) {
+    public ParserResponseDto checkServerResource(@RequestParam Long serverId) {
 
         // 서버 id로 서버 정보 가져오기
         ServerDto serverDto = serverService.findById(serverId);
@@ -378,7 +376,7 @@ public class InstanceController {
 
     // 모든 컨테이너 상태 출력(관리자)
     @GetMapping("/status/container/manager")
-    public ParserResponseDto printStatusforManager(@RequestParam Integer serverId) {
+    public ParserResponseDto printStatusforManager(@RequestParam Long serverId) {
 
         // 서버 id로 서버 정보 가져오기
         ServerDto serverDto = serverService.findById(serverId);
@@ -400,7 +398,7 @@ public class InstanceController {
         // 인스턴스 목록 가져오기
         List<InstanceDto> dtoList = instanceService.findAllByUserId(principalDetails.getId());
         // 서버 id 가져오기
-        int serverId = dtoList.get(0).getServerId();
+        Long serverId = dtoList.get(0).getServerId();
         // 서버 정보 가져오기
         ServerDto serverDto = serverService.findById(serverId);
         // 호스트 계정 이름, 호스트 ip, 유저 이름

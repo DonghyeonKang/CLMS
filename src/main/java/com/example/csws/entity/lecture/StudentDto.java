@@ -1,16 +1,15 @@
-package com.example.csws.entity.department;
+package com.example.csws.entity.lecture;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
-@Data
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
-public class DepartmentResponse {
-
-    private Long id;
+@NoArgsConstructor
+public class StudentDto {
     private String name;
+    private int studentId;
 }

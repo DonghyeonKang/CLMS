@@ -6,12 +6,18 @@ import com.example.csws.config.jwt.JwtAuthorizationFilter;
 import com.example.csws.config.jwt.JwtService;
 import com.example.csws.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity // 시큐리티 활성화 -> 기본 스프링 필터체인에 등록
@@ -20,14 +26,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private final UserRepository userRepository;
 	private final JwtService jwtService;
-	private final CorsConfig corsConfig;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-				.addFilter(corsConfig.corsFilter())
+				.cors().configurationSource(corsConfigurationSource())
+				.and()
 				.csrf().disable()
-				.sessionManagement()
+ 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 				.formLogin().disable()
@@ -46,6 +52,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 					.access("hasRole('ROLE_USER', 'ROLE_MANAGER', 'ROLE_ADMIN')") // user, manager, admin 이 접근 가능
 				.anyRequest() // 다른 모든 요청
 					.permitAll();
+	}
+
+	//CORS 설정
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration config = new CorsConfiguration();
+
+		config.setAllowCredentials(true);
+		config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://csws.kro.kr"));
+		config.setAllowedMethods(Arrays.asList("HEAD","POST","GET","DELETE","PUT"));
+		config.setAllowedHeaders(Arrays.asList("*"));
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+		return source;
 	}
 }
 
