@@ -269,7 +269,6 @@ public class InstanceController {
         return "redirect:listUserid?userId=" + newUserId;   // 해당 학생의 userId로 인스턴스 리스트 조회하는 페이지 이동
     }
 
-
     // 특정 인스턴스의 도메인 조회(instanceId)
     @GetMapping("/domain")
     public JSONObject getDomainName(@RequestParam Integer instanceId) {

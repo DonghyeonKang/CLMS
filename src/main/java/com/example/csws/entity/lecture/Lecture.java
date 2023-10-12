@@ -1,6 +1,7 @@
 package com.example.csws.entity.lecture;
 
 
+import com.example.csws.entity.department.Department;
 import com.example.csws.entity.server.Server;
 import com.example.csws.entity.user.User;
 import lombok.*;
@@ -23,7 +24,16 @@ public class Lecture {
     @ManyToOne(targetEntity = Server.class)
     @JoinColumn(name = "server_id")
     private Server server;
-    @OneToMany
-    @JoinColumn(name = "user_id")
-    private List<User> user = new ArrayList<>();
+
+    @ManyToOne(targetEntity = Department.class)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    public LectureDto toDto() {
+        return LectureDto.builder()
+                .lectureName(lectureName)
+                .introducing(introducing)
+                .id(id)
+                .build();
+    }
 }

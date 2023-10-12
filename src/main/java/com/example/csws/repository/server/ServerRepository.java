@@ -13,6 +13,8 @@ public interface ServerRepository extends JpaRepository<Server, Long> {
     // 학과 id 로 서버 리스트 조회
     public List<Server> findAllByDepartmentId(int departmentId);
 
+    public Optional<Long> findServerIdByDepartmentId(int departmentId);
+
     // 서버 등록
     public Server save(Server server);
 
