@@ -33,4 +33,6 @@ public class LectureUser {
     public void setRefuse() {
         this.permit = "refuse";
     }
+
+
 }

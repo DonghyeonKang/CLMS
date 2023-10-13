@@ -1,9 +1,11 @@
 package com.example.csws.controller.lecture;
 
+import com.example.csws.config.auth.PrincipalDetails;
 import com.example.csws.entity.lecture.*;
 import com.example.csws.service.lecture.LectureService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,20 +57,26 @@ public class LectureController {
 
     // 수강 신청
     @PostMapping("/student")
-    public void signUpClass(@RequestBody ClassRegistrationDto classRegistrationDto) {
+    public void signUpClass(@RequestBody ClassRegistrationDto classRegistrationDto , Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        classRegistrationDto.setUserId(principalDetails.getUser().getId());
         lectureService.signUpClass(classRegistrationDto);
 
     }
 
     // 수강 신청 승인
     @PostMapping("/student/registration")
-    public void approveRegistration(@RequestBody ClassRegistrationDto classRegistrationDto) {
+    public void approveRegistration(@RequestBody ClassRegistrationDto classRegistrationDto, Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        classRegistrationDto.setUserId(principalDetails.getUser().getId());
         lectureService.approveRegistration(classRegistrationDto);
     }
 
     // 수강 신청 거절
     @PostMapping("/student/refusal")
-    public void refuseRegistration(@RequestBody ClassRegistrationDto classRegistrationDto) {
+    public void refuseRegistration(@RequestBody ClassRegistrationDto classRegistrationDto, Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        classRegistrationDto.setUserId(principalDetails.getUser().getId());
         lectureService.refuseRegistration(classRegistrationDto);
     }
 }

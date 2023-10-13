@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,12 +74,16 @@ public class LectureServiceImpl implements LectureService{
     @Override
     public List<StudentDto> getStudentList(Long lectureId) {
         List<LectureUser> lectureUsers = lectureUserRepository.findAllByLectureId(lectureId);
-        List<User> users = lectureUsers.stream().map(LectureUser::getUser).collect(Collectors.toList());
 
+        List<StudentDto> result = new ArrayList<>();
 
-        List<StudentDto> result = users.stream()
-                .map(m -> m.toStudentDto())
-                .collect(Collectors.toList());
+        for (LectureUser lectureUser : lectureUsers) {
+            StudentDto newDto = new StudentDto();
+            newDto.setStudentId(lectureUser.getUser().getId());
+            newDto.setName(lectureUser.getUser().getName());
+            result.add(newDto);
+        }
+
         return result;
     }
 

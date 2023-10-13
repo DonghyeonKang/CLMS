@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 @RestController // rest api 를 다루기 위함
@@ -35,17 +32,32 @@ public class ServerController {
     // 서버 등록 자동화 파일 다운로드
     @GetMapping("/register/installing")
     public void getServerizeFile(HttpServletResponse response) {
-        String filePath = "/Users/donghyeonkang/Desktop/project/csws/src/main/java/com/example/csws/Automation.tar.gz";
-        response.setContentType("application/gzip");
-        response.setHeader("Content-Disposition", "attachment; filename==\"Automation.tar.gz\"");
+        String filePath = "/Automation.tar";
+        File file = new File(filePath);
 
-        try {
-            FileInputStream fis = new FileInputStream(filePath);
-            BufferedInputStream bis = new BufferedInputStream(fis);
-            ServletOutputStream so = response.getOutputStream();
-            BufferedOutputStream bos = new BufferedOutputStream(so);
-        } catch(IOException e) {
-            System.out.println(e.getMessage());
+        if (file.exists()) {
+            response.setContentType("application/x-tar");
+            response.setHeader("Content-Disposition", "attachment; filename=\"Automation.tar\"");
+            try {
+                FileInputStream fis = new FileInputStream(file);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                ServletOutputStream so = response.getOutputStream();
+                BufferedOutputStream bos = new BufferedOutputStream(so);
+
+                int data;
+                while ((data = bis.read()) != -1) {
+                    bos.write(data);
+                }
+
+                bis.close();
+                bos.close();
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // 파일이 존재하지 않을 때 처리
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
