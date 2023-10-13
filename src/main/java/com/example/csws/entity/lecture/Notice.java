@@ -16,6 +16,7 @@ public class Notice {
     private Long id;
     private String title;
     private String content;
+    private String createAt;
 
     @ManyToOne(targetEntity = Lecture.class)
     @JoinColumn(name = "Lecture_id")
@@ -26,6 +27,7 @@ public class Notice {
                 .noticeId(id)
                 .title(title)
                 .content(content)
+                .createAt(createAt)
                 .lectureId(lecture.getId())
                 .build();
     }

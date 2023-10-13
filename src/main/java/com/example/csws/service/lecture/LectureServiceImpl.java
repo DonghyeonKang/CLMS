@@ -124,4 +124,10 @@ public class LectureServiceImpl implements LectureService{
         lectureUserRepository.save(lectureUser);
     }
 
+    public LectureDto findById(Long lectureId) {
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
+
+        return lecture.toDto();
+    }
 }

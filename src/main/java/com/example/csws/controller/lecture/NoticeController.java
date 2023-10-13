@@ -29,16 +29,17 @@ public class NoticeController {
     }
 
     @PostMapping()
-    public void postingNotice(@RequestBody PostingNoticeRequest postingNoticeRequest) {
+    public NoticeDto postingNotice(@RequestBody PostingNoticeRequest postingNoticeRequest) {
         // request to dto
         NoticeDto noticeDto = NoticeDto.builder()
                 .title(postingNoticeRequest.getTitle())
                 .content(postingNoticeRequest.getContent())
                 .lectureId(postingNoticeRequest.getLectureId())
+                .createAt(postingNoticeRequest.getCreateAt())
                 .build();
 
         // create notice
-        noticeService.postingNotice(noticeDto);
+        return noticeService.postingNotice(noticeDto);
     }
 
     @DeleteMapping()

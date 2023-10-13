@@ -33,6 +33,7 @@ public class Lecture {
         return LectureDto.builder()
                 .lectureName(lectureName)
                 .introducing(introducing)
+                .serverId(server.getId())
                 .id(id)
                 .build();
     }

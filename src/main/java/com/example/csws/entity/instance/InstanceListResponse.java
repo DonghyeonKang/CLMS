@@ -3,15 +3,14 @@ package com.example.csws.entity.instance;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateInstanceRequest {
+public class InstanceListResponse {
+    private int instanceId;
     private String name;
-    private String storage;
-    private String keyPair;
-    private String address;
-    private String os;
-    private Long lectureId;
+    private String userName;
 }

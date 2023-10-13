@@ -13,6 +13,7 @@ public class RegisterManagerRequest {
     private String phone;
     private String universityId;
     private String departmentId;
+    private String name;
 
     public UserDto toUserDto() {
         return UserDto.builder()
@@ -21,6 +22,7 @@ public class RegisterManagerRequest {
                 .phone(phone)
                 .departmentId(Long.parseLong(departmentId))
                 .universityId(Integer.parseInt(universityId))
+                .name(name)
                 .build();
     }
 }

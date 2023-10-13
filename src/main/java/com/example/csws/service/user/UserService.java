@@ -40,12 +40,4 @@ public class UserService {  // 사용자 회원가입, 사용자 정보 불러�
         userToUpdate.setPassword(password);
         userRepository.save(userToUpdate);
     }
-
-    // 학생 목록 조회
-    public List<String> getStudentList(int serverId) {
-        // serverId 로 username 조회
-        List<User> userList = instanceRepository.findAllUserByServerId(serverId);
-        List<String> usernames = userList.stream().map(User::getUsername).collect(Collectors.toList());
-        return usernames;
-    }
 }

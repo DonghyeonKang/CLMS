@@ -14,11 +14,13 @@ public class NoticeDto {
     private String title;
     private String content;
     private Long lectureId;
+    private String createAt;
 
     Notice toEntity(Lecture lecture) {
         return Notice.builder()
                 .title(title)
                 .content(content)
+                .createAt(createAt)
                 .lecture(lecture)
                 .build();
     }
