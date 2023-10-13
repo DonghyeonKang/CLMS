@@ -27,6 +27,7 @@ public class InstanceDto {
     private Long userId;
     private Long lectureId;
     private String domainName;
+    private String username;
 
     public Instance toEntity(User user, Lecture lecture) {
         return Instance.builder()

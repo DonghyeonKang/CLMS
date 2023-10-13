@@ -50,6 +50,7 @@ public class Instance {
                 .address(address)
                 .port(port)
                 .keyName(keyName)
+                .username(user.getName())
                 .os(os)
                 .created(created)
                 .userId(user.getId())

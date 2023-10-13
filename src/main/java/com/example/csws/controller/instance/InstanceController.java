@@ -176,53 +176,21 @@ public class InstanceController {
         return instanceDto;
     }
 
-    // 강의 내 본인 인스턴스 id 조회
-    @GetMapping("/list/user")  // 본인의 목록을 조회하면 userId가 null로 넘어온다. null을 허용하기 위한 어노테이션.
-    public JSONObject listByUserId(Authentication authentication) {
-        System.out.println(authentication);
-        // 로그인된 사용자 객체
-        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-
-        // userId로 인스턴스 리스트 받아오기.
-        List<InstanceDto> list = instanceService.findAllByUserId(principalDetails.getId()); // 중복 코드는 따로 메서드로 만들어도 좋음.
-        List<InstanceDto> newList = new ArrayList<>(); // 반환할 리스트
-
-        for (InstanceDto dto : list) {      // 조회 페이지에 띄울 내용만 새 dto 리스트에 담기
-            InstanceDto newDto = new InstanceDto();
-            newDto.setInstanceId(dto.getInstanceId());
-            newDto.setName(dto.getName());
-            newDto.setState(dto.getState());
-            newDto.setAddress(dto.getAddress());
-            newDto.setPort(dto.getPort());
-            newDto.setOs(dto.getOs());
-            newDto.setKeyName(dto.getKeyName());
-            newDto.setStorage(dto.getStorage());
-            newList.add(newDto);
-        }
-
-        JSONObject obj = new JSONObject();
-        obj.put("instances", newList);
-        return obj;
-    }
-
     // 강의 내 인스턴스 목록 조회
-    @GetMapping("/list/server")
-    public JSONObject listByServerId(@RequestParam(value = "lectureId", required = false) Integer lectureId) {
+    @GetMapping("/list")
+    public JSONObject listByLectureId(@RequestParam(value = "lectureId", required = false) Integer lectureId) {
 
-        List<InstanceDto> newList = new ArrayList<>(); // 반환할 리스트
+        List<InstanceListResponse> newList = new ArrayList<>(); // 반환할 리스트
 
         List<InstanceDto> list = instanceService.findAllByLectureId(lectureId.longValue());
         for (InstanceDto dto : list) {      // 조회 페이지에 띄울 내용만 새 dto 리스트에 담기
-            InstanceDto newDto = new InstanceDto();
+            InstanceListResponse newDto = new InstanceListResponse();
             newDto.setInstanceId(dto.getInstanceId());
             newDto.setName(dto.getName());
-            newDto.setState(dto.getState());
-            newDto.setAddress(dto.getAddress());
-            newDto.setPort(dto.getPort());
-            newDto.setOs(dto.getOs());
+            newDto.setUserName("dong");
             newList.add(newDto);
         }
-
+        System.out.println(newList);
         JSONObject obj = new JSONObject();
         obj.put("instances", newList);
         return obj;
@@ -335,6 +303,7 @@ public class InstanceController {
         return parserResponseDto;
     }
 
+    // 강의 내 본인 인스턴스 id 조회
     @GetMapping("/id")
     public JSONObject findMyInstanceId(@RequestParam Long lectureId, Authentication authentication) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
