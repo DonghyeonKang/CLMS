@@ -9,6 +9,6 @@ import java.util.Map;
 
 public interface NoticeService {
     public List<NoticeDto> getNoticeList(Long lectureId);
-    public void postingNotice(NoticeDto noticeDto);
+    public NoticeDto postingNotice(NoticeDto noticeDto);
     public void deleteNotice(Long noticeId);
 }

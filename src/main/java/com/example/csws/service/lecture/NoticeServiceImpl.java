@@ -29,7 +29,7 @@ public class NoticeServiceImpl implements NoticeService {
 
         return result;
     }
-    public void postingNotice(NoticeDto noticeDto) {
+    public NoticeDto postingNotice(NoticeDto noticeDto) {
         // 엔티티 생성 시 필요한 주소 값
         Lecture lecture = lectureRepository.getReferenceById(noticeDto.getLectureId());
 
@@ -37,10 +37,11 @@ public class NoticeServiceImpl implements NoticeService {
         Notice notice = Notice.builder()
                 .title(noticeDto.getTitle())
                 .content(noticeDto.getContent())
+                .createAt(noticeDto.getCreateAt())
                 .lecture(lecture)
                 .build();
 
-        noticeRepository.save(notice);
+        return noticeRepository.save(notice).toDto();
     }
     public void deleteNotice(Long noticeId) {
         noticeRepository.deleteById(noticeId);
