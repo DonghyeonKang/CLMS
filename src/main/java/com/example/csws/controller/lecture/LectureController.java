@@ -16,6 +16,15 @@ import java.util.List;
 public class LectureController {
     private final LectureService lectureService;
 
+    @GetMapping("/my")
+    public JSONObject getMyLectureList(Authentication authentication) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        List<LectureDto> result = lectureService.getMyLectureList(principalDetails.getUser().getId());
+        JSONObject obj = new JSONObject();
+        obj.put("lectureList", result);
+        return obj;
+    }
+
     @GetMapping
     public JSONObject getLectureList(@RequestParam(value = "departmentId") Long departmentId) {
         List<LectureDto> result = lectureService.getLectureList(departmentId);

@@ -43,7 +43,7 @@ public class LectureServiceImpl implements LectureService{
         lectureRepository.save(lecture);
     }
 
-    // 강의 목록
+    // 전체 강의 목록
     @Override
     public List<LectureDto> getLectureList(Long departmentId) {
         List<Lecture> lectureList = lectureRepository.findAllByDepartmentId(departmentId);
@@ -51,6 +51,25 @@ public class LectureServiceImpl implements LectureService{
         List<LectureDto> result = lectureList.stream()
                 .map(m -> m.toDto())
                 .collect(Collectors.toList());
+        return result;
+    }
+
+    // 내 강의 목록
+    public List<LectureDto> getMyLectureList(Long userId) {
+        List<LectureUser> lectureUserList = lectureUserRepository.findAllByUserId(userId);
+        List<LectureDto> result = new ArrayList<>();
+
+        for(LectureUser lectureUser : lectureUserList) {
+            LectureDto newDto = new LectureDto();
+            Lecture lecture = lectureRepository.findById(lectureUser.getLecture().getId())
+                    .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
+
+            newDto.setId(lecture.getId());
+            newDto.setLectureName(lecture.getLectureName());
+            newDto.setNoticeCount(0);
+            newDto.setIntroducing(lecture.getIntroducing());
+            result.add(newDto);
+        }
         return result;
     }
 
