@@ -24,11 +24,12 @@ public class ServerController {
 
     // 서버 등록
     @PostMapping("/register/new")
-    public void registerServer(@RequestBody ServerRegisterRequest serverRegisterRequest) {
+    public ServerDto registerServer(@RequestBody ServerRegisterRequest serverRegisterRequest) {
         System.out.println("Server Controller 시작");
         ServerDto serverDto = serverRegisterRequest.toServerDto();
         System.out.println("ServerDto 생성됨");
-        serverService.registerServer(serverDto);
+        ServerDto result = serverService.registerServer(serverDto);
+        return result;
     }
 
     // 서버 등록 자동화 파일 다운로드

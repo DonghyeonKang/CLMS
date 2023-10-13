@@ -62,8 +62,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		config.setAllowCredentials(true);
 		config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://csws.kro.kr"));
 		config.setAllowedMethods(Arrays.asList("HEAD","POST","GET","DELETE","PUT"));
-		config.setAllowedHeaders(Arrays.asList("*"));
-
+		config.setAllowedHeaders(Arrays.asList("Authorization", "Set-Cookie", "Content-Type", "Referer",
+				"User-Agent", "Accept", "Access-Control-Request-Headers", "Access-Control-Request-Method", "Origin", "Sec-Fetch-Mode", "User-Agent"));
+		config.setExposedHeaders(Arrays.asList("Authorization","Set-Cookie"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);
 		return source;
