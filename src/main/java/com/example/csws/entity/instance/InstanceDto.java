@@ -1,5 +1,6 @@
 package com.example.csws.entity.instance;
 
+import com.example.csws.entity.lecture.Lecture;
 import com.example.csws.entity.server.Server;
 import com.example.csws.entity.user.User;
 import lombok.*;
@@ -24,10 +25,10 @@ public class InstanceDto {
     private String os;
     private Timestamp created;
     private Long userId;
-    private Long serverId;
+    private Long lectureId;
     private String domainName;
 
-    public Instance toEntity(User user, Server server) {
+    public Instance toEntity(User user, Lecture lecture) {
         return Instance.builder()
                 .id(instanceId)
                 .name(name)
@@ -40,7 +41,7 @@ public class InstanceDto {
                 .os(os)
                 .created(created)
                 .user(user)
-                .server(server)
+                .lecture(lecture)
                 .build();
     }
 }

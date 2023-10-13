@@ -13,5 +13,5 @@ public class CreateInstanceRequest {
     private String keyPair;
     private String address;
     private String os;
-    private Long serverId;
+    private Long lectureId;
 }
