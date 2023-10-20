@@ -32,6 +32,7 @@ public class ServerController {
     // 서버 등록 자동화 파일 다운로드
     @GetMapping("/register/installing")
     public void getServerizeFile(HttpServletResponse response) {
+
         String filePath = "/Automation.tar";
         File file = new File(filePath);
 
