@@ -10,4 +10,5 @@ import lombok.*;
 public class StudentDto {
     private String name;
     private Long studentId;
+    private Long id;
 }

@@ -41,11 +41,11 @@ public class LectureController {
 
     @PostMapping
     public JSONObject createLecture(@RequestBody CreateLectureRequest createLectureRequest) {
-        lectureService.createLecture(createLectureRequest);
+        LectureDto lectureDto = lectureService.createLecture(createLectureRequest);
 
         // 저장된 도메인 명 응답
         JSONObject obj = new JSONObject();
-        obj.put("success", true);
+        obj.put("lecture", lectureDto);
         return obj;
     }
 
@@ -54,10 +54,20 @@ public class LectureController {
         lectureService.deleteLecture(lectureId);
     }
 
-    // 수강 신청 학생 목록
+    // 수강 신청된 학생 목록
     @GetMapping("/student")
     public JSONObject getStudentList(@RequestParam(value = "id") Long lectureId) {
         List<StudentDto> result = lectureService.getStudentList(lectureId);
+
+        JSONObject obj = new JSONObject();
+        obj.put("studentList", result);
+        return obj;
+    }
+
+    // 수강 신청한 학생 목록
+    @GetMapping("/student/register")
+    public JSONObject getStudentListForRegister(@RequestParam(value = "id") Long lectureId) {
+        List<StudentDto> result = lectureService.getStudentListForRegister(lectureId);
 
         JSONObject obj = new JSONObject();
         obj.put("studentList", result);

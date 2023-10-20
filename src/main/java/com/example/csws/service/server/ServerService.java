@@ -42,7 +42,7 @@ public class ServerService {
     }
 
     // 학과 서버 목록 조회
-    public List<ServerListResponse> getServerList(int departmentId) {
+    public List<ServerListResponse> getServerList(Long departmentId) {
         List<ServerListResponse> serverList = new ArrayList<>();
 
         List<Server> servers = serverRepository.findAllByDepartmentId(departmentId);

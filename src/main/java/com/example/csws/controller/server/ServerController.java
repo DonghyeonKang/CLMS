@@ -63,8 +63,8 @@ public class ServerController {
 
     // 서버 리스트 조회
     @GetMapping("/management/list")
-    public JSONObject getServerList(HttpServletRequest req) {
-        List<ServerListResponse> serverList =  serverService.getServerList(Integer.parseInt(req.getParameter("departmentId")));
+    public JSONObject getServerList(@RequestParam(value = "departmentId") Long departmentId) {
+        List<ServerListResponse> serverList =  serverService.getServerList(departmentId);
 
         JSONObject obj = new JSONObject();
         obj.put("servers", serverList);

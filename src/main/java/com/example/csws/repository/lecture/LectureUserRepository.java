@@ -15,6 +15,8 @@ public interface LectureUserRepository  extends JpaRepository<LectureUser, Long>
     public LectureUser save(LectureUser lectureUser);
     public List<LectureUser> findAllByLectureId(Long lectureId);
 
+    @Query(value = "select * from lecture_user where lecture_id=?1 and permit='permit'", nativeQuery = true)
+    public List<LectureUser> findAllByPermittedUserId(Long lectureId);
     @Query(value = "select * from lecture_user where user_id=?1 and permit='permit'", nativeQuery = true)
     public List<LectureUser> findAllByUserId(Long userId);
 }

@@ -30,7 +30,7 @@ public class LectureServiceImpl implements LectureService{
 
     // 강의 생성
     @Override
-    public void createLecture(CreateLectureRequest createLectureRequest) {
+    public LectureDto createLecture(CreateLectureRequest createLectureRequest) {
         Server server = serverRepository.getReferenceById(createLectureRequest.getServerId());
         Department department = departmentRepository.getReferenceById(createLectureRequest.getDepartmentId());
 
@@ -40,7 +40,8 @@ public class LectureServiceImpl implements LectureService{
                 .server(server)
                 .department(department)
                 .build();
-        lectureRepository.save(lecture);
+        Lecture newLecture = lectureRepository.save(lecture);
+        return newLecture.toDto();
     }
 
     // 전체 강의 목록
@@ -89,9 +90,27 @@ public class LectureServiceImpl implements LectureService{
         lectureRepository.deleteById(lectureId);
     }
 
-    // 수강 신청 학생 목록
+    // 수강 신청된 학생 목록
     @Override
     public List<StudentDto> getStudentList(Long lectureId) {
+
+        List<LectureUser> lectureUsers = lectureUserRepository.findAllByPermittedUserId(lectureId);
+
+        List<StudentDto> result = new ArrayList<>();
+
+        for (LectureUser lectureUser : lectureUsers) {
+            StudentDto newDto = new StudentDto();
+            newDto.setStudentId(lectureUser.getUser().getId());
+            newDto.setName(lectureUser.getUser().getName());
+            result.add(newDto);
+        }
+
+        return result;
+    }
+
+    // 수강 신청한 학생 목록
+    @Override
+    public List<StudentDto> getStudentListForRegister(Long lectureId) {
         List<LectureUser> lectureUsers = lectureUserRepository.findAllByLectureId(lectureId);
 
         List<StudentDto> result = new ArrayList<>();
@@ -100,6 +119,7 @@ public class LectureServiceImpl implements LectureService{
             StudentDto newDto = new StudentDto();
             newDto.setStudentId(lectureUser.getUser().getId());
             newDto.setName(lectureUser.getUser().getName());
+            newDto.setId((lectureUser.getId()));
             result.add(newDto);
         }
 
