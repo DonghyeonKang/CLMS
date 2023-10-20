@@ -35,9 +35,9 @@ public class ServerController {
     // 서버 등록 자동화 파일 다운로드
     @GetMapping("/register/installing")
     public void getServerizeFile(HttpServletResponse response) {
-        String filePath = "/Users/donghyeonkang/Desktop/project/csws/src/main/java/com/example/csws/Automation.tar.gz";
-        response.setContentType("application/gzip");
-        response.setHeader("Content-Disposition", "attachment; filename==\"Automation.tar.gz\"");
+        String filePath = "src/main/resources/Automation.tar";
+        response.setContentType("application/x-tar");
+        response.setHeader("Content-Disposition", "attachment; filename==\"Automation.tar\"");
 
         try {
             FileInputStream fis = new FileInputStream(filePath);
