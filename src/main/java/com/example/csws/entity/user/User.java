@@ -48,11 +48,4 @@ public class User {
     public void setManager() {
         this.roles = "ROLE_MANAGER";
     }
-
-    public StudentDto toStudentDto() {
-        return StudentDto.builder()
-                .studentId(no)
-                .name(name)
-                .build();
-    }
 }

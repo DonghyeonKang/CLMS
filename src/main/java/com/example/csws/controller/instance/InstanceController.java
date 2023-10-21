@@ -149,19 +149,26 @@ public class InstanceController {
     // 키페어 생성
     @PostMapping("/keypair")
     public ResponseEntity<Resource> createKeypair(@RequestBody Map<String, String> testName) throws IOException {
+
+        String hostName = testName.get("hostName");
+        String keyName = testName.get("keyName");
+
         // 키페어 생성
-        instanceService.createKeyPair(testName.get("hostname"), testName.get("name"));
+        instanceService.createKeyPair(hostName, keyName);
 
         // 파일 경로 지정 (여기서는 resources 디렉토리에 있는 "example.txt" 파일 사용)
-        String fileName = testName.get("name") + ".pem";
-        Resource resource = new FileSystemResource("/Users/donghyeonkang/Keys/" + testName.get("hostname") + "/" + fileName);
+        String fileName = keyName + ".pem";
+        Resource resource = new FileSystemResource("/home/ubuntu/Keys/" + hostName + "/" + fileName);
 
         // 다운로드할 파일의 MIME 타입 설정
-        String mimeType = Files.probeContentType(resource.getFile().toPath());
+        System.out.println(resource.getFile().toPath());
+        // TODO : pem의 mime 타입을 인식 못해서 임시로 하드코딩 함. 추후 수정 필요.
+//        String mimeType = Files.probeContentType(resource.getFile().toPath());
+        String mimeType = "application/x-pem-file";
 
         // 파일 다운로드를 위한 HttpHeaders 설정
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=a.pem");
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
         headers.setContentType(MediaType.parseMediaType(mimeType));
 
         // 파일을 ResponseEntity에 포함하여 반환

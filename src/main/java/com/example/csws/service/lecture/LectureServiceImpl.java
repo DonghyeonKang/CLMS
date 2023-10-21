@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class LectureServiceImpl implements LectureService{
 
     // 강의 생성
     @Override
-    public void createLecture(CreateLectureRequest createLectureRequest) {
+    public LectureDto createLecture(CreateLectureRequest createLectureRequest) {
         Server server = serverRepository.getReferenceById(createLectureRequest.getServerId());
         Department department = departmentRepository.getReferenceById(createLectureRequest.getDepartmentId());
 
@@ -39,10 +40,11 @@ public class LectureServiceImpl implements LectureService{
                 .server(server)
                 .department(department)
                 .build();
-        lectureRepository.save(lecture);
+        Lecture newLecture = lectureRepository.save(lecture);
+        return newLecture.toDto();
     }
 
-    // 강의 목록
+    // 전체 강의 목록
     @Override
     public List<LectureDto> getLectureList(Long departmentId) {
         List<Lecture> lectureList = lectureRepository.findAllByDepartmentId(departmentId);
@@ -50,6 +52,25 @@ public class LectureServiceImpl implements LectureService{
         List<LectureDto> result = lectureList.stream()
                 .map(m -> m.toDto())
                 .collect(Collectors.toList());
+        return result;
+    }
+
+    // 내 강의 목록
+    public List<LectureDto> getMyLectureList(Long userId) {
+        List<LectureUser> lectureUserList = lectureUserRepository.findAllByUserId(userId);
+        List<LectureDto> result = new ArrayList<>();
+
+        for(LectureUser lectureUser : lectureUserList) {
+            LectureDto newDto = new LectureDto();
+            Lecture lecture = lectureRepository.findById(lectureUser.getLecture().getId())
+                    .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
+
+            newDto.setId(lecture.getId());
+            newDto.setLectureName(lecture.getLectureName());
+            newDto.setNoticeCount(0);
+            newDto.setIntroducing(lecture.getIntroducing());
+            result.add(newDto);
+        }
         return result;
     }
 
@@ -69,16 +90,39 @@ public class LectureServiceImpl implements LectureService{
         lectureRepository.deleteById(lectureId);
     }
 
-    // 수강 신청 학생 목록
+    // 수강 신청된 학생 목록
     @Override
     public List<StudentDto> getStudentList(Long lectureId) {
+
+        List<LectureUser> lectureUsers = lectureUserRepository.findAllByPermittedUserId(lectureId);
+
+        List<StudentDto> result = new ArrayList<>();
+
+        for (LectureUser lectureUser : lectureUsers) {
+            StudentDto newDto = new StudentDto();
+            newDto.setStudentId(lectureUser.getUser().getId());
+            newDto.setName(lectureUser.getUser().getName());
+            result.add(newDto);
+        }
+
+        return result;
+    }
+
+    // 수강 신청한 학생 목록
+    @Override
+    public List<StudentDto> getStudentListForRegister(Long lectureId) {
         List<LectureUser> lectureUsers = lectureUserRepository.findAllByLectureId(lectureId);
-        List<User> users = lectureUsers.stream().map(LectureUser::getUser).collect(Collectors.toList());
 
+        List<StudentDto> result = new ArrayList<>();
 
-        List<StudentDto> result = users.stream()
-                .map(m -> m.toStudentDto())
-                .collect(Collectors.toList());
+        for (LectureUser lectureUser : lectureUsers) {
+            StudentDto newDto = new StudentDto();
+            newDto.setStudentId(lectureUser.getUser().getId());
+            newDto.setName(lectureUser.getUser().getName());
+            newDto.setId((lectureUser.getId()));
+            result.add(newDto);
+        }
+
         return result;
     }
 

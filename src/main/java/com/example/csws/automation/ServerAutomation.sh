@@ -57,7 +57,7 @@ Automation(){
     sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT #https 포트 허용
     sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT # DNS 포트 허용
     sudo iptables -A INPUT -p tcp --dport 25 -j ACCEPT # SMTP 포트 허용
-    sudo iptables -A INPUT -p icmp -j ACCEPT # IPCM 허용
+    sudo iptables -A INPUT -p icmp -j ACCEPT # ICMP 허용
     sudo iptables -A INPUT -p udp --sport 53 -j ACCEPT
     sudo iptables -A INPUT -p tcp --sport 80 -j ACCEPT
     sudo iptables -A INPUT -p tcp --sport 443 -j ACCEPT

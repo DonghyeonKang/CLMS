@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface ServerRepository extends JpaRepository<Server, Long> {
     // 학과 id 로 서버 리스트 조회
-    public List<Server> findAllByDepartmentId(int departmentId);
+    public List<Server> findAllByDepartmentId(Long departmentId);
 
     public Optional<Long> findServerIdByDepartmentId(int departmentId);
 
