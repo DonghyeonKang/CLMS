@@ -2,8 +2,11 @@ package com.example.csws.controller.server;
 
 import com.example.csws.entity.server.*;
 import com.example.csws.service.server.ServerService;
+import com.fasterxml.jackson.databind.ser.std.ClassSerializer;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.apache.bcel.util.ClassPath;
 import org.json.simple.JSONObject;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,16 +33,15 @@ public class ServerController {
     }
 
     // 서버 등록 자동화 파일 다운로드
-    @GetMapping("/register/installing")
-    public void getServerizeFile(HttpServletResponse response) {
-
-        String filePath = "/Automation.tar";
-        File file = new File(filePath);
+    // wget http://clms.kro.kr/servers/register/clmsPackage.tar 로 다운로드 할 수 있도록 함
+    @GetMapping("/register/clmsPackage.tar")
+    public void getServerizeFile(HttpServletResponse response) throws IOException {
+        ClassPathResource resource = new ClassPathResource("clmsPackage.tar");
+        File file = resource.getFile();
 
         if (file.exists()) {
             response.setContentType("application/x-tar");
-            response.setHeader("Content-Disposition", "attachment; filename=\"Automation.tar\"");
-            try {
+            response.setHeader("Content-Disposition", "attachment; filename=\"clmsPackage.tar\"");
                 FileInputStream fis = new FileInputStream(file);
                 BufferedInputStream bis = new BufferedInputStream(fis);
                 ServletOutputStream so = response.getOutputStream();
@@ -50,7 +52,6 @@ public class ServerController {
                     bos.write(data);
                 }
 
-                bis.close();
                 bos.close();
                 fis.close();
             } catch (IOException e) {
