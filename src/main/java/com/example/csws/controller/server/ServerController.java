@@ -42,6 +42,7 @@ public class ServerController {
         if (file.exists()) {
             response.setContentType("application/x-tar");
             response.setHeader("Content-Disposition", "attachment; filename=\"clmsPackage.tar\"");
+            try {
                 FileInputStream fis = new FileInputStream(file);
                 BufferedInputStream bis = new BufferedInputStream(fis);
                 ServletOutputStream so = response.getOutputStream();
