@@ -13,5 +13,5 @@ public interface JpaDepartmentRepository extends JpaRepository<Department, Long>
 
     // department 의 참조 값을 넘겨줌
     @Override
-    public Department getReferenceById(int universityId);
+    public Department getReferenceById(Long departmentId);
 }

@@ -15,7 +15,7 @@ public class Department {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String name;
 
     @ManyToOne(targetEntity = University.class) // university 엔티티와 관계를 설정할 것임을 명시

@@ -27,16 +27,22 @@ public class ServerService {
     private final ShParser shParser;
 
     // 서버 등록
-    public void registerServer(ServerDto serverDto) {
+    public ServerDto registerServer(ServerDto serverDto) {
         // department 객체 가져오기
         Department department = departmentRepository.getReferenceById(serverDto.getDepartmentId());
         // dto to entity
         Server server = serverDto.toEntity(department);
-        serverRepository.save(server);
+        Server newServer = serverRepository.save(server);
+        return ServerDto.builder()
+                .serverUsername(newServer.getServerUsername())
+                .ipv4(newServer.getIpv4())
+                .departmentId(newServer.getDepartment().getId())
+                .serverName(newServer.getName())
+                .build();
     }
 
     // 학과 서버 목록 조회
-    public List<ServerListResponse> getServerList(int departmentId) {
+    public List<ServerListResponse> getServerList(Long departmentId) {
         List<ServerListResponse> serverList = new ArrayList<>();
 
         List<Server> servers = serverRepository.findAllByDepartmentId(departmentId);
@@ -109,7 +115,7 @@ public class ServerService {
         }
     }
 
-    public ServerDto findById(int serverId) {
+    public ServerDto findById(Long serverId) {
         Server server = serverRepository.findById(serverId).get();
 
         ServerDto dto = new ServerDto();

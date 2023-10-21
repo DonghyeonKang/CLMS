@@ -13,11 +13,13 @@ public class UserDto {
 
     private int id;
     private String username;
+    private String name;
     private String password;
     private String role;
+    private int no;
     private String phone;
     private int universityId;
-    private int departmentId;
+    private Long departmentId;
 
     public User toUserEntity(Department department, University university) {
         return User.builder()
@@ -25,6 +27,8 @@ public class UserDto {
                 .password(password)
                 .roles(role)
                 .department(department)
+                .no(no)
+                .name(name)
                 .university(university)
                 .build();
     }
@@ -37,6 +41,7 @@ public class UserDto {
                 .phone(phone)
                 .department(department)
                 .university(university)
+                .name(name)
                 .build();
     }
 }

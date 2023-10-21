@@ -1,6 +1,8 @@
 package com.example.csws.entity.user;
 
 import com.example.csws.entity.department.Department;
+import com.example.csws.entity.lecture.Lecture;
+import com.example.csws.entity.lecture.StudentDto;
 import com.example.csws.entity.university.University;
 import lombok.*;
 
@@ -22,8 +24,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
-    private String password;
+    private String username;    // 아이디
+    private String password;    // 비밀번호
+    private String name;    // 이름
+    private int no;  // 학번 직번
     private String roles;
     private String phone;
     @ManyToOne(targetEntity = University.class) // university 엔티티와 관계를 설정할 것임을 명시

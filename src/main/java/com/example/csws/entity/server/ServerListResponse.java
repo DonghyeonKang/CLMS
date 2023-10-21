@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class ServerListResponse {
 
-    private int serverId;
+    private Long serverId;
     private String name;
     private String ipv4;
     private String hostname;

@@ -90,7 +90,7 @@ public class InboundPolicyServiceImpl implements InboundPolicyService{
 
             // 쉘 실행
             Instance entity = instanceRepository.findById(instanceId).get();
-            Server baseServer = entity.getServer();
+            Server baseServer = entity.getLecture().getServer();
             String containerName = entity.getName() + entity.getId();
             String newPorts = "";
 

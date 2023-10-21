@@ -69,10 +69,4 @@ public class UserController {
     public void deleteManagerVerification(@RequestBody Map<String, String> req) {
         managerAuthoritiesService.deleteManagerVerification(req.get("username"));
     }
-
-    // 학생 목록 조회
-    @GetMapping("/student/list")
-    public List<String> getStudentList(HttpServletRequest req) {
-        return userService.getStudentList(Integer.parseInt(req.getParameter("serverId")));  // int 로 형변환해서 조회
-    }
 }

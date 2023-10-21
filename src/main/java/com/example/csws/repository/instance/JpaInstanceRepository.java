@@ -8,5 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface JpaInstanceRepository extends JpaRepository<Instance, Long>, InstanceRepository {
-    public List<User> findAllUserByServerId(int serverId);
+    @Query(value = "select id from instance where user_id=?1 and lecture_id=?2", nativeQuery = true)
+    public int findIdByUserIdAndLectureId(Long userid, Long lectureId);
 }

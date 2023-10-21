@@ -1,6 +1,7 @@
 package com.example.csws.entity.instance;
 
 import com.example.csws.entity.boundPolicy.InboundPolicy;
+import com.example.csws.entity.lecture.Lecture;
 import com.example.csws.entity.server.Server;
 import com.example.csws.entity.user.User;
 import lombok.*;
@@ -33,9 +34,9 @@ public class Instance {
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne(targetEntity = Server.class)
-    @JoinColumn(name = "server_id")
-    private Server server;
+    @ManyToOne(targetEntity = Lecture.class)
+    @JoinColumn(name = "lecture_id")
+    private Lecture lecture;
     @OneToMany(mappedBy = "instance", orphanRemoval = true)
     private List<InboundPolicy> inboundPolicy = new ArrayList<>();
 
@@ -49,10 +50,11 @@ public class Instance {
                 .address(address)
                 .port(port)
                 .keyName(keyName)
+                .username(user.getName())
                 .os(os)
                 .created(created)
                 .userId(user.getId())
-                .serverId(server.getId())
+                .lectureId(lecture.getId())
                 .build();
     }
 
