@@ -100,7 +100,8 @@ public class LectureServiceImpl implements LectureService{
 
         for (LectureUser lectureUser : lectureUsers) {
             StudentDto newDto = new StudentDto();
-            newDto.setStudentId(lectureUser.getUser().getId());
+            newDto.setId((lectureUser.getId()));
+            newDto.setStudentId(lectureUser.getUser().getNo());
             newDto.setName(lectureUser.getUser().getName());
             result.add(newDto);
         }
@@ -117,7 +118,7 @@ public class LectureServiceImpl implements LectureService{
 
         for (LectureUser lectureUser : lectureUsers) {
             StudentDto newDto = new StudentDto();
-            newDto.setStudentId(lectureUser.getUser().getId());
+            newDto.setStudentId(lectureUser.getUser().getNo());
             newDto.setName(lectureUser.getUser().getName());
             newDto.setId((lectureUser.getId()));
             result.add(newDto);
