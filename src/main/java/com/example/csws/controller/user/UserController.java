@@ -1,14 +1,9 @@
 package com.example.csws.controller.user;
 
 import com.example.csws.config.auth.PrincipalDetails;
-import com.example.csws.entity.department.DepartmentResponse;
-import com.example.csws.entity.university.UniversityDto;
-import com.example.csws.entity.user.ManagerAuthority;
 import com.example.csws.entity.user.ManagerAuthorityDto;
 import com.example.csws.entity.user.ManagerAuthorityResponse;
 import com.example.csws.entity.user.ResetPasswordRequest;
-import com.example.csws.service.department.DepartmentService;
-import com.example.csws.service.university.UniversityService;
 import com.example.csws.service.user.ManagerAuthoritiesService;
 import com.example.csws.service.user.UserService;
 import lombok.RequiredArgsConstructor;

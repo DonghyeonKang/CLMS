@@ -10,23 +10,19 @@ import com.example.csws.entity.instance.Instance;
 import com.example.csws.entity.instance.InstanceDto;
 import com.example.csws.entity.lecture.Lecture;
 import com.example.csws.entity.server.Server;
-import com.example.csws.entity.server.ServerDto;
 import com.example.csws.entity.user.User;
 import com.example.csws.repository.boundPolicy.InboundPolicyRepository;
 import com.example.csws.repository.instance.InstanceRepository;
 import com.example.csws.repository.lecture.LectureRepository;
-import com.example.csws.repository.server.ServerRepository;
 import com.example.csws.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 
 @Service
@@ -44,9 +40,13 @@ public class InstanceServiceImpl implements InstanceService{
     @Override
     public int findMyInstanceId(Long userId, Long lectureId) {
         try {
-            int instanceId = instanceRepository.findIdByUserIdAndLectureId(userId, lectureId);
+            int instanceId = instanceRepository.findIdByUserIdAndLectureId(userId, lectureId)
+                    .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
             return instanceId;
         } catch (Exception e) {
+            System.out.println("애러 발생");
+            System.out.println(lectureId);
+            System.out.println(userId);
             return -1;  // 없으면 -1
         }
 
@@ -128,19 +128,16 @@ public class InstanceServiceImpl implements InstanceService{
 
     // 인스턴스 id를 이용해 개별 인스턴스 검색 후 Optional에 넣어서 반환. 객체가 없으면 null이 담겨있음.
     @Override
-    public Optional<InstanceDto> findById(int instanceId) {
-        return Optional.ofNullable(instanceRepository.findById(instanceId).get().toDto());
-    }
-
-    // userId로 엔티티 리스트를 받아온 뒤, 각 엔티티를 dto로 변환하고 dto 리스트에 추가하여 반환.
-    @Override
-    public List<InstanceDto> findAllByUserId(Long userId) {
-        List<Instance> entityList = instanceRepository.findAllByUserId(userId);
-        List<InstanceDto> dtoList = new ArrayList<>();
-        for (Instance entity : entityList) {
-            dtoList.add(entity.toDto());
+    public InstanceDto findById(int instanceId) {
+        try {
+            InstanceDto instanceDto = instanceRepository.findById(instanceId)
+                    .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND))
+                    .toDto();
+            return instanceDto;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new InstanceDto();
         }
-        return dtoList;
     }
 
     // serverId로 전체 리스트 가져오기.

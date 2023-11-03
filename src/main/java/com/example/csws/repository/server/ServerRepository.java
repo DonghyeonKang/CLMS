@@ -1,6 +1,5 @@
 package com.example.csws.repository.server;
 
-import com.example.csws.entity.lecture.Lecture;
 import com.example.csws.entity.server.Server;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

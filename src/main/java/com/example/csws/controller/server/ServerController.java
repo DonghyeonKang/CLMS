@@ -2,12 +2,9 @@ package com.example.csws.controller.server;
 
 import com.example.csws.entity.server.*;
 import com.example.csws.service.server.ServerService;
-import com.fasterxml.jackson.databind.ser.std.ClassSerializer;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.apache.bcel.util.ClassPath;
 import org.json.simple.JSONObject;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
@@ -43,7 +40,7 @@ public class ServerController {
             response.setContentType("application/x-tar");
             response.setHeader("Content-Disposition", "attachment; filename=\"clmsPackage.tar\"");
             try {
-                FileInputStream fis = new FileInputStream(file);
+                 FileInputStream fis = new FileInputStream(file);
                 BufferedInputStream bis = new BufferedInputStream(fis);
                 ServletOutputStream so = response.getOutputStream();
                 BufferedOutputStream bos = new BufferedOutputStream(so);

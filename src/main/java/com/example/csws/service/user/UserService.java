@@ -2,19 +2,11 @@ package com.example.csws.service.user;
 
 import com.example.csws.common.exception.EntityNotFoundException;
 import com.example.csws.common.exception.ErrorCode;
-import com.example.csws.entity.user.ManagerAuthority;
-import com.example.csws.entity.user.ManagerAuthorityDto;
 import com.example.csws.entity.user.User;
 import com.example.csws.repository.instance.InstanceRepository;
-import com.example.csws.repository.user.ManagerAuthoritiesRepository;
 import com.example.csws.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component  // component scan 방식으로 빈 등록. Repository 해도 상관없음
 @RequiredArgsConstructor // private 필드를 생성자 주입으로 DI 구현

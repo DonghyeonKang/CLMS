@@ -1,8 +1,6 @@
 package com.example.csws.repository.lecture;
 
-import com.example.csws.entity.lecture.Lecture;
 import com.example.csws.entity.lecture.LectureUser;
-import com.example.csws.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

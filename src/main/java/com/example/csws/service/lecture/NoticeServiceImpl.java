@@ -1,7 +1,5 @@
 package com.example.csws.service.lecture;
 
-import com.example.csws.common.exception.EntityNotFoundException;
-import com.example.csws.common.exception.ErrorCode;
 import com.example.csws.entity.lecture.Lecture;
 import com.example.csws.entity.lecture.Notice;
 import com.example.csws.entity.lecture.NoticeDto;
@@ -10,7 +8,6 @@ import com.example.csws.repository.lecture.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

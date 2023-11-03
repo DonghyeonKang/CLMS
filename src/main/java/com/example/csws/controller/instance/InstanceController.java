@@ -13,33 +13,27 @@ import org.springframework.core.io.Resource;
 import com.example.csws.entity.boundPolicy.InboundPolicyDto;
 import com.example.csws.entity.domain.DomainDto;
 import com.example.csws.entity.instance.*;
-import com.example.csws.entity.user.User;
 import com.example.csws.service.boundPolicy.InboundPolicyService;
 import com.example.csws.service.domain.DomainService;
 import com.example.csws.service.instance.InstanceService;
-import com.example.csws.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/instances")
 public class InstanceController {
-    private final UserService userService;
     private final InstanceService instanceService;
     private final DomainService domainService;
     private final InboundPolicyService inboundPolicyService;
@@ -150,8 +144,8 @@ public class InstanceController {
     @PostMapping("/keypair")
     public ResponseEntity<Resource> createKeypair(@RequestBody Map<String, String> testName) throws IOException {
 
-        String hostName = testName.get("hostName");
-        String keyName = testName.get("keyName");
+        String hostName = testName.get("hostname");
+        String keyName = testName.get("name");
 
         // 키페어 생성
         instanceService.createKeyPair(hostName, keyName);
@@ -179,7 +173,7 @@ public class InstanceController {
 
     @GetMapping("/detail")
     public InstanceDto instanceDetail(@RequestParam Integer instanceId) {
-        InstanceDto instanceDto = instanceService.findById(instanceId).get();
+        InstanceDto instanceDto = instanceService.findById(instanceId);
         return instanceDto;
     }
 
@@ -278,7 +272,7 @@ public class InstanceController {
     @GetMapping("/resource/container")
     public ParserResponseDto checkContainerResource(Authentication authentication, @RequestParam Integer instanceId) {
         // 서버 정보를 얻기 위해 인스턴스 엔티티의 lecture 가져오기
-        InstanceDto instanceDto = instanceService.findById(instanceId).get();
+        InstanceDto instanceDto = instanceService.findById(instanceId);
 
         // 서버 id로 서버 정보 가져오기
         LectureDto lectureDto = lectureService.findById(instanceId.longValue());

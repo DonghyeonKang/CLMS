@@ -4,13 +4,11 @@ import com.example.csws.common.shRunner.ParserResponseDto;
 import com.example.csws.entity.instance.InstanceDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface InstanceService {
     public int findMyInstanceId(Long userId, Long lectureId);
     public String createInstance(InstanceDto instanceDto, String username);
-    public Optional<InstanceDto> findById(int instanceId);
-    public List<InstanceDto> findAllByUserId(Long userId);
+    public InstanceDto findById(int instanceId);
     public List<InstanceDto> findAllByLectureId(Long lectureId);
     public String startInstance(int instanceId, String username);
     public String stopInstance(int instanceId, String username);

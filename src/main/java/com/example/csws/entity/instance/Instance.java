@@ -2,7 +2,6 @@ package com.example.csws.entity.instance;
 
 import com.example.csws.entity.boundPolicy.InboundPolicy;
 import com.example.csws.entity.lecture.Lecture;
-import com.example.csws.entity.server.Server;
 import com.example.csws.entity.user.User;
 import lombok.*;
 

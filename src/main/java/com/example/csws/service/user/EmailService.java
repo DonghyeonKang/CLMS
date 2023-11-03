@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 

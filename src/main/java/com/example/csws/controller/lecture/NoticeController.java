@@ -1,6 +1,5 @@
 package com.example.csws.controller.lecture;
 
-import com.example.csws.entity.lecture.Notice;
 import com.example.csws.entity.lecture.NoticeDto;
 import com.example.csws.entity.lecture.PostingNoticeRequest;
 import com.example.csws.service.lecture.NoticeService;

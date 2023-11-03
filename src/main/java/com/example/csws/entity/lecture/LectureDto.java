@@ -2,7 +2,6 @@ package com.example.csws.entity.lecture;
 
 import com.example.csws.entity.department.Department;
 import com.example.csws.entity.server.Server;
-import com.example.csws.entity.user.User;
 import lombok.*;
 
 @Getter

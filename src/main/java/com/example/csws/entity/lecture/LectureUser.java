@@ -2,7 +2,6 @@ package com.example.csws.entity.lecture;
 
 import com.example.csws.entity.user.User;
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 

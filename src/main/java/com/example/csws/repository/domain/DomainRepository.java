@@ -1,7 +1,6 @@
 package com.example.csws.repository.domain;
 
 import com.example.csws.entity.domain.Domain;
-import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 

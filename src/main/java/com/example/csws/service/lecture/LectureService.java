@@ -1,7 +1,6 @@
 package com.example.csws.service.lecture;
 
 import com.example.csws.entity.lecture.*;
-import com.example.csws.entity.user.User;
 
 import java.util.List;
 

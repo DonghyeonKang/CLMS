@@ -1,6 +1,5 @@
 package com.example.csws.entity.lecture;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Builder
