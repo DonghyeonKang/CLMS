@@ -112,7 +112,7 @@ public class LectureServiceImpl implements LectureService{
     // 수강 신청한 학생 목록
     @Override
     public List<StudentDto> getStudentListForRegister(Long lectureId) {
-        List<LectureUser> lectureUsers = lectureUserRepository.findAllByLectureId(lectureId);
+        List<LectureUser> lectureUsers = lectureUserRepository.findAllByWaitingUserId(lectureId);
 
         List<StudentDto> result = new ArrayList<>();
 

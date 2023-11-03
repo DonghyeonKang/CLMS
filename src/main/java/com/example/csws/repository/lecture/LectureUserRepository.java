@@ -11,10 +11,15 @@ public interface LectureUserRepository  extends JpaRepository<LectureUser, Long>
     public Optional<LectureUser> findById(Long id);
 
     public LectureUser save(LectureUser lectureUser);
-    public List<LectureUser> findAllByLectureId(Long lectureId);
+
+    @Query(value = "select * from lecture_user where lecture_id=?1 and permit='waiting'", nativeQuery = true)
+    public List<LectureUser> findAllByWaitingUserId(Long lectureId);
 
     @Query(value = "select * from lecture_user where lecture_id=?1 and permit='permit'", nativeQuery = true)
     public List<LectureUser> findAllByPermittedUserId(Long lectureId);
+
     @Query(value = "select * from lecture_user where user_id=?1 and permit='permit'", nativeQuery = true)
     public List<LectureUser> findAllByUserId(Long userId);
 }
+
+//public List<School> find By Ranking Between And Name Containing(int startRanking, int endRanking, String name); // where ranking between
