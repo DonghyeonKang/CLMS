@@ -146,7 +146,7 @@ public class LectureServiceImpl implements LectureService{
 
     // 수강 신청 승인
     @Transactional
-    public void approveRegistration(ClassRegistrationDto classRegistrationDto) {
+    public List<StudentDto> approveRegistration(ClassRegistrationDto classRegistrationDto) {
         // 엔티티 탐색
         LectureUser lectureUser = lectureUserRepository.findById(classRegistrationDto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
@@ -154,12 +154,15 @@ public class LectureServiceImpl implements LectureService{
         // 수정
         lectureUser.setPermit();
         lectureUserRepository.save(lectureUser);
+
+        List<StudentDto> result = getStudentListForRegister(lectureUser.getLecture().getId());
+        return result;
     }
 
 
     // 수강 신청 거절
    @Transactional
-    public void refuseRegistration(ClassRegistrationDto classRegistrationDto) {
+    public List<StudentDto> refuseRegistration(ClassRegistrationDto classRegistrationDto) {
         // 엔티티 탐색
         LectureUser lectureUser = lectureUserRepository.findById(classRegistrationDto.getId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
@@ -167,7 +170,10 @@ public class LectureServiceImpl implements LectureService{
         // 수정
         lectureUser.setRefuse();
         lectureUserRepository.save(lectureUser);
-    }
+
+       List<StudentDto> result = getStudentListForRegister(lectureUser.getLecture().getId());
+       return result;
+   }
 
     public LectureDto findById(Long lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId)

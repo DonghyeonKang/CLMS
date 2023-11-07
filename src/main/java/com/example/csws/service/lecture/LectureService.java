@@ -14,7 +14,7 @@ public interface LectureService {
     public List<StudentDto> getStudentList(Long lectureId);
     public List<StudentDto> getStudentListForRegister(Long lectureId);
     public void signUpClass(ClassRegistrationDto classRegistrationDto);
-    public void approveRegistration(ClassRegistrationDto classRegistrationDto);
-    public void refuseRegistration(ClassRegistrationDto classRegistrationDto);
+    public List<StudentDto> approveRegistration(ClassRegistrationDto classRegistrationDto);
+    public List<StudentDto> refuseRegistration(ClassRegistrationDto classRegistrationDto);
     public LectureDto findById(Long lectureId);
 }
