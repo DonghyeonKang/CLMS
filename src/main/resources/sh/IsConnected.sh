@@ -7,7 +7,7 @@ IsConnected()
     local hostName=$1
     local hostIp=$2 
 
-    ssh -o StrictHostKeyChecking=no $hostName@$hostIp 'cat ~/etc/logo.txt | wall'
+    ssh -o StrictHostKeyChecking=no $hostName@$hostIp -p 9999 'cat ~/etc/logo.txt | wall'
 }
 
 Start IsConnected

@@ -11,7 +11,7 @@ AddNginx()
     local domain=$4
     local port=$5 
 
-    ssh $hostName@$hostIp "bash ~/sh/H_AddNginx.sh $containerName $domain $port $hostIp"    
+    ssh $hostName@$hostIp -p 9999 "bash ~/sh/H_AddNginx.sh $containerName $domain $port $hostIp"    
 }
 Start AddNginx
 AddNginx $1 $2 $3 $4 $5 && CSWSSuccess AddNginx || CSWSFailure AddNginx
