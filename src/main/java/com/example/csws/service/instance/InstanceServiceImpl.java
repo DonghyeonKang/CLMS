@@ -1,27 +1,28 @@
 package com.example.csws.service.instance;
 
+import com.example.csws.common.exception.EntityNotFoundException;
+import com.example.csws.common.exception.ErrorCode;
 import com.example.csws.common.shRunner.ParserResponseDto;
 import com.example.csws.common.shRunner.ShParser;
 import com.example.csws.common.shRunner.ShRunner;
 import com.example.csws.entity.boundPolicy.InboundPolicy;
 import com.example.csws.entity.instance.Instance;
 import com.example.csws.entity.instance.InstanceDto;
+import com.example.csws.entity.lecture.Lecture;
 import com.example.csws.entity.server.Server;
 import com.example.csws.entity.user.User;
 import com.example.csws.repository.boundPolicy.InboundPolicyRepository;
 import com.example.csws.repository.instance.InstanceRepository;
-import com.example.csws.repository.server.ServerRepository;
+import com.example.csws.repository.lecture.LectureRepository;
 import com.example.csws.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 
 @Service
@@ -29,14 +30,27 @@ import java.util.Optional;
 public class InstanceServiceImpl implements InstanceService{
 
     private final UserRepository userRepository;
-    private final ServerRepository serverRepository;
+    private final LectureRepository lectureRepository;
     private final InstanceRepository instanceRepository;
     private final InboundPolicyRepository inboundPolicyRepository;
     private final EntityManager entityManager;
     private final ShRunner shRunner;
     private final ShParser shParser;
 
-    static StringTokenizer stringTokenizer;
+    @Override
+    public int findMyInstanceId(Long userId, Long lectureId) {
+        try {
+            int instanceId = instanceRepository.findIdByUserIdAndLectureId(userId, lectureId)
+                    .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
+            return instanceId;
+        } catch (Exception e) {
+            System.out.println("애러 발생");
+            System.out.println(lectureId);
+            System.out.println(userId);
+            return -1;  // 없으면 -1
+        }
+
+    }
 
     // 컨트롤러에서 이미 인스턴스의 code 필드를 받아왔음을 가정함.
     // DB에서 프로시저를 이용하여 code를 설정할 것이라면 연관된 전체 기능 수정 필요.
@@ -48,12 +62,23 @@ public class InstanceServiceImpl implements InstanceService{
     @Transactional
     @Override
     public String createInstance(InstanceDto instanceDto, String username) {
-        // port null 로 저장
+        // 사용자 데이터 가져오기
         User newUser = userRepository.getReferenceById(instanceDto.getUserId());
-        Server baseServer = serverRepository.findById(instanceDto.getServerId()).get();
-        Instance entity = instanceRepository.save(instanceDto.toEntity(newUser, baseServer));
+
+        // lecture 에 연결된 server 가져오기
+        Lecture lecture = lectureRepository.findById(instanceDto.getLectureId())
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
+        Server baseServer = lecture.getServer();
+        instanceDto.setAddress(baseServer.getIpv4());
+
+        // db에 인스턴스 정보 저장
+        Instance entity = instanceRepository.save(instanceDto.toEntity(newUser, lecture));
         username = username.replaceAll("[@.]", "");
 
+
+        /*
+        *  db 저장 후 원격 쉘 실행
+        * */
         // ssh port 값 생성
         int instanceId = entity.getId();
         int port = 2000 + instanceId;
@@ -103,25 +128,22 @@ public class InstanceServiceImpl implements InstanceService{
 
     // 인스턴스 id를 이용해 개별 인스턴스 검색 후 Optional에 넣어서 반환. 객체가 없으면 null이 담겨있음.
     @Override
-    public Optional<InstanceDto> findById(int instanceId) {
-        return Optional.ofNullable(instanceRepository.findById(instanceId).get().toDto());
-    }
-
-    // userId로 엔티티 리스트를 받아온 뒤, 각 엔티티를 dto로 변환하고 dto 리스트에 추가하여 반환.
-    @Override
-    public List<InstanceDto> findAllByUserId(Long userId) {
-        List<Instance> entityList = instanceRepository.findAllByUserId(userId);
-        List<InstanceDto> dtoList = new ArrayList<>();
-        for (Instance entity : entityList) {
-            dtoList.add(entity.toDto());
+    public InstanceDto findById(int instanceId) {
+        try {
+            InstanceDto instanceDto = instanceRepository.findById(instanceId)
+                    .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND))
+                    .toDto();
+            return instanceDto;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new InstanceDto();
         }
-        return dtoList;
     }
 
     // serverId로 전체 리스트 가져오기.
     @Override
-    public List<InstanceDto> findAllByServerId(int serverId) {
-        List<Instance> entityList = instanceRepository.findAllByServerId(serverId);
+    public List<InstanceDto> findAllByLectureId(Long lectureId) {
+        List<Instance> entityList = instanceRepository.findAllByLectureId(lectureId);
         List<InstanceDto> dtoList = new ArrayList<>();
         for (Instance entity : entityList) {
             dtoList.add(entity.toDto());
@@ -136,7 +158,7 @@ public class InstanceServiceImpl implements InstanceService{
     public String startInstance(int instanceId, String username) {
         // instanceId를 이용해서 인스턴스와 서버 정보 가져옴
         Instance entity = instanceRepository.findById(instanceId).get();
-        Server baseServer = entity.getServer();
+        Server baseServer = entity.getLecture().getServer();
 
         // db 에서 상태 업데이트
         entityManager.persist(entity);
@@ -165,7 +187,7 @@ public class InstanceServiceImpl implements InstanceService{
     @Override
     public String stopInstance(int instanceId, String username) {
         Instance entity = instanceRepository.findById(instanceId).get();
-        Server baseServer = entity.getServer();
+        Server baseServer = entity.getLecture().getServer();
 
         // db 에서 상태 업데이트
         entityManager.persist(entity);
@@ -190,7 +212,7 @@ public class InstanceServiceImpl implements InstanceService{
     @Override
     public String restartInstance(int instanceId, String username) {
         Instance entity = instanceRepository.findById(instanceId).get();
-        Server baseServer = entity.getServer();
+        Server baseServer = entity.getLecture().getServer();
 
         // db 에서 상태 업데이트
         entityManager.persist(entity);
@@ -216,7 +238,7 @@ public class InstanceServiceImpl implements InstanceService{
     @Override
     public String deleteInstance(int instanceId, String username) {
         Instance entity = instanceRepository.findById(instanceId).get();
-        Server baseServer = entity.getServer();
+        Server baseServer = entity.getLecture().getServer();
 
         // 쉘 실행
         try {
@@ -251,19 +273,6 @@ public class InstanceServiceImpl implements InstanceService{
         }
     }
 
-    // userId가 수정되어있는 dto를 컨트롤러에서 받은 뒤 엔티티로 변환해 save(update).
-    // dto 내부의 새로운 user의 email로 user 엔티티 조회 후 toEntity() 메서드 파라미터로 넘겨주기.
-    @Override
-    public InstanceDto changeUserid(InstanceDto instanceDto) {
-        // getReferenceById 메서드에 필요한 인자는 Long인데 우리가 설정한 엔티티는 id가 int로 되어있음.
-        User newUser = userRepository.getReferenceById((long) instanceDto.getUserId());
-        Server baseServer = serverRepository.findById(instanceDto.getServerId()).get();
-        Instance entity = instanceRepository.save(instanceDto.toEntity(newUser, baseServer));
-
-        return entity.toDto();
-    }
-
-
     // 에러 발생시 에러 출력 및 false 값 담긴 responseDto 반환
     // 성공시 데이터 담긴 dto 반환
     @Override
@@ -293,33 +302,4 @@ public class InstanceServiceImpl implements InstanceService{
             return responseDto;
         }
     }
-
-    @Override
-    public ParserResponseDto printStatusforManager(String hostName, String hostIp) {
-
-        try {
-            Map result = shRunner.execCommand("PrintStatusforManager.sh", hostName, hostIp);
-            return shParser.checkContainerResource(result.get(1).toString());
-        } catch (Exception e) {
-            ParserResponseDto responseDto = new ParserResponseDto();
-            responseDto.setSuccess(false);
-            System.out.println(e.toString());
-            return responseDto;
-        }
-    }
-
-    @Override
-    public ParserResponseDto printStatusforUser(String hostName, String hostIp, String username) {
-
-        try {
-            Map result = shRunner.execCommand("PrintStatusforUser.sh", hostName, hostIp, username);
-            return shParser.checkContainerResource(result.get(1).toString());
-        } catch (Exception e) {
-            ParserResponseDto responseDto = new ParserResponseDto();
-            responseDto.setSuccess(false);
-            System.out.println(e.toString());
-            return responseDto;
-        }
-    }
-
 }

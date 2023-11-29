@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class Server {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String name;
     private String ipv4;
     private String serverUsername;

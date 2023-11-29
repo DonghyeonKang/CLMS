@@ -24,7 +24,7 @@ public class PrincipalDetails implements UserDetails {
         return user.getId();
     }
     public String getRole() { return user.getRoles(); }
-    public int getDepartmentId() {
+    public Long getDepartmentId() {
         Department department = user.getDepartment();
         return department.getId();
     }

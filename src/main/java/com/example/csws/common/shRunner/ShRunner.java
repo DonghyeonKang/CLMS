@@ -16,7 +16,7 @@ public class ShRunner {
         Map<Integer, String> map = new HashMap<>();
 
         // making shell command
-        String baseStrShellScriptPath = "sh src/main/java/com/example/CSWS/sh/";
+        String baseStrShellScriptPath = "sh /home/ubuntu/sh/";
         String shellScriptPath = baseStrShellScriptPath + Arrays.toString(str).replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(",", "");
         String baseStrShellPath = "/bin/bash";
 

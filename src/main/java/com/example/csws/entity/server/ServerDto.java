@@ -12,7 +12,7 @@ public class ServerDto {
     private String ipv4;
     private String serverName;
     private String serverUsername;
-    private int departmentId;
+    private Long departmentId;
     public Server toEntity(Department department) {
         return Server.builder()
                 .name(serverName)

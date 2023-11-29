@@ -1,7 +1,6 @@
 package com.example.csws.entity.server;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +18,7 @@ public class ServerRegisterRequest {
                 .ipv4(ipv4)
                 .serverName(serverName)
                 .serverUsername(serverUsername)
-                .departmentId(Integer.parseInt(departmentId))
+                .departmentId(Long.parseLong(departmentId))
                 .build();
     }
 }

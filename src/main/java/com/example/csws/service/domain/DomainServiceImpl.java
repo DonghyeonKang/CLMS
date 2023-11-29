@@ -44,7 +44,7 @@ public class DomainServiceImpl implements DomainService {
     public CreateDomainDto createDomain(DomainDto domainDto) {
         // instance 의 참조값 가져오기
         Instance entity = instanceRepository.findById(domainDto.getInstanceId()).get();
-        Server baseServer = entity.getServer();
+        Server baseServer = entity.getLecture().getServer();
 
         // 쉘 실행
         try {
@@ -80,7 +80,7 @@ public class DomainServiceImpl implements DomainService {
     public Boolean deleteDomain(DomainDto domainDto) {
         // instance 의 참조값 가져오기
         Instance entity = instanceRepository.findById(domainDto.getInstanceId()).get();
-        Server baseServer = entity.getServer();
+        Server baseServer = entity.getLecture().getServer();
 
         // 쉘 실행
         try {

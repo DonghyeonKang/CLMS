@@ -1,14 +1,9 @@
 package com.example.csws.controller.user;
 
 import com.example.csws.config.auth.PrincipalDetails;
-import com.example.csws.entity.department.DepartmentResponse;
-import com.example.csws.entity.university.UniversityDto;
-import com.example.csws.entity.user.ManagerAuthority;
 import com.example.csws.entity.user.ManagerAuthorityDto;
 import com.example.csws.entity.user.ManagerAuthorityResponse;
 import com.example.csws.entity.user.ResetPasswordRequest;
-import com.example.csws.service.department.DepartmentService;
-import com.example.csws.service.university.UniversityService;
 import com.example.csws.service.user.ManagerAuthoritiesService;
 import com.example.csws.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -68,11 +63,5 @@ public class UserController {
     @PostMapping("/manager/verification/delete")
     public void deleteManagerVerification(@RequestBody Map<String, String> req) {
         managerAuthoritiesService.deleteManagerVerification(req.get("username"));
-    }
-
-    // 학생 목록 조회
-    @GetMapping("/student/list")
-    public List<String> getStudentList(HttpServletRequest req) {
-        return userService.getStudentList(Integer.parseInt(req.getParameter("serverId")));  // int 로 형변환해서 조회
     }
 }

@@ -3,7 +3,6 @@ package com.example.csws.config.jwt;
 import com.example.csws.common.exception.ErrorCode;
 import com.example.csws.config.LoginRequestDto;
 import com.example.csws.config.auth.PrincipalDetails;
-import com.example.csws.repository.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

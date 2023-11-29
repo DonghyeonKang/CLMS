@@ -1,18 +1,14 @@
 package com.example.csws.config.jwt;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.csws.common.exception.CustomJwtException;
-import com.example.csws.common.exception.JwtErrorCode;
 import com.example.csws.config.auth.PrincipalDetails;
 import com.example.csws.entity.user.User;
 import com.example.csws.repository.user.UserRepository;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

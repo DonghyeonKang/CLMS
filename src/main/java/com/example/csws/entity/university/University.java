@@ -1,11 +1,6 @@
 package com.example.csws.entity.university;
 
-import com.example.csws.entity.department.Department;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.*;
 
 @Entity
