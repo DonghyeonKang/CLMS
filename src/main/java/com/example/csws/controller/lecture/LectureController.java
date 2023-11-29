@@ -80,22 +80,29 @@ public class LectureController {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         classRegistrationDto.setUserId(principalDetails.getUser().getId());
         lectureService.signUpClass(classRegistrationDto);
-
     }
 
     // 수강 신청 승인
     @PostMapping("/student/registration")
-    public void approveRegistration(@RequestBody ClassRegistrationDto classRegistrationDto, Authentication authentication) {
+    public JSONObject approveRegistration(@RequestBody ClassRegistrationDto classRegistrationDto, Authentication authentication) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         classRegistrationDto.setUserId(principalDetails.getUser().getId());
-        lectureService.approveRegistration(classRegistrationDto);
+        List<StudentDto> result = lectureService.approveRegistration(classRegistrationDto);
+
+        JSONObject obj = new JSONObject();
+        obj.put("studentList", result);
+        return obj;
     }
 
     // 수강 신청 거절
     @PostMapping("/student/refusal")
-    public void refuseRegistration(@RequestBody ClassRegistrationDto classRegistrationDto, Authentication authentication) {
+    public JSONObject refuseRegistration(@RequestBody ClassRegistrationDto classRegistrationDto, Authentication authentication) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         classRegistrationDto.setUserId(principalDetails.getUser().getId());
-        lectureService.refuseRegistration(classRegistrationDto);
+        List<StudentDto> result = lectureService.refuseRegistration(classRegistrationDto);
+
+        JSONObject obj = new JSONObject();
+        obj.put("studentList", result);
+        return obj;
     }
 }
