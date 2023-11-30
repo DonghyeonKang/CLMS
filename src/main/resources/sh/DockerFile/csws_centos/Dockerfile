@@ -27,7 +27,7 @@ RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
 RUN sed -ri 's/^#?PubkeyAuthentication\s+.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
 RUN sed -ri 's/^#?PasswordAuthentication\s+.*/PasswordAuthentication no/' /etc/ssh/sshd_config
 RUN sed -ri 's/^#?AuthorizedKeysFile\s+.*/AuthorizedKeysFile      \/home\/csws\/.ssh\/authorized_keys/' /etc/ssh/sshd_config
-RUN sed -ri 's/^#?Port\s+.*/Port 9999/' /etc/ssh/sshd_config
+RUN sed -ri 's/^#?Port\s+.*/Port 22/' /etc/ssh/sshd_config
 
 RUN mkdir -p /home/csws/.ssh
 RUN touch /home/csws/.ssh/authorized_keys
