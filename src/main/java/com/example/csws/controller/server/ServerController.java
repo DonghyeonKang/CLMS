@@ -33,8 +33,8 @@ public class ServerController {
     // wget http://clms.kro.kr/servers/register/clmsPackage.tar 로 다운로드 할 수 있도록 함
     @GetMapping("/register/clmsPackage.tar")
     public void getServerizeFile(HttpServletResponse response) throws IOException {
-        ClassPathResource resource = new ClassPathResource("clmsPackage.tar");
-        File file = resource.getFile();
+        // ClassPathResource resource = new ClassPathResource("clmsPackage.tar");
+        File file = new File("/home/ubuntu/clmsPackage.tar");
 
         if (file.exists()) {
             response.setContentType("application/x-tar");

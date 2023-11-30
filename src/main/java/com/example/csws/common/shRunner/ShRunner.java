@@ -16,7 +16,7 @@ public class ShRunner {
         Map<Integer, String> map = new HashMap<>();
 
         // making shell command
-        String baseStrShellScriptPath = "sh src/main/resources/sh/";     // TODO 로컬 테스트를 위해 변경한 path 임
+        String baseStrShellScriptPath = "sh /home/ubuntu/sh/";     // TODO 로컬 테스트를 위해 변경한 path 임
         String shellScriptPath = baseStrShellScriptPath + Arrays.toString(str).replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(",", "");
         String baseStrShellPath = "/bin/bash";
 

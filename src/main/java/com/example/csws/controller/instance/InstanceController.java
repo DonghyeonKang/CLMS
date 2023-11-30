@@ -120,7 +120,7 @@ public class InstanceController {
         // request 의 데이터 dto 에 넣기
         newDto.setName(request.getName());
         newDto.setStorage(Double.parseDouble(request.getStorage().substring(0, request.getStorage().length() - 1)));
-        newDto.setKeyName(request.getKeyPair());
+        newDto.setKeyName(request.getKeyName());
         newDto.setOs(request.getOs());
         newDto.setLectureId(request.getLectureId());
 
