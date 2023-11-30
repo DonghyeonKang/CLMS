@@ -18,7 +18,7 @@ TransferOwnersip()
 
     local containerName=$owner$code
 
-    ssh $hostName@$hostIp "bash ~/sh/H_TransferOwnership.sh $3 $4 $5 $6 $7 $8 "    
+    ssh $hostName@$hostIp -p 9999 "bash ~/sh/H_TransferOwnership.sh $3 $4 $5 $6 $7 $8 "    
 }
 Start TransferOwnersip
 TransferOwnersip $1 $2 $3 $4 $5 $6 $7 $8 && CSWSSuccess TransferOwnersip || CSWSFailure TransferOwnersip
