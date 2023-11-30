@@ -8,7 +8,7 @@ Automation(){
 
     echo "$passwd" | sudo -S sed -i -r -e '/# User privilege specification/a\'"$USER"'\tALL=NOPASSWD:\tALL' /etc/sudoers
 
-    # xfs ì°¾ì•„ì„œ fstabê³¼ grub íŒŒì¼ì„ pquotaë¡œ ë°”ê¾¸ê¸°
+    # xfs ì°¾ì•„?„œ fstabê³? grub ?ŒŒ?¼?„ pquotaë¡? ë°”ê¾¸ê¸?
     #fstab
     sudo sed -ie 's@/home xfs defaults 0 1@/home xfs pquota 0 1@g' /etc/fstab
     # grub
@@ -16,27 +16,27 @@ Automation(){
 
     sudo apt-get update -y
 
-    # open ssh server ê¹”ê³  í¬íŠ¸ 22ë²ˆ ì—´ê³  ì„¤ì • íŒŒì¼ ë°”ê¾¸ê¸°
+    # open ssh server ê¹”ê³  ?¬?Š¸ 22ë²? ?—´ê³? ?„¤? • ?ŒŒ?¼ ë°”ê¾¸ê¸?
     sudo apt install -y openssh-server
     sudo sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
     sudo sed -ri 's/^#?PubkeyAuthentication\s+.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
     sudo sed -ri 's/^#?PasswordAuthentication\s+.*/PasswordAuthentication no/' /etc/ssh/sshd_config
     sudo sed -ri "s/^#?AuthorizedKeysFile\s+.*/AuthorizedKeysFile      \/home\/$USER\/.ssh\/authorized_keys/" /etc/ssh/sshd_config
-    sudo sed -ri "s/^#?Port\s+.*/Port 22/" /etc/ssh/sshd_config
+    sudo sed -ri "s/^#?Port\s+.*/Port 9999/" /etc/ssh/sshd_config
     sudo cat ~/etc/id_rsa.pub >> /home/$USER/.ssh/authorized_keys
     sudo systemctl restart sshd
 
-    # ì„œë²„ ìì› ì‚¬ìš©ëŸ‰ì„ ì•Œê¸° ìœ„í•´ ì„¤ì¹˜
+    # ?„œë²? ??› ?‚¬?š©?Ÿ‰?„ ?•Œê¸? ?œ„?•´ ?„¤ì¹?
     sudo apt-get install -y sysstat
 
-    # ë„ì»¤ ê¹”ê¸°
+    # ?„ì»? ê¹”ê¸°
     sudo apt-get install -y ca-certificates curl gnupg lsb-release
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     sudo apt-get update -y
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io 
 
-    # ë„ì»¤ ê²½ë¡œ ë°”ê¾¸ê¸°
+    # ?„ì»? ê²½ë¡œ ë°”ê¾¸ê¸?
     sudo systemctl start docker
     sudo sed -i '13s@$@ --data-root=/home/docker@' /lib/systemd/system/docker.service
     sudo systemctl daemon-reload
@@ -46,18 +46,18 @@ Automation(){
     sudo usermod -a -G docker $USER
     sudo systemctl start docker
 
-    # iptables ê¹”ê³  22 ì—´ê¸°
+    # iptables ê¹”ê³  22 ?—´ê¸?
     sudo DEBIAN_FRONTEND=noninteractive apt-get install -y iptables-persistent
     sudo systemctl start iptables
     sudo systemctl enable iptables
 
     sudo iptables -P INPUT DROP
-    sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT #ssh í¬íŠ¸ í—ˆìš©
-    sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT #http í¬íŠ¸ í—ˆìš©
-    sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT #https í¬íŠ¸ í—ˆìš©
-    sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT # DNS í¬íŠ¸ í—ˆìš©
-    sudo iptables -A INPUT -p tcp --dport 25 -j ACCEPT # SMTP í¬íŠ¸ í—ˆìš©
-    sudo iptables -A INPUT -p icmp -j ACCEPT # ICMP í—ˆìš©
+    sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT #ssh ?¬?Š¸ ?—ˆ?š©
+    sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT #http ?¬?Š¸ ?—ˆ?š©
+    sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT #https ?¬?Š¸ ?—ˆ?š©
+    sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT # DNS ?¬?Š¸ ?—ˆ?š©
+    sudo iptables -A INPUT -p tcp --dport 25 -j ACCEPT # SMTP ?¬?Š¸ ?—ˆ?š©
+    sudo iptables -A INPUT -p icmp -j ACCEPT # ICMP ?—ˆ?š©
     sudo iptables -A INPUT -p udp --sport 53 -j ACCEPT
     sudo iptables -A INPUT -p tcp --sport 80 -j ACCEPT
     sudo iptables -A INPUT -p tcp --sport 443 -j ACCEPT
@@ -65,7 +65,7 @@ Automation(){
 
     sudo netfilter-persistent save
 
-    # nginx ì„¤ì¹˜
+    # nginx ?„¤ì¹?
     sudo apt-get install -y nginx
     sudo systemctl start nginx
     sudo systemctl enable nginx

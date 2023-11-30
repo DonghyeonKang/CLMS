@@ -7,9 +7,9 @@ PrintStatusforUser()
     local hostName=$1
     local hostIp=$2 
     
-    local userName=$3 # ì»¨í…Œì´ë„ˆë¥¼ ì‹¤í–‰ì‹œí‚¨ ìœ ì € ì´ë¦„
+    local userName=$3 # ì»¨í…Œ?´?„ˆë¥? ?‹¤?–‰?‹œ?‚¨ ?œ ??? ?´ë¦?
 
-    ssh $hostName@$hostIp " docker ps -a --format 'table {{.Names}}\t{{.Status}}\t' | grep $userName[0-99999]"   
+    ssh $hostName@$hostIp -p 9999 " docker ps -a --format 'table {{.Names}}\t{{.Status}}\t' | grep $userName[0-99999]"   
 
 }
 Start PrintStatusforUser
